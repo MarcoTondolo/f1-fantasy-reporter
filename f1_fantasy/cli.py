@@ -198,6 +198,7 @@ def cmd_demo(args: argparse.Namespace) -> int:
     """Render every card from synthetic data, for judging layout by eye."""
     from f1_fantasy.demo import demo_snapshots
     from f1_fantasy.render import render_card
+    from f1_fantasy.report import lockout as lockout_report
     from f1_fantasy.report import recap as recap_report
 
     config = Config.load(args.config)
@@ -210,11 +211,24 @@ def cmd_demo(args: argparse.Namespace) -> int:
         race_label="Dutch Grand Prix",
         you_guid="guid-01",
     )
-    png = render_card("recap.html.j2", context, out_dir / "recap.png")
-    (out_dir / "recap.txt").write_text(recap_report.caption(context) + "\n", encoding="utf-8")
+    cards = [
+        ("recap", "recap.html.j2", context, recap_report.caption(context)),
+    ]
 
-    print(f"rendered {png}")
-    print(f"caption  {out_dir / 'recap.txt'}")
+    lockout_context = lockout_report.build_lockout(
+        current,
+        previous,
+        race_label="Dutch Grand Prix",
+        you_guid="guid-01",
+    )
+    cards.append(
+        ("lockout", "lockout.html.j2", lockout_context, lockout_report.caption(lockout_context))
+    )
+
+    for name, template, ctx, text in cards:
+        png = render_card(template, ctx, out_dir / f"{name}.png")
+        (out_dir / f"{name}.txt").write_text(text + "\n", encoding="utf-8")
+        print(f"rendered {png}")
     return 0
 
 

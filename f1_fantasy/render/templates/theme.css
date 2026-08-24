@@ -373,3 +373,34 @@ body {
 }
 
 .empty { font-size: 21px; color: var(--ink-muted); font-style: italic; }
+
+/* -- lockout: per-member change blocks ---------------------------------- */
+
+.mover {
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.mover.is-you { box-shadow: inset 3px 0 0 var(--accent); }
+
+.mover-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.mover-name { font-size: 22px; font-weight: 600; }
+.mover-value { margin-left: auto; font-size: 18px; }
+
+.mover-body { display: flex; flex-direction: column; gap: 4px; }
+.mover-body .swap { font-size: 19px; }
+
+/* Two-column flow for the lockout changes list. A ten-member league in one
+   column pushes the card past 1900px, which WhatsApp crops hard in preview;
+   columns pack it to roughly 1400 without shrinking any type. */
+.movers-2col {
+  column-count: 2;
+  column-gap: 14px;
+}
+.movers-2col .mover {
+  break-inside: avoid;
+  margin-bottom: 10px;
+}

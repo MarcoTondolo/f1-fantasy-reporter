@@ -1,0 +1,97 @@
+{% extends "base.html.j2" %}
+{# Post-lockout: what everyone changed. No outcomes -- the race has not run. #}
+
+{% block content %}
+
+{% if chips_played %}
+<section>
+  <h2 class="section-title">Chips played</h2>
+  <div class="badges">
+    {% for chip in chips_played %}
+    <span class="badge hot">{{ chip.label }} &middot; {{ chip.who }}</span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section>
+  <h2 class="section-title">Changes</h2>
+  {% if movers %}
+  {# Two columns once the list is long enough to hurt the chat preview. #}
+  <div class="{{ 'movers-2col' if movers | length > 5 else 'standings' }}">
+    {% for mover in movers %}
+    <div class="mover{% if mover.is_you %} is-you{% endif %}">
+      <div class="mover-head">
+        <span class="mover-name">{{ mover.name }}</span>
+        {% if mover.chips %}
+          {% for chip in mover.chips %}<span class="badge hot">{{ chip }}</span>{% endfor %}
+        {% endif %}
+        {% if mover.value_change %}
+        <span class="delta {{ 'pos' if mover.value_change > 0 else 'neg' }} mover-value">
+          {{ mover.value_change | signed }}m
+        </span>
+        {% endif %}
+      </div>
+      <div class="mover-body">
+        {% for swap in mover.swaps %}
+        <div class="swap">
+          {% if swap.out %}<span class="swap-out">{{ swap.out }}</span>{% else %}<span class="swap-out">—</span>{% endif %}
+          <span class="swap-arrow">&rarr;</span>
+          {% if swap.in %}<span class="swap-in">{{ swap['in'] }}</span>{% else %}<span class="swap-out">—</span>{% endif %}
+        </div>
+        {% endfor %}
+        {# Only when it changed -- this is the changes card, so an unchanged
+           captain is noise. #}
+        {% if mover.captain and mover.captain_changed %}
+        <div class="swap">
+          <span class="swap-arrow">New captain</span>
+          <span class="chip"><span class="chip-dot" style="background: {{ mover.captain_color }}"></span><span class="swap-in">{{ mover.captain }}</span></span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="empty">Nobody changed a thing.</p>
+  {% endif %}
+</section>
+
+{% if most_backed or most_dropped %}
+<section>
+  <h2 class="section-title">League consensus</h2>
+  <div class="tiles">
+    {% if most_backed %}
+    <div class="tile good">
+      <div class="tile-label">Most backed</div>
+      {% for player in most_backed %}
+      <div class="tile-note"><strong>{{ player.name }}</strong> &times;{{ player.count }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if most_dropped %}
+    <div class="tile bad">
+      <div class="tile-label">Most dropped</div>
+      {% for player in most_dropped %}
+      <div class="tile-note"><strong>{{ player.name }}</strong> &times;{{ player.count }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if held %}
+<section>
+  <h2 class="section-title">Held firm</h2>
+  <div class="badges">
+    {% for name in held %}<span class="badge">{{ name }}</span>{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}
