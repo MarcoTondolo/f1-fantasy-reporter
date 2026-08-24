@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>{{ css }}</style>
+</head>
+<body>
+<div class="card">
+  <header class="header">
+    <div class="eyebrow">{{ eyebrow }}</div>
+    <h1 class="title">{{ title }}</h1>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer class="footer">
+    <span>{{ league_name }}</span>
+    <span>{{ footer_note }}</span>
+  </footer>
+</div>
+</body>
+</html>

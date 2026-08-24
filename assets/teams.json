@@ -1,0 +1,30 @@
+{
+  "_note": [
+    "Constructor identity colours, keyed by lowercase substrings matched against",
+    "the TeamName the fantasy API returns. These are used ONLY as identity rails",
+    "and dots beside a written team name -- never to encode a value. Measured as a",
+    "series palette they fail CVD separation badly (Haas grey vs Alpine pink is",
+    "deutan dE 1.0), which is exactly why the design pairs them with labels.",
+    "",
+    "Verify against the current season's liveries and correct as needed; a wrong",
+    "colour here is cosmetic and safe to fix at any time. Unmatched teams fall",
+    "back to --ink-muted."
+  ],
+  "colors": {
+    "mclaren": "#FF8000",
+    "ferrari": "#E8002D",
+    "red bull": "#3671C6",
+    "mercedes": "#27F4D2",
+    "aston martin": "#229971",
+    "alpine": "#FF87BC",
+    "williams": "#64C4FF",
+    "racing bulls": "#6692FF",
+    "rb": "#6692FF",
+    "audi": "#00E701",
+    "kick sauber": "#52E252",
+    "sauber": "#52E252",
+    "haas": "#B6BABD",
+    "cadillac": "#C9B074"
+  },
+  "fallback": "#898781"
+}

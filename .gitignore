@@ -1,0 +1,18 @@
+# Rendered output is regenerated from snapshots; only committed by the workflow
+# for the primary league, under out/{season}/{race}/.
+out/demo/
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Secrets never belong in the repo.
+.env
+
+# FastF1's raw cache is tens of MB per session -- Actions caches it instead.
+.fastf1-cache/

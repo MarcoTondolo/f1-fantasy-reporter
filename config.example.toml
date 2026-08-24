@@ -1,0 +1,24 @@
+# Copy to config.toml and edit. Secrets do NOT go here -- see README.
+
+season = 2026
+
+# League ids to capture. Leave empty to capture every private league you are in.
+# `f1-fantasy probe` prints the ids.
+leagues = []
+
+# The league whose reports actually get published. Others are captured quietly
+# so their history accumulates, but they do not generate cards.
+# primary_league = 4321
+
+# Where reports are emailed for you to forward into the chat.
+email_to = ""
+
+# Used to render session times in the preview card.
+timezone = "Europe/London"
+
+[reports]
+preview = true
+lockout = true
+recap = true
+chips = true
+ownership = true

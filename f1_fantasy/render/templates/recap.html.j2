@@ -1,0 +1,108 @@
+{% extends "base.html.j2" %}
+{# Post-race recap: where the league stands, who gained, and whose moves paid. #}
+
+{% block content %}
+
+{% if hero %}
+<section class="hero">
+  <div class="hero-figure">{{ hero.points | points }}</div>
+  <div class="hero-body">
+    <div class="hero-label">Round winner</div>
+    <div class="hero-name">{{ hero.name }}</div>
+    {% if hero.note %}<div class="hero-note">{{ hero.note }}</div>{% endif %}
+  </div>
+</section>
+{% endif %}
+
+<section>
+  <h2 class="section-title">Standings</h2>
+  <div class="standings">
+    {% for row in standings %}
+    <div class="row{% if row.is_podium %} is-podium{% endif %}{% if row.is_you %} is-you{% endif %}">
+      <div class="rank">{{ row.rank }}</div>
+      {# Arrow glyph carries direction; colour only reinforces it. #}
+      <div class="move {{ row.move_class }}">{{ row.move_label }}</div>
+      <div class="who">
+        <div class="who-name">{{ row.name }}</div>
+        <div class="who-team">{{ row.team_name }}</div>
+      </div>
+      <div class="bar-cell">
+        <div class="bar-track">
+          <div class="bar-fill" style="width: {{ row.bar_pct }}%"></div>
+        </div>
+        <div class="bar-value">{{ row.gained | points }}</div>
+      </div>
+      <div class="total">{{ row.total | points }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if best_move or worst_move %}
+<section>
+  <h2 class="section-title">Moves of the weekend</h2>
+  <div class="tiles">
+    {% if best_move %}
+    <div class="tile good">
+      <div class="tile-label">Best call</div>
+      <div class="tile-value delta pos">{{ best_move.delta | signed }}</div>
+      <div class="tile-name">{{ best_move.name }}</div>
+      <div class="tile-note">{{ best_move.detail }}</div>
+    </div>
+    {% endif %}
+    {% if worst_move %}
+    <div class="tile bad">
+      <div class="tile-label">Worst call</div>
+      <div class="tile-value delta neg">{{ worst_move.delta | signed }}</div>
+      <div class="tile-name">{{ worst_move.name }}</div>
+      <div class="tile-note">{{ worst_move.detail }}</div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if captain %}
+<section>
+  <h2 class="section-title">Captain's call</h2>
+  <div class="tiles">
+    <div class="tile good">
+      <div class="tile-label">Best armband</div>
+      <div class="tile-value delta pos">{{ captain.best.bonus | signed }}</div>
+      <div class="tile-name">{{ captain.best.name }}</div>
+      <div class="tile-note">
+        <span class="chip"><span class="chip-dot" style="background: {{ captain.best.color }}"></span>{{ captain.best.captain }}</span>
+        &nbsp;&times;{{ captain.best.multiplier }}
+      </div>
+    </div>
+    {% if captain.worst %}
+    <div class="tile bad">
+      <div class="tile-label">Least reward</div>
+      <div class="tile-value delta neg">{{ captain.worst.bonus | signed }}</div>
+      <div class="tile-name">{{ captain.worst.name }}</div>
+      <div class="tile-note">
+        <span class="chip"><span class="chip-dot" style="background: {{ captain.worst.color }}"></span>{{ captain.worst.captain }}</span>
+        &nbsp;&times;{{ captain.worst.multiplier }}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if chips_played %}
+<section>
+  <h2 class="section-title">Chips played</h2>
+  <div class="badges">
+    {% for chip in chips_played %}
+    <span class="badge hot">{{ chip.label }} &middot; {{ chip.who }}</span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}
