@@ -15,6 +15,7 @@ from pathlib import Path
 from f1_fantasy.api.client import AuthExpired, FantasyClient, FantasyError
 from f1_fantasy.api.endpoints import FantasyApi
 from f1_fantasy.api.models import Phase
+from f1_fantasy.schedule import Action
 from f1_fantasy.collect import collect_league
 from f1_fantasy.config import Config, Credentials
 from f1_fantasy.store.snapshots import SnapshotStore
@@ -190,6 +191,94 @@ def cmd_capture(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------
+# plan / tick
+# --------------------------------------------------------------------------
+
+
+def _resolve_event(config: Config, force: str | None):
+    """Current race event, the actions due for it, and the run state."""
+    from f1_fantasy.calendar import current_event, fetch_calendar
+    from f1_fantasy.runner import utcnow
+    from f1_fantasy.schedule import Action, RunState, due_actions
+
+    events = fetch_calendar(config.season)
+    now = utcnow()
+    event = current_event(events, now)
+    if event is None:
+        return None, [], None
+
+    state = RunState()
+    if force:
+        return event, [Action(force)], state
+    return event, due_actions(event, now, state.done(config.season, event.round)), state
+
+
+def cmd_plan(args: argparse.Namespace) -> int:
+    """Print what is due, in GitHub Actions output format.
+
+    Separate from ``tick`` so the workflow can skip installing a browser on the
+    many hourly runs where nothing is happening.
+    """
+    config = Config.load(args.config)
+    event, due, _ = _resolve_event(config, args.force)
+
+    if event is None:
+        print("due=")
+        print("season=")
+        print("round=")
+        return 0
+
+    print(f"due={','.join(action.value for action in due)}")
+    print(f"season={event.season}")
+    print(f"round={event.round}")
+    return 0
+
+
+def cmd_tick(args: argparse.Namespace) -> int:
+    """Run whatever the calendar says is due."""
+    from f1_fantasy.runner import build_publisher, run_action
+
+    config = Config.load(args.config)
+    credentials = Credentials.from_env()
+
+    event, due, state = _resolve_event(config, args.force)
+    if event is None:
+        print("no upcoming race in the calendar")
+        return 0
+    if not due:
+        print(f"nothing due for round {event.round} ({event.name})")
+        return 0
+
+    print(f"round {event.round} ({event.name}): {', '.join(a.value for a in due)}")
+
+    api = build_api(credentials)
+    store = SnapshotStore(config.snapshot_dir)
+    publisher = build_publisher(config, credentials, dry_run=args.dry_run)
+    race_id = args.race or api.current_race_id()
+
+    for action in due:
+        written = run_action(
+            action,
+            api=api,
+            config=config,
+            event=event,
+            race_id=race_id,
+            store=store,
+            publisher=publisher,
+        )
+        for path in written:
+            print(f"  {action.value}: {path}")
+        # Recorded only on success, so a failed action stays due and retries
+        # on the next hourly tick rather than being silently skipped.
+        if not args.dry_run:
+            state.mark(config.season, event.round, action)
+
+    if not args.dry_run:
+        state.save()
+    return 0
+
+
+# --------------------------------------------------------------------------
 # wiring
 # --------------------------------------------------------------------------
 
@@ -258,6 +347,18 @@ def build_parser() -> argparse.ArgumentParser:
     demo = sub.add_parser("demo", help="render cards from synthetic data")
     demo.add_argument("--out", help="output directory (default: out/demo)")
     demo.set_defaults(func=cmd_demo)
+
+    actions = [action.value for action in Action]
+
+    plan = sub.add_parser("plan", help="print what is due, for CI to gate on")
+    plan.add_argument("--force", choices=actions, help="ignore the calendar")
+    plan.set_defaults(func=cmd_plan)
+
+    tick = sub.add_parser("tick", help="run whatever the calendar says is due")
+    tick.add_argument("--force", choices=actions, help="ignore the calendar")
+    tick.add_argument("--dry-run", action="store_true", help="render but do not send")
+    tick.add_argument("--race", type=int, help="race id (default: current)")
+    tick.set_defaults(func=cmd_tick)
 
     return parser
 

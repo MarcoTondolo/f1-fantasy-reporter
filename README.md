@@ -14,9 +14,9 @@ Nothing posts to WhatsApp automatically — see [Why not auto-post](#why-not-aut
 | --- | --- |
 | 0 — Access spike (`probe`) | Ready to run, **needs your cookie** |
 | 1 — API client, models, snapshot store | Done |
-| 2 — Diff engine | Done, 53 tests |
-| 3 — Render pipeline + recap card | Recap done; four cards remaining |
-| 4 — Actions automation + email | Not started |
+| 2 — Diff engine | Done |
+| 3 — Render pipeline + cards | Recap and lockout done; preview, chips, ownership remaining |
+| 4 — Actions automation + email | Done, untested against a live repo |
 | 5 — News and articles | Not started |
 | 6 — Pace dataset (FastF1) | Not started |
 
@@ -82,6 +82,8 @@ layout without waiting for a race weekend.
 | `probe` | Check how much league data is readable |
 | `doctor` | Validate credentials, config and delivery |
 | `capture --phase {pre_lock,locked,final}` | Write a snapshot of each league |
+| `plan` | Print what the calendar says is due (used by CI to gate) |
+| `tick [--force X] [--dry-run]` | Run whatever is due |
 | `demo` | Render cards from synthetic data |
 
 ## How it works
@@ -152,7 +154,44 @@ and `out/` from history first.
 pytest
 ```
 
-Everything runs offline against fixtures — no live API, no credentials. The
+All 76 run offline against fixtures — no live API, no credentials. The
 parser tests deliberately reproduce the API's real payloads including its
 misspellings (`FUllName`, `OverallPpints`, `isnonigativetaken`) and its habit of
 sending numbers as strings; if the API changes shape, those break first.
+
+## Scheduling
+
+One hourly workflow that asks the race calendar what is due, rather than a cron
+line per report. Sessions get rescheduled, sprint weekends lock a day earlier at
+the Sprint rather than at Qualifying, and clocks shift twice a year — a fixed
+schedule quietly reports at the wrong time through all of that.
+
+| Report | Fires |
+| --- | --- |
+| Pace | After final practice, before lockout |
+| Preview | ~24h before lockout |
+| Lockout | 15 min after lockout, letting last-second edits settle |
+| Recap | Once race points stop moving between reads |
+
+Windows close after a grace period, so a tool that was offline for a week does
+not wake up and post a preview for a race that has already run. Actions are
+recorded in `state.json` only on success, so a failure stays due and retries on
+the next tick.
+
+The recap waits for two consecutive identical point reads rather than assuming a
+fixed delay after the flag: penalties and classification changes move fantasy
+points hours later, and a recap published from provisional numbers has to be
+corrected in the chat.
+
+### Repository secrets
+
+| Secret | Purpose |
+| --- | --- |
+| `F1_FANTASY_TOKEN` | Session cookie (refresh ~every 5 days) |
+| `F1_USER_GUID` | Your account guid |
+| `SMTP_USER` / `SMTP_PASS` | Gmail address and **app password** |
+| `SMTP_HOST` / `SMTP_PORT` | Optional, default to Gmail |
+
+When a run fails on authentication the workflow opens (or comments on) an issue
+with the refresh steps, rather than leaving a red X in the Actions tab — an
+expired cookie is a routine five-day event, not a crash.
