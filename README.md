@@ -15,7 +15,7 @@ Nothing posts to WhatsApp automatically — see [Why not auto-post](#why-not-aut
 | 0 — Access spike (`probe`) | **Confirmed live: full access to other members' teams** |
 | 1 — API client, models, snapshot store | Done, confirmed against the live API |
 | 2 — Diff engine | Done |
-| 3 — Render pipeline + cards | Recap and lockout done; preview, chips, ownership remaining |
+| 3 — Render pipeline + cards | Recap, lockout, chips, ownership done; preview remaining |
 | 4 — Actions automation + email | Done; `probe` runs green in Actions |
 | 5 — News and articles | Not started |
 | 6 — Pace dataset (FastF1) | Not started |
