@@ -335,3 +335,71 @@ def test_league_list_tolerates_differing_envelope_shapes():
     assert parse_league_list(keyed)[0].league_name == "A League"
     assert parse_league_list(bare)[0].league_id == 2
     assert parse_league_list({"unexpected": True}) == []
+
+
+# Trimmed from a real /services/user/league/{guid}/1/0/0/privateleague response
+# (2026-08-25). The first entry is F1's own promotional showcase league, shown
+# to every account whether joined or not -- that's what isJoined distinguishes.
+RAW_PRIVATE_LEAGUE = {
+    "Details": [
+        {
+            "leagueId": "264909",
+            "leagueName": "F1%20Live",
+            "leagueCode": "",
+            "isAdmin": 1,
+            "memberCount": "8",
+            "leagueType": "Classic Private",
+            "isJoined": 0,
+        },
+        {
+            "leagueId": "4512504",
+            "leagueName": "Ciao%20Squadra%202026",
+            "leagueCode": "C3OVN102504",
+            "isAdmin": 1,
+            "memberCount": "26",
+            "leagueType": "Classic Private",
+            "isJoined": 1,
+        },
+    ]
+}
+
+# Trimmed from a real /services/user/league/{guid}/getuserleague/1 response,
+# same account, same moment. Note the endpoint's own distinct misspelling.
+RAW_USER_LEAGUES = {
+    "leaguesdata": [
+        {
+            "rno": 1,
+            "leagueId": 4512504,
+            "leagueCode": "C3OVN102504",
+            "leagueName": "Ciao%20Squadra%202026",
+            "leagueType": "C.Private",
+            "leagueAdmin": 1,
+            "memeberCount": "26",
+        }
+    ],
+    "leaguestotcnt": 1,
+}
+
+
+def test_privateleague_filters_out_leagues_not_joined():
+    """The promotional showcase entry (isJoined: 0) must not appear as 'yours'."""
+    leagues = parse_league_list(RAW_PRIVATE_LEAGUE)
+
+    assert [l.league_id for l in leagues] == [4512504]
+    assert leagues[0].league_name == "Ciao Squadra 2026"
+    assert leagues[0].member_count == 26
+
+
+def test_getuserleague_parses_its_own_misspelled_member_count():
+    """This endpoint has no isJoined key at all -- its rows pass straight through."""
+    leagues = parse_league_list(RAW_USER_LEAGUES)
+
+    assert leagues[0].league_id == 4512504
+    assert leagues[0].member_count == 26  # from "memeberCount", not "memberCount"
+
+
+def test_privateleague_member_count_falls_back_to_zero_for_non_numeric_strings():
+    """The API sends "10k+" for very large leagues -- not parseable, not fatal."""
+    huge = {"Details": [{"leagueId": "1", "leagueName": "X", "memberCount": "10k+", "isJoined": 1}]}
+
+    assert parse_league_list(huge)[0].member_count == 0

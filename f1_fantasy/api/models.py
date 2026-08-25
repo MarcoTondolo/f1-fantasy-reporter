@@ -309,10 +309,20 @@ def parse_leaderboard(payload: Any) -> tuple[LeagueRef, list[Member]]:
 
 
 def parse_league_list(payload: Any) -> list[LeagueRef]:
-    """Parse any of the league-list endpoints, which vary in envelope shape."""
+    """Parse ``/privateleague`` or ``/getuserleague``, confirmed against the live API.
+
+    The two endpoints disagree on almost everything:
+
+    - ``/privateleague``'s Value is a dict with a ``Details`` list that mixes
+      leagues you've joined together with F1's own promotional showcase
+      leagues (``isJoined: 0``) -- those get filtered out here.
+    - ``/getuserleague``'s Value is a dict with a ``leaguesdata`` list of just
+      the leagues you're actually in, using its own distinct misspellings
+      (``memeberCount``, not ``memberCount``) from the other endpoint.
+    """
     rows: Sequence[Any]
     if isinstance(payload, Mapping):
-        for key in ("leagues", "Leagues", "value", "Value"):
+        for key in ("Details", "leaguesdata", "leagues", "Leagues", "value", "Value"):
             candidate = payload.get(key)
             if isinstance(candidate, list):
                 rows = candidate
@@ -328,7 +338,11 @@ def parse_league_list(payload: Any) -> list[LeagueRef]:
     for row in rows:
         if not isinstance(row, Mapping):
             continue
-        league_id = as_int(first(row, "leagueid", "leagueId", "id"))
+        # /privateleague marks its promotional entries this way; /getuserleague
+        # rows have no such key at all, so they pass through untouched.
+        if "isJoined" in row and not as_bool(row.get("isJoined")):
+            continue
+        league_id = as_int(first(row, "leagueId", "leagueid", "id"))
         if not league_id:
             continue
         leagues.append(
@@ -336,7 +350,9 @@ def parse_league_list(payload: Any) -> list[LeagueRef]:
                 league_id=league_id,
                 league_name=decode(first(row, "leagueName", "leaguename", "name")),
                 league_code=str(first(row, "leagueCode", "leaguecode", default="") or ""),
-                member_count=as_int(first(row, "memCount", "memcount", "membercount")),
+                member_count=as_int(
+                    first(row, "memberCount", "memeberCount", "memCount", "membercount")
+                ),
             )
         )
     return leagues

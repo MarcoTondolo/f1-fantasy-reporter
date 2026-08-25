@@ -46,6 +46,18 @@ def build_api(credentials: Credentials) -> FantasyApi:
 # --------------------------------------------------------------------------
 
 
+def _dump_raw(api: FantasyApi, label: str, path: str) -> None:
+    """Print an endpoint's raw JSON, for diagnosing an unverified payload shape
+    without needing another CI round-trip to add ad-hoc logging.
+    """
+    try:
+        raw = api.client.get_raw(path)
+    except Exception as exc:  # noqa: BLE001 - this is a diagnostic dump
+        print(f"  {label}: request failed: {exc}")
+        return
+    print(f"\n  -- {label} --\n{json.dumps(raw, indent=2)[:4000]}")
+
+
 def cmd_probe(args: argparse.Namespace) -> int:
     """Determine how much league data this account can actually read."""
     credentials = Credentials.from_env()
@@ -69,17 +81,8 @@ def cmd_probe(args: argparse.Namespace) -> int:
 
     if not leagues:
         print("  no leagues found via either endpoint. Raw responses:")
-        for label, path in (
-            ("/privateleague", f"/services/user/league/{api.guid}/1/0/0/privateleague"),
-            ("/getuserleague", f"/services/user/league/{api.guid}/getuserleague/1"),
-        ):
-            try:
-                raw = api.client.get_raw(path)
-            except Exception as exc:  # noqa: BLE001 - this is a diagnostic dump
-                print(f"  {label}: request failed: {exc}")
-                continue
-            dumped = json.dumps(raw, indent=2)[:4000]
-            print(f"\n  -- {label} --\n{dumped}")
+        _dump_raw(api, "/privateleague", f"/services/user/league/{api.guid}/1/0/0/privateleague")
+        _dump_raw(api, "/getuserleague", f"/services/user/league/{api.guid}/getuserleague/1")
         return 1
 
     print(f"  ({source}) found {len(leagues)} league(s):")
@@ -89,6 +92,18 @@ def cmd_probe(args: argparse.Namespace) -> int:
     target = args.league or leagues[0].league_id
     print(f"\n== Leaderboard for league {target} ==")
     league, members = api.leaderboard(target)
+    if not members:
+        # A silent empty parse here would masquerade as "you're the only
+        # member" below -- worse than a crash, since it looks like a real
+        # answer. Two guesses about envelope shape have already been wrong
+        # once each, so don't trust a third without seeing the raw body.
+        print("  0 members parsed -- this endpoint's shape hasn't been confirmed live.")
+        _dump_raw(
+            api,
+            "leaderboard",
+            f"/services/user/leaderboard/{api.guid}/pvtleagueuserrankget/1/{target}/0/1/1/1000/",
+        )
+        return 1
     print(f"  {league.league_name}: {len(members)} members")
     for member in members[:5]:
         print(f"    #{member.rank:<3} {member.user_name:<20} {member.points:>8.0f}")
@@ -97,8 +112,9 @@ def cmd_probe(args: argparse.Namespace) -> int:
 
     print("\n== Own team ==")
     own = api.teams(race_id)
-    if not own:
+    if not own or not own[0].picks:
         print("  WARNING: could not read your own team -- something is wrong beyond sharing")
+        _dump_raw(api, "getteam", f"/services/user/gameplay/{api.guid}/getteam/1/1/{race_id}/1")
         return 1
     team = own[0]
     print(f"  ok -- {len(team.picks)} picks, captain {team.captain_id}, value {team.value}")
