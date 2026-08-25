@@ -12,11 +12,11 @@ Nothing posts to WhatsApp automatically — see [Why not auto-post](#why-not-aut
 
 | Phase | State |
 | --- | --- |
-| 0 — Access spike (`probe`) | Ready to run, **needs your cookie** |
-| 1 — API client, models, snapshot store | Done |
+| 0 — Access spike (`probe`) | **Confirmed live: full access to other members' teams** |
+| 1 — API client, models, snapshot store | Done, confirmed against the live API |
 | 2 — Diff engine | Done |
 | 3 — Render pipeline + cards | Recap and lockout done; preview, chips, ownership remaining |
-| 4 — Actions automation + email | Done, untested against a live repo |
+| 4 — Actions automation + email | Done; `probe` runs green in Actions |
 | 5 — News and articles | Not started |
 | 6 — Pace dataset (FastF1) | Not started |
 
@@ -54,17 +54,11 @@ f1-fantasy probe
 ```
 
 `probe` answers the question the whole design depends on: **can this account read
-other league members' teams?** The leaderboard hands out every member's `guid`,
-and the team endpoint takes a `guid` in its path — so it plausibly works for
-anyone in the league, but that is unverified until someone runs it against a real
-account.
-
-- **Full access** → every report works: lockout changes, chip watch, ownership,
-  transfer winners and losers.
-- **Partial** → reports cover the readable members and say so on the card.
-- **None** → open the league standings page with DevTools, click through to a
-  rival's team, and note which request the site makes; that endpoint gets wired
-  in. Until then reports fall back to standings only.
+other league members' teams?** Confirmed live (2026-08-25): **yes, full access** —
+every report in the plan is possible. Re-run it any time credentials change or
+you want to sanity-check a league; it's also how three real payload-shape bugs
+in the parsers got caught and fixed on first contact with the live API (see
+"Endpoints confirmed live" below).
 
 ### Seeing a card without credentials
 
@@ -113,6 +107,28 @@ genuinely one swap.
 `getusergamedaysv1`, which is keyed by race across the whole season. Team-change
 history does **not** — the API exposes no past lineups. Change reports start
 accumulating from the first run onward.
+
+### Endpoints confirmed live
+
+The API is undocumented; every field name and envelope shape below started as
+an inference from a third-party client's source, and every one of the first
+three turned out to need a correction on first contact with the real service —
+tracked here rather than left as folklore.
+
+| Endpoint | Envelope | Confirmed |
+| --- | --- | --- |
+| `getusergamedaysv1` | `Data.Value` is a **bare list**, not `{"data": [...]}` | Live, 2026-08-25 |
+| `.../1/0/0/privateleague` | `Data.Value.Details` — mixes in F1's own promotional league (`isJoined: 0`), filtered out | Live, 2026-08-25 |
+| `.../getuserleague/1` | `Data.Value.leaguesdata` — its own distinct misspelling, `memeberCount` | Live, 2026-08-25 |
+| `pvtleagueuserrankget` (leaderboard) | `Data.Value.{leagueInfo, memRank}` | Live, 2026-08-25 — the "full access" verdict requires this to have parsed real members |
+| `getteam`, own team and every other member's | `Data.Value.{mdid, userTeam}` | Live, 2026-08-25 — same verdict; every member in the league came back readable |
+| `/feeds/drivers/{race}_en.json` | Public, `Value` is a list of player dicts | Not exercised by `probe` — first real test is the first rendered card against live data |
+
+`probe` deliberately dumps raw JSON to the Actions log when a result looks
+suspicious (zero leagues, zero members, zero picks) rather than trusting an
+empty parse — that's what caught the first three. If a future run hits one of
+the "not yet confirmed" rows and something looks off, the same dump will show
+up in the log; update this table and the corresponding parser together.
 
 ## Design notes
 
