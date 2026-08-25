@@ -1,0 +1,1625 @@
+{
+  "captured_at": "2026-08-25T02:54:21.944559Z",
+  "league_id": 4512504,
+  "league_name": "Ciao Squadra 2026",
+  "members": [
+    {
+      "guid": "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702",
+      "is_admin": true,
+      "points": 3066.0,
+      "rank": 1,
+      "team_id": 1137720303,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Chris Krueger"
+    },
+    {
+      "guid": "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229",
+      "is_admin": false,
+      "points": 2834.0,
+      "rank": 2,
+      "team_id": 2066480210,
+      "team_name": "dbdbdb",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Derek Blais"
+    },
+    {
+      "guid": "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702",
+      "is_admin": true,
+      "points": 2742.0,
+      "rank": 3,
+      "team_id": 1137720303,
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": "Chris Krueger"
+    },
+    {
+      "guid": "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141",
+      "is_admin": false,
+      "points": 2710.0,
+      "rank": 4,
+      "team_id": 1820510202,
+      "team_name": "Lewis' eighth",
+      "team_no": 3,
+      "trend": 1,
+      "user_name": "Paul Brown"
+    },
+    {
+      "guid": "5a9bc96e-1961-11f1-9075-aba426ce3dce-0-179187119",
+      "is_admin": false,
+      "points": 2588.0,
+      "rank": 5,
+      "team_id": 2786640410,
+      "team_name": "Active Aero Club",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Sylvester Sawala"
+    },
+    {
+      "guid": "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931",
+      "is_admin": false,
+      "points": 2491.0,
+      "rank": 6,
+      "team_id": 2289880402,
+      "team_name": "sydkav2",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": ""
+    },
+    {
+      "guid": "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062",
+      "is_admin": false,
+      "points": 2426.0,
+      "rank": 7,
+      "team_id": 1438960303,
+      "team_name": "Bad Viiibbrrations",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": "Marie Lunny"
+    },
+    {
+      "guid": "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849",
+      "is_admin": false,
+      "points": 2404.0,
+      "rank": 8,
+      "team_id": 1454130210,
+      "team_name": "Th' Rude Boys",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": "Jacob Vander Zanden"
+    },
+    {
+      "guid": "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141",
+      "is_admin": false,
+      "points": 2302.0,
+      "rank": 9,
+      "team_id": 1820510202,
+      "team_name": "Rest In Peace MGU-H",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Paul Brown"
+    },
+    {
+      "guid": "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062",
+      "is_admin": false,
+      "points": 2250.0,
+      "rank": 10,
+      "team_id": 1438960303,
+      "team_name": "Good Viiibbrrations",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Marie Lunny"
+    },
+    {
+      "guid": "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194",
+      "is_admin": false,
+      "points": 2243.0,
+      "rank": 11,
+      "team_id": 941300305,
+      "team_name": "The Hamilton Line",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": "Paul Gosse"
+    },
+    {
+      "guid": "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714",
+      "is_admin": false,
+      "points": 2083.0,
+      "rank": 12,
+      "team_id": 1141710305,
+      "team_name": "Inny or Audi?",
+      "team_no": 1,
+      "trend": 2,
+      "user_name": "Daniel Frank"
+    },
+    {
+      "guid": "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229",
+      "is_admin": false,
+      "points": 2069.0,
+      "rank": 13,
+      "team_id": 2066480210,
+      "team_name": "dbdbdb2",
+      "team_no": 2,
+      "trend": 3,
+      "user_name": "Derek Blais"
+    },
+    {
+      "guid": "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849",
+      "is_admin": false,
+      "points": 1990.0,
+      "rank": 14,
+      "team_id": 1454130210,
+      "team_name": "Th' Hard Mods",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Jacob Vander Zanden"
+    },
+    {
+      "guid": "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951",
+      "is_admin": false,
+      "points": 1981.0,
+      "rank": 15,
+      "team_id": 1638530402,
+      "team_name": "The Blur I",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Rob Sardellitti"
+    },
+    {
+      "guid": "3df60b10-166b-11f1-a76d-a7a37128dead-0-35655021",
+      "is_admin": false,
+      "points": 1955.0,
+      "rank": 16,
+      "team_id": 1584990202,
+      "team_name": "BBQ2 Racing",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": "Matthew Bielawski"
+    },
+    {
+      "guid": "3df60b10-166b-11f1-a76d-a7a37128dead-0-35655021",
+      "is_admin": false,
+      "points": 1862.0,
+      "rank": 17,
+      "team_id": 1584990202,
+      "team_name": "BBQ1 Racing",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Matthew Bielawski"
+    },
+    {
+      "guid": "e02076de-1178-11f1-9ab9-47680fdfd1ea-0-223277995",
+      "is_admin": false,
+      "points": 1793.0,
+      "rank": 18,
+      "team_id": 261170406,
+      "team_name": "DannyRickGasly",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Caitlyn Landry"
+    },
+    {
+      "guid": "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714",
+      "is_admin": false,
+      "points": 1692.0,
+      "rank": 19,
+      "team_id": 1141710305,
+      "team_name": "Something Alonso Lines",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": "Daniel Frank"
+    },
+    {
+      "guid": "70558ff4-17d3-11f1-bab6-e12db015fb66-0-200893771",
+      "is_admin": false,
+      "points": 1495.0,
+      "rank": 20,
+      "team_id": 1936620402,
+      "team_name": "Max is king 2026",
+      "team_no": 3,
+      "trend": 1,
+      "user_name": "James Carroll"
+    },
+    {
+      "guid": "e02076de-1178-11f1-9ab9-47680fdfd1ea-0-223277995",
+      "is_admin": false,
+      "points": 1420.0,
+      "rank": 21,
+      "team_id": 261170406,
+      "team_name": "DNFButMakeItCute",
+      "team_no": 2,
+      "trend": 2,
+      "user_name": "Caitlyn Landry"
+    },
+    {
+      "guid": "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194",
+      "is_admin": false,
+      "points": 1412.0,
+      "rank": 22,
+      "team_id": 941300305,
+      "team_name": "Piastri & Chill",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Paul Gosse"
+    },
+    {
+      "guid": "6dc408c0-1962-11f1-a2dc-7d9f10b2c2af-0-189108915",
+      "is_admin": false,
+      "points": 1326.0,
+      "rank": 23,
+      "team_id": 2790100406,
+      "team_name": "Lethal Weapons",
+      "team_no": 1,
+      "trend": 3,
+      "user_name": "Johnathan Bald"
+    },
+    {
+      "guid": "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951",
+      "is_admin": false,
+      "points": 1302.0,
+      "rank": 24,
+      "team_id": 1638530402,
+      "team_name": "The Blur II: The Sequel",
+      "team_no": 2,
+      "trend": 2,
+      "user_name": "Rob Sardellitti"
+    },
+    {
+      "guid": "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931",
+      "is_admin": false,
+      "points": 1289.0,
+      "rank": 25,
+      "team_id": 2289880402,
+      "team_name": "sydkav1",
+      "team_no": 1,
+      "trend": 3,
+      "user_name": ""
+    },
+    {
+      "guid": "70558ff4-17d3-11f1-bab6-e12db015fb66-0-200893771",
+      "is_admin": false,
+      "points": 957.0,
+      "rank": 26,
+      "team_id": 1936620402,
+      "team_name": "Bow to max 2026",
+      "team_no": 2,
+      "trend": 1,
+      "user_name": "James Carroll"
+    }
+  ],
+  "phase": "locked",
+  "players": {
+    "11": {
+      "captain_pct": 0.0,
+      "constructor": "Williams",
+      "display_name": "A. Albon",
+      "full_name": "Alexander Albon",
+      "is_constructor": false,
+      "player_id": "11",
+      "price": 5.8,
+      "race_points": 2.0,
+      "season_points": 8.0,
+      "selected_pct": 9.0,
+      "tla": "ALB"
+    },
+    "110": {
+      "captain_pct": 9.0,
+      "constructor": "Ferrari",
+      "display_name": "L. Hamilton",
+      "full_name": "Lewis Hamilton",
+      "is_constructor": false,
+      "player_id": "110",
+      "price": 25.0,
+      "race_points": 23.0,
+      "season_points": 367.0,
+      "selected_pct": 19.0,
+      "tla": "HAM"
+    },
+    "11031": {
+      "captain_pct": 2.0,
+      "constructor": "Haas F1 Team",
+      "display_name": "O. Bearman",
+      "full_name": "Oliver Bearman",
+      "is_constructor": false,
+      "player_id": "11031",
+      "price": 7.6,
+      "race_points": -13.0,
+      "season_points": 56.0,
+      "selected_pct": 51.0,
+      "tla": "BEA"
+    },
+    "11032": {
+      "captain_pct": 3.0,
+      "constructor": "Red Bull Racing",
+      "display_name": "I. Hadjar",
+      "full_name": "Isack Hadjar",
+      "is_constructor": false,
+      "player_id": "11032",
+      "price": 14.5,
+      "race_points": 0.0,
+      "season_points": 138.0,
+      "selected_pct": 29.0,
+      "tla": "HAD"
+    },
+    "11051": {
+      "captain_pct": 0.0,
+      "constructor": "Audi",
+      "display_name": "G. Bortoleto",
+      "full_name": "Gabriel Bortoleto",
+      "is_constructor": false,
+      "player_id": "11051",
+      "price": 7.8,
+      "race_points": 5.0,
+      "season_points": 70.0,
+      "selected_pct": 34.0,
+      "tla": "BOR"
+    },
+    "11059": {
+      "captain_pct": 1.0,
+      "constructor": "Alpine",
+      "display_name": "F. Colapinto",
+      "full_name": "Franco Colapinto",
+      "is_constructor": false,
+      "player_id": "11059",
+      "price": 11.2,
+      "race_points": 6.0,
+      "season_points": 129.0,
+      "selected_pct": 19.0,
+      "tla": "COL"
+    },
+    "111": {
+      "captain_pct": 0.0,
+      "constructor": "Audi",
+      "display_name": "N. Hulkenberg",
+      "full_name": "Nico Hulkenberg",
+      "is_constructor": false,
+      "player_id": "111",
+      "price": 3.0,
+      "race_points": 5.0,
+      "season_points": -27.0,
+      "selected_pct": 36.0,
+      "tla": "HUL"
+    },
+    "11149": {
+      "captain_pct": 1.0,
+      "constructor": "Racing Bulls",
+      "display_name": "A. Lindblad",
+      "full_name": "Arvid Lindblad",
+      "is_constructor": false,
+      "player_id": "11149",
+      "price": 8.0,
+      "race_points": 7.0,
+      "season_points": 71.0,
+      "selected_pct": 45.0,
+      "tla": "LIN"
+    },
+    "11161": {
+      "captain_pct": 25.0,
+      "constructor": "Mercedes",
+      "display_name": "K. Antonelli",
+      "full_name": "Kimi Antonelli",
+      "is_constructor": false,
+      "player_id": "11161",
+      "price": 25.7,
+      "race_points": 37.0,
+      "season_points": 466.0,
+      "selected_pct": 36.0,
+      "tla": "ANT"
+    },
+    "114": {
+      "captain_pct": 0.0,
+      "constructor": "Racing Bulls",
+      "display_name": "L. Lawson",
+      "full_name": "Liam Lawson",
+      "is_constructor": false,
+      "player_id": "114",
+      "price": 10.3,
+      "race_points": 0.0,
+      "season_points": 128.0,
+      "selected_pct": 29.0,
+      "tla": "LAW"
+    },
+    "115": {
+      "captain_pct": 15.0,
+      "constructor": "Ferrari",
+      "display_name": "C. Leclerc",
+      "full_name": "Charles Leclerc",
+      "is_constructor": false,
+      "player_id": "115",
+      "price": 23.9,
+      "race_points": 39.0,
+      "season_points": 324.0,
+      "selected_pct": 27.0,
+      "tla": "LEC"
+    },
+    "116": {
+      "captain_pct": 0.0,
+      "constructor": "Red Bull Racing",
+      "display_name": "L. Lawson",
+      "full_name": "Liam Lawson",
+      "is_constructor": false,
+      "player_id": "116",
+      "price": 14.5,
+      "race_points": 12.0,
+      "season_points": 12.0,
+      "selected_pct": 1.0,
+      "tla": "LAW"
+    },
+    "117": {
+      "captain_pct": 6.0,
+      "constructor": "McLaren",
+      "display_name": "L. Norris",
+      "full_name": "Lando Norris",
+      "is_constructor": false,
+      "player_id": "117",
+      "price": 26.1,
+      "race_points": 57.0,
+      "season_points": 284.0,
+      "selected_pct": 9.0,
+      "tla": "NOR"
+    },
+    "118": {
+      "captain_pct": 0.0,
+      "constructor": "Haas F1 Team",
+      "display_name": "E. Ocon",
+      "full_name": "Esteban Ocon",
+      "is_constructor": false,
+      "player_id": "118",
+      "price": 10.7,
+      "race_points": -10.0,
+      "season_points": 110.0,
+      "selected_pct": 13.0,
+      "tla": "OCO"
+    },
+    "12": {
+      "captain_pct": 0.0,
+      "constructor": "Aston Martin",
+      "display_name": "F. Alonso",
+      "full_name": "Fernando Alonso",
+      "is_constructor": false,
+      "player_id": "12",
+      "price": 6.2,
+      "race_points": 24.0,
+      "season_points": 29.0,
+      "selected_pct": 9.0,
+      "tla": "ALO"
+    },
+    "121": {
+      "captain_pct": 0.0,
+      "constructor": "Cadillac",
+      "display_name": "S. Perez",
+      "full_name": "Sergio Perez",
+      "is_constructor": false,
+      "player_id": "121",
+      "price": 3.8,
+      "race_points": 8.0,
+      "season_points": 13.0,
+      "selected_pct": 18.0,
+      "tla": "PER"
+    },
+    "124": {
+      "captain_pct": 17.0,
+      "constructor": "Mercedes",
+      "display_name": "G. Russell",
+      "full_name": "George Russell",
+      "is_constructor": false,
+      "player_id": "124",
+      "price": 27.9,
+      "race_points": 32.0,
+      "season_points": 308.0,
+      "selected_pct": 22.0,
+      "tla": "RUS"
+    },
+    "125": {
+      "captain_pct": 1.0,
+      "constructor": "Williams",
+      "display_name": "C. Sainz",
+      "full_name": "Carlos Sainz",
+      "is_constructor": false,
+      "player_id": "125",
+      "price": 10.0,
+      "race_points": 7.0,
+      "season_points": 89.0,
+      "selected_pct": 23.0,
+      "tla": "SAI"
+    },
+    "129": {
+      "captain_pct": 0.0,
+      "constructor": "Aston Martin",
+      "display_name": "L. Stroll",
+      "full_name": "Lance Stroll",
+      "is_constructor": false,
+      "player_id": "129",
+      "price": 3.0,
+      "race_points": -10.0,
+      "season_points": -90.0,
+      "selected_pct": 5.0,
+      "tla": "STR"
+    },
+    "13": {
+      "captain_pct": 0.0,
+      "constructor": "Cadillac",
+      "display_name": "V. Bottas",
+      "full_name": "Valtteri Bottas",
+      "is_constructor": false,
+      "player_id": "13",
+      "price": 3.0,
+      "race_points": -18.0,
+      "season_points": -78.0,
+      "selected_pct": 20.0,
+      "tla": "BOT"
+    },
+    "130": {
+      "captain_pct": 0.0,
+      "constructor": "Racing Bulls",
+      "display_name": "Y. Tsunoda",
+      "full_name": "Yuki Tsunoda",
+      "is_constructor": false,
+      "player_id": "130",
+      "price": 10.3,
+      "race_points": 5.0,
+      "season_points": 5.0,
+      "selected_pct": 1.0,
+      "tla": "TSU"
+    },
+    "131": {
+      "captain_pct": 13.0,
+      "constructor": "Red Bull Racing",
+      "display_name": "M. Verstappen",
+      "full_name": "Max Verstappen",
+      "is_constructor": false,
+      "player_id": "131",
+      "price": 27.6,
+      "race_points": -13.0,
+      "season_points": 258.0,
+      "selected_pct": 17.0,
+      "tla": "VER"
+    },
+    "18": {
+      "captain_pct": 1.0,
+      "constructor": "Alpine",
+      "display_name": "P. Gasly",
+      "full_name": "Pierre Gasly",
+      "is_constructor": false,
+      "player_id": "18",
+      "price": 13.0,
+      "race_points": 8.0,
+      "season_points": 143.0,
+      "selected_pct": 19.0,
+      "tla": "GAS"
+    },
+    "1982": {
+      "captain_pct": 5.0,
+      "constructor": "McLaren",
+      "display_name": "O. Piastri",
+      "full_name": "Oscar Piastri",
+      "is_constructor": false,
+      "player_id": "1982",
+      "price": 24.4,
+      "race_points": 21.0,
+      "season_points": 181.0,
+      "selected_pct": 9.0,
+      "tla": "PIA"
+    },
+    "210": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Williams",
+      "full_name": "Williams",
+      "is_constructor": true,
+      "player_id": "210",
+      "price": 13.0,
+      "race_points": 15.0,
+      "season_points": 147.0,
+      "selected_pct": 9.0,
+      "tla": "WIL"
+    },
+    "23": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Alpine",
+      "full_name": "Alpine",
+      "is_constructor": true,
+      "player_id": "23",
+      "price": 18.8,
+      "race_points": 19.0,
+      "season_points": 345.0,
+      "selected_pct": 7.0,
+      "tla": "ALP"
+    },
+    "24": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Aston Martin",
+      "full_name": "Aston Martin",
+      "is_constructor": true,
+      "player_id": "24",
+      "price": 5.7,
+      "race_points": 18.0,
+      "season_points": -40.0,
+      "selected_pct": 3.0,
+      "tla": "AST"
+    },
+    "25": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Ferrari",
+      "full_name": "Ferrari",
+      "is_constructor": true,
+      "player_id": "25",
+      "price": 26.6,
+      "race_points": 74.0,
+      "season_points": 840.0,
+      "selected_pct": 42.0,
+      "tla": "FER"
+    },
+    "26": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Haas F1 Team",
+      "full_name": "Haas F1 Team",
+      "is_constructor": true,
+      "player_id": "26",
+      "price": 12.0,
+      "race_points": -20.0,
+      "season_points": 196.0,
+      "selected_pct": 24.0,
+      "tla": "HAA"
+    },
+    "2636": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Racing Bulls",
+      "full_name": "Racing Bulls",
+      "is_constructor": true,
+      "player_id": "2636",
+      "price": 12.9,
+      "race_points": 22.0,
+      "season_points": 366.0,
+      "selected_pct": 33.0,
+      "tla": "RBS"
+    },
+    "2640": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Audi",
+      "full_name": "Audi",
+      "is_constructor": true,
+      "player_id": "2640",
+      "price": 6.8,
+      "race_points": 25.0,
+      "season_points": 131.0,
+      "selected_pct": 21.0,
+      "tla": "AUD"
+    },
+    "2641": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Cadillac",
+      "full_name": "Cadillac",
+      "is_constructor": true,
+      "player_id": "2641",
+      "price": 3.0,
+      "race_points": -9.0,
+      "season_points": -67.0,
+      "selected_pct": 8.0,
+      "tla": "CAD"
+    },
+    "27": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "McLaren",
+      "full_name": "McLaren",
+      "is_constructor": true,
+      "player_id": "27",
+      "price": 31.0,
+      "race_points": 80.0,
+      "season_points": 618.0,
+      "selected_pct": 11.0,
+      "tla": "MCL"
+    },
+    "28": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Mercedes",
+      "full_name": "Mercedes",
+      "is_constructor": true,
+      "player_id": "28",
+      "price": 32.6,
+      "race_points": 84.0,
+      "season_points": 966.0,
+      "selected_pct": 35.0,
+      "tla": "MER"
+    },
+    "29": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Red Bull Racing",
+      "full_name": "Red Bull Racing",
+      "is_constructor": true,
+      "player_id": "29",
+      "price": 30.9,
+      "race_points": 11.0,
+      "season_points": 513.0,
+      "selected_pct": 7.0,
+      "tla": "RBR"
+    }
+  },
+  "race_id": 12,
+  "season": 2026,
+  "teams": {
+    "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702": {
+      "bank": 0.5,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "110",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "27",
+          "slot": 6
+        }
+      ],
+      "points": 2742.0,
+      "race_id": 12,
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "transfers_left": -1,
+      "transfers_made": 4,
+      "value": 120.3
+    },
+    "5a9bc96e-1961-11f1-9075-aba426ce3dce-0-179187119": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "5a9bc96e-1961-11f1-9075-aba426ce3dce-0-179187119",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194": {
+      "bank": 0.5,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "110",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "27",
+          "slot": 6
+        }
+      ],
+      "points": 2742.0,
+      "race_id": 12,
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "transfers_left": -1,
+      "transfers_made": 4,
+      "value": 120.3
+    },
+    "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229": {
+      "bank": 0.5,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "110",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "27",
+          "slot": 6
+        }
+      ],
+      "points": 2742.0,
+      "race_id": 12,
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "transfers_left": -1,
+      "transfers_made": 4,
+      "value": 120.3
+    },
+    "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931": {
+      "bank": 0.5,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "110",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "27",
+          "slot": 6
+        }
+      ],
+      "points": 2742.0,
+      "race_id": 12,
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "transfers_left": -1,
+      "transfers_made": 4,
+      "value": 120.3
+    },
+    "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    }
+  }
+}
