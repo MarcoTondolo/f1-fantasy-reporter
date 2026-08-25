@@ -208,6 +208,22 @@ corrected in the chat.
 | `SMTP_USER` / `SMTP_PASS` | Gmail address and **app password** |
 | `SMTP_HOST` / `SMTP_PORT` | Optional, default to Gmail |
 
+### A caution on league size: `max_team_fetches`
+
+"Private" only means invite-only. A community league you've joined can carry
+thousands of members even though it isn't public, and `collect_league` fetches
+one member's team per HTTP request. Confirmed live on this tool's own first
+real run: one of the three leagues on this account reported `"memberCount":
+"10k+"`, and an uncapped fetch loop stalled a CI job for minutes against it
+before being caught and cancelled.
+
+`config.max_team_fetches` (default **15**) caps how many members, by rank,
+get their team pulled per capture. Standings still cover every member
+regardless — that's one cheap call, not one per member — only the per-member
+detail behind lockout, chips, ownership and winners/losers is capped. Raise it
+in `config.toml` for a league you've confirmed is small enough to want full
+coverage of; the `showcase` command also takes a one-off `--top N` override.
+
 When a run fails on authentication the workflow opens (or comments on) an issue
 with the refresh steps, rather than leaving a red X in the Actions tab — an
 expired cookie is a routine five-day event, not a crash.

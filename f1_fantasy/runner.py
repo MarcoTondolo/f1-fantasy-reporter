@@ -98,6 +98,7 @@ def run_action(
             race_id=race_id,
             phase=phase,
             season=config.season,
+            max_team_fetches=config.max_team_fetches,
         )
         written.append(store.write(snapshot))
         log.info("league %s: %s", league_id, access)

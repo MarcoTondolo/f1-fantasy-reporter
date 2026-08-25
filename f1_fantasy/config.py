@@ -51,6 +51,13 @@ class Config(Model):
     leagues: list[int] = Field(default_factory=list)
     #: The league whose reports get published; others are captured but quiet.
     primary_league: int | None = None
+    #: Cap on how many members (by rank) get their team fetched per league,
+    #: per capture. "Private" only means invite-only -- a heavily promoted
+    #: community league can carry thousands of members, and this is what
+    #: stops one of those from turning a capture into thousands of sequential
+    #: requests. Raise it for a league you've confirmed is small enough to
+    #: want full coverage of.
+    max_team_fetches: int = 15
     #: Where reports are emailed.
     email_to: str = ""
     #: Local timezone for rendering session times in reports.

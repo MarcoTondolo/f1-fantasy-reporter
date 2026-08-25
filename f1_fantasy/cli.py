@@ -229,7 +229,12 @@ def cmd_showcase(args: argparse.Namespace) -> int:
 
     for league_id in league_ids:
         snapshot, access = collect_league(
-            api, league_id=league_id, race_id=race_id, phase=Phase.LOCKED, season=config.season
+            api,
+            league_id=league_id,
+            race_id=race_id,
+            phase=Phase.LOCKED,
+            season=config.season,
+            max_team_fetches=args.top if args.top is not None else config.max_team_fetches,
         )
         store.write(snapshot)
         print(f"{snapshot.league_name} ({league_id}): {access}")
@@ -273,6 +278,7 @@ def cmd_capture(args: argparse.Namespace) -> int:
             race_id=race_id,
             phase=phase,
             season=config.season,
+            max_team_fetches=config.max_team_fetches,
         )
         path = store.write(snapshot)
         print(f"{snapshot.league_name}: {access} -> {path}")
@@ -441,6 +447,9 @@ def build_parser() -> argparse.ArgumentParser:
         "showcase", help="capture and render chips/ownership for every configured league"
     )
     showcase.add_argument("--race", type=int, help="race id (default: current)")
+    showcase.add_argument(
+        "--top", type=int, help="cap team fetches to the top N by rank (default: config.max_team_fetches)"
+    )
     showcase.set_defaults(func=cmd_showcase)
 
     demo = sub.add_parser("demo", help="render cards from synthetic data")
