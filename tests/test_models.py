@@ -298,6 +298,82 @@ def test_game_days_handles_an_empty_list_without_crashing():
     assert parse_game_days([]) == ({}, [])
 
 
+# Captured live 2026-08-25 from
+# /services/user/opponentteam/opponentgamedayget/1/{guid}/{team_no} -- this is
+# Data.Value directly, already unwrapped, as client.get() would hand it to the
+# parser. Note the bare-dict envelope (no list, no "data"/"Value" key) and
+# every chip key CamelCased -- both differ from RAW_GAME_DAYS above, which is
+# the account's *own* gameday shape.
+RAW_OPPONENT_GAMEDAY = {
+    "ftMdid": 1,
+    "ftGdid": 1,
+    "CuGdid": 30,
+    "mdDetails": {
+        "1": {"mds": 3, "phId": 1, "pts": 169},
+        "2": {"mds": 3, "phId": 1, "pts": 511},
+        "9": {"mds": 3, "phId": 1, "pts": 407},
+        "12": {"mds": 3, "phId": 1, "pts": 178},
+    },
+    "teamCount": 3,
+    "isWildcardtaken": 0,
+    "wildCardtakengd": 0,
+    "isLimitlesstaken": 1,
+    "limitLesstakengd": 2,
+    "isFinalfixtaken": 0,
+    "finalFixtakengd": 0,
+    "isExtradrstaken": 6,
+    "extraDrstakengd": 9,
+    "isNonigativetaken": 5,
+    "noNigativetakengd": 6,
+    "isAutopilottaken": 0,
+    "isAutopilottakengd": 0,
+}
+
+
+def test_opponent_gameday_parses_the_bare_dict_envelope():
+    """Confirmed live 2026-08-25: opponentgamedayget's Data.Value is the
+    entry directly -- no list, no "data"/"Value" wrapper, unlike own gamedays.
+    Without this case, the parser silently returned ({}, []) for every
+    opponent instead of crashing, which is worse: it looks like "no data"
+    rather than "parser doesn't handle this shape yet".
+    """
+    points, _ = parse_game_days(RAW_OPPONENT_GAMEDAY)
+
+    assert points == {
+        1: pytest.approx(169.0),
+        2: pytest.approx(511.0),
+        9: pytest.approx(407.0),
+        12: pytest.approx(178.0),
+    }
+
+
+def test_opponent_gameday_chip_keys_are_camelcased_differently_from_own():
+    """Every chip key here is CamelCased where getusergamedaysv1 and getteam
+    use all lowercase -- e.g. "isWildcardtaken" vs "iswildcardtaken",
+    "extraDrstakengd" vs "extradrstakengd".
+    """
+    _, chips = parse_game_days(RAW_OPPONENT_GAMEDAY)
+    by_chip = {c.chip: c for c in chips}
+
+    assert by_chip[Chip.LIMITLESS].used and by_chip[Chip.LIMITLESS].race_id == 2
+    assert by_chip[Chip.EXTRA_DRS].used and by_chip[Chip.EXTRA_DRS].race_id == 9
+    assert by_chip[Chip.NO_NEGATIVE].used and by_chip[Chip.NO_NEGATIVE].race_id == 6
+    assert not by_chip[Chip.WILDCARD].used
+    assert not by_chip[Chip.AUTOPILOT].used
+    assert not by_chip[Chip.FINAL_FIX].used
+
+
+def test_opponent_gameday_flag_values_are_not_strictly_boolean_but_still_truthy():
+    """isExtradrstaken and isNonigativetaken arrive as 6 and 5, not 0/1 --
+    still correctly read as "used" via as_bool's nonzero-int handling.
+    """
+    _, chips = parse_game_days(RAW_OPPONENT_GAMEDAY)
+    by_chip = {c.chip: c for c in chips}
+
+    assert by_chip[Chip.EXTRA_DRS].used is True
+    assert by_chip[Chip.NO_NEGATIVE].used is True
+
+
 # -- envelope handling -----------------------------------------------------
 
 

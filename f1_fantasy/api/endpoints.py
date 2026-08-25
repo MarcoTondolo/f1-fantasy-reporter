@@ -104,6 +104,24 @@ class FantasyApi:
         payload = self.client.get(f"/services/user/gameplay/{target}/getusergamedaysv1/1")
         return parse_game_days(payload)
 
+    def opponent_game_days(
+        self, guid: str, team_no: int
+    ) -> tuple[dict[int, float], list[ChipUsage]]:
+        """Per-race points and season chip state for another league member.
+
+        Confirmed live 2026-08-25, via a DevTools capture on the site itself --
+        ``getteam`` cannot read another member (it silently echoes the caller's
+        own team regardless of guid), but this dedicated opponent endpoint
+        genuinely does. It does not carry picks/roster, only points and chips;
+        a further endpoint for the opponent's actual driver/constructor
+        selections has not yet been found. Race id is not part of this URL --
+        unlike ``getteam``, it always reflects the account's current gameday.
+        """
+        payload = self.client.get(
+            f"/services/user/opponentteam/opponentgamedayget/1/{guid}/{team_no}"
+        )
+        return parse_game_days(payload)
+
     def current_race_id(self) -> int:
         """Highest race id the authenticated user has a scoring record for."""
         points, _ = self.game_days()

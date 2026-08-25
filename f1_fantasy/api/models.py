@@ -41,21 +41,35 @@ CHIP_LABELS: dict[Chip, str] = {
     Chip.NO_NEGATIVE: "No Negative",
 }
 
-# (flag keys, race-id keys) per chip. Multiple spellings because the team and
-# game-days endpoints disagree -- notably autopilot's race id.
+# (flag keys, race-id keys) per chip. Multiple spellings because every
+# endpoint disagrees -- notably autopilot's race id, and the opponent-gameday
+# endpoint (confirmed live 2026-08-25) CamelCases every single one of these
+# where the own-team and own-gameday endpoints use all lowercase.
 CHIP_KEYS: dict[Chip, tuple[tuple[str, ...], tuple[str, ...]]] = {
     Chip.WILDCARD: (
-        ("iswildcardtaken",),
-        ("wildcardtakengd", "is_wildcard_taken_gd_id"),
+        ("iswildcardtaken", "isWildcardtaken"),
+        ("wildcardtakengd", "is_wildcard_taken_gd_id", "wildCardtakengd"),
     ),
-    Chip.LIMITLESS: (("islimitlesstaken",), ("limitlesstakengd",)),
+    Chip.LIMITLESS: (
+        ("islimitlesstaken", "isLimitlesstaken"),
+        ("limitlesstakengd", "limitLesstakengd"),
+    ),
     Chip.AUTOPILOT: (
-        ("isautopilottaken",),
-        ("autopilottakengd", "isautopilottakengd"),
+        ("isautopilottaken", "isAutopilottaken"),
+        ("autopilottakengd", "isautopilottakengd", "isAutopilottakengd"),
     ),
-    Chip.EXTRA_DRS: (("isextradrstaken",), ("extradrstakengd",)),
-    Chip.FINAL_FIX: (("isfinalfixtaken",), ("finalfixtakengd",)),
-    Chip.NO_NEGATIVE: (("isnonigativetaken",), ("nonigativetakengd",)),
+    Chip.EXTRA_DRS: (
+        ("isextradrstaken", "isExtradrstaken"),
+        ("extradrstakengd", "extraDrstakengd"),
+    ),
+    Chip.FINAL_FIX: (
+        ("isfinalfixtaken", "isFinalfixtaken"),
+        ("finalfixtakengd", "finalFixtakengd"),
+    ),
+    Chip.NO_NEGATIVE: (
+        ("isnonigativetaken", "isNonigativetaken"),
+        ("nonigativetakengd", "noNigativetakengd"),
+    ),
 }
 
 
@@ -421,27 +435,40 @@ def parse_players(payload: Any) -> dict[str, Player]:
 
 
 def parse_game_days(payload: Any) -> tuple[dict[int, float], list[ChipUsage]]:
-    """Parse ``getusergamedaysv1`` into per-race points and season chip state.
+    """Parse a "gameday" payload into per-race points and season chip state.
 
-    This is the one endpoint that backfills a member's scoring history, since
-    ``mddetails`` is keyed by race id for every race played so far.
+    This is the one shape of endpoint that backfills scoring history, since
+    ``mddetails`` is keyed by race id for every race played so far -- and it
+    is shared, with real differences, by two confirmed-live endpoints:
 
-    Confirmed against the live API: ``Data.Value`` here is a bare JSON array,
-    not wrapped in a further "data" key -- unlike most other endpoints, whose
-    unwrapped Value is a dict. Handling both shapes rather than assuming one,
-    since this is undocumented and only checked by hand.
+    - ``getusergamedaysv1`` (own account): ``Data.Value`` is a bare JSON
+      array of one entry, not wrapped in a further "data" key.
+    - ``opponentteam/opponentgamedayget`` (another member): ``Data.Value`` is
+      that one entry directly, as a bare dict with no list or "data"/"Value"
+      wrapper at all -- and every chip key is CamelCased where the other
+      endpoints use all lowercase (handled in CHIP_KEYS, not here).
+
+    Handling all of these rather than assuming one, since this is
+    undocumented and only checked by hand.
     """
+    head: Mapping[str, Any] = {}
     if isinstance(payload, Mapping):
-        entries = payload.get("data") or payload.get("Value") or []
-    else:
-        entries = payload or []
-    if isinstance(entries, Mapping):
-        entries = [entries]
-    if not entries:
+        entries = payload.get("data") or payload.get("Value")
+        if isinstance(entries, list) and entries and isinstance(entries[0], Mapping):
+            head = entries[0]
+        elif isinstance(entries, Mapping):
+            head = entries
+        elif "data" not in payload and "Value" not in payload:
+            # No wrapper key at all -- the opponent shape, where payload
+            # itself already is the single entry.
+            head = payload
+    elif isinstance(payload, list) and payload and isinstance(payload[0], Mapping):
+        head = payload[0]
+
+    if not head:
         return {}, []
 
-    head = entries[0] if isinstance(entries[0], Mapping) else {}
-    details = head.get("mddetails") or {}
+    details = first(head, "mddetails", "mdDetails") or {}
 
     points: dict[int, float] = {}
     for race_key, detail in details.items():
