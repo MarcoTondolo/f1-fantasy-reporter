@@ -1,0 +1,211 @@
+{
+  "season": 2026,
+  "rounds_requested": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "rounds_used": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "skipped": [],
+  "track_summaries": [
+    {
+      "round": 1,
+      "name": "Australian Grand Prix",
+      "corner_direction_balance": -0.4320704116313311,
+      "pct_slow": 16.373756950750835,
+      "pct_medium": 2.989166220744665,
+      "pct_fast": 9.903372706187398,
+      "pct_straight": 70.73370412231709,
+      "n_corners": 14
+    },
+    {
+      "round": 2,
+      "name": "Chinese Grand Prix",
+      "corner_direction_balance": -0.1940569463798862,
+      "pct_slow": 20.09007497303062,
+      "pct_medium": 6.16812009663497,
+      "pct_fast": 0.0,
+      "pct_straight": 73.74180493033441,
+      "n_corners": 16
+    },
+    {
+      "round": 3,
+      "name": "Japanese Grand Prix",
+      "corner_direction_balance": -0.03179789691601064,
+      "pct_slow": 6.005454769148665,
+      "pct_medium": 17.820693692331798,
+      "pct_fast": 2.254055581552089,
+      "pct_straight": 73.91979595696745,
+      "n_corners": 18
+    },
+    {
+      "round": 4,
+      "name": "Miami Grand Prix",
+      "corner_direction_balance": 0.3852244655282142,
+      "pct_slow": 25.42885372888593,
+      "pct_medium": 2.307283548852129,
+      "pct_fast": 4.6779351746460565,
+      "pct_straight": 67.58592754761588,
+      "n_corners": 19
+    },
+    {
+      "round": 5,
+      "name": "Canadian Grand Prix",
+      "corner_direction_balance": -0.298845835453706,
+      "pct_slow": 28.618325502221243,
+      "pct_medium": 0.0,
+      "pct_fast": 0.0,
+      "pct_straight": 71.38167449777876,
+      "n_corners": 14
+    },
+    {
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "corner_direction_balance": -0.026215782729977304,
+      "pct_slow": 37.4022840797243,
+      "pct_medium": 10.55147585443022,
+      "pct_fast": 0.0,
+      "pct_straight": 52.046240065845474,
+      "n_corners": 19
+    },
+    {
+      "round": 7,
+      "name": "Barcelona Grand Prix",
+      "corner_direction_balance": -0.15385231208463046,
+      "pct_slow": 12.341765938367681,
+      "pct_medium": 13.058291818760265,
+      "pct_fast": 6.857707835459867,
+      "pct_straight": 67.7422344074122,
+      "n_corners": 14
+    },
+    {
+      "round": 8,
+      "name": "Austrian Grand Prix",
+      "corner_direction_balance": -0.45030637795931283,
+      "pct_slow": 14.43695705612606,
+      "pct_medium": 12.319650481311253,
+      "pct_fast": 6.1405726446935,
+      "pct_straight": 67.10281981786919,
+      "n_corners": 10
+    },
+    {
+      "round": 9,
+      "name": "British Grand Prix",
+      "corner_direction_balance": -0.13459822579817518,
+      "pct_slow": 12.679031243486822,
+      "pct_medium": 3.827616774163927,
+      "pct_fast": 7.284150743719245,
+      "pct_straight": 76.20920123862999,
+      "n_corners": 18
+    },
+    {
+      "round": 10,
+      "name": "Belgian Grand Prix",
+      "corner_direction_balance": -0.3663693944954171,
+      "pct_slow": 8.658356578617422,
+      "pct_medium": 10.672737994867015,
+      "pct_fast": 0.0,
+      "pct_straight": 80.66890542651556,
+      "n_corners": 19
+    },
+    {
+      "round": 11,
+      "name": "Hungarian Grand Prix",
+      "corner_direction_balance": -0.24082446746332428,
+      "pct_slow": 28.315481946501837,
+      "pct_medium": 10.973931689894485,
+      "pct_fast": 7.517995621169465,
+      "pct_straight": 53.192590742434206,
+      "n_corners": 16
+    },
+    {
+      "round": 12,
+      "name": "Dutch Grand Prix",
+      "corner_direction_balance": -0.4529435050216419,
+      "pct_slow": 23.891206528985006,
+      "pct_medium": 7.976531435359982,
+      "pct_fast": 7.807572912222844,
+      "pct_straight": 60.32468912343217,
+      "n_corners": 14
+    }
+  ],
+  "constructor_direction_sensitivity": {
+    "Williams": {
+      "correlation": -0.07606557359377333,
+      "n": 20,
+      "mean_degradation": -0.31322064272845307
+    },
+    "Mercedes": {
+      "correlation": 0.16572648812213603,
+      "n": 19,
+      "mean_degradation": -0.06375434040151474
+    },
+    "Haas F1 Team": {
+      "correlation": 0.09303622663711396,
+      "n": 17,
+      "mean_degradation": 0.2463452778124024
+    },
+    "Audi": {
+      "correlation": 0.0023196036027211576,
+      "n": 19,
+      "mean_degradation": 0.11231931074748734
+    },
+    "Cadillac": {
+      "correlation": 0.00980828319496296,
+      "n": 19,
+      "mean_degradation": 0.47022257015632063
+    },
+    "Alpine": {
+      "correlation": -0.3326302884737111,
+      "n": 20,
+      "mean_degradation": -0.1037823796202173
+    },
+    "Red Bull Racing": {
+      "correlation": -0.2012494450665064,
+      "n": 20,
+      "mean_degradation": 0.52857282451685
+    },
+    "Ferrari": {
+      "correlation": 0.044889900466006716,
+      "n": 19,
+      "mean_degradation": 0.5669283369973347
+    },
+    "Racing Bulls": {
+      "correlation": -0.0004158121461274379,
+      "n": 18,
+      "mean_degradation": 0.3931554088949605
+    },
+    "McLaren": {
+      "correlation": 0.033009775679387114,
+      "n": 20,
+      "mean_degradation": -0.21418088949534003
+    },
+    "Aston Martin": {
+      "correlation": 0.18215195211415827,
+      "n": 16,
+      "mean_degradation": 1.5630225437109582
+    }
+  }
+}

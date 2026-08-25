@@ -388,6 +388,73 @@ def cmd_pace_backtest(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_track_backtest(args: argparse.Namespace) -> int:
+    """Backfill the track-segment pace pipeline and evaluate cross-track prediction.
+
+    Splits each track into corner (slow/medium/fast) and straight segments
+    from qualifying telemetry, ranks drivers by segment-class strength from
+    every *other* round, and scores that prediction against the held-out
+    round's real results -- i.e. whether one track's segment performance
+    predicts another's. Much slower than pace-backtest: pulls full telemetry
+    (not just lap summaries) for every driver, every round.
+    """
+    import json
+
+    from f1_fantasy.pace.track_backtest import backtest_track_model
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"backfilling track segments for {config.season} rounds {rounds[0]}-{rounds[-1]} (slow)...")
+    result = backtest_track_model(config.season, rounds)
+
+    out_path = Path(args.out or f"data/pace/track_backtest_{config.season}_r{rounds[0]}-{rounds[-1]}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    print(f"rounds used: {result['rounds_used']}")
+    if result["skipped"]:
+        print(f"skipped: {result['skipped']}")
+    print("summary:", result["summary"])
+    print(f"written {out_path}")
+    return 0
+
+
+def cmd_tyre_asymmetry(args: argparse.Namespace) -> int:
+    """Correlate each constructor's degradation against track corner-direction balance.
+
+    A directional proxy, not a wear measurement -- FastF1 carries no tyre
+    sensor data, so this cannot say *which* corner (front-right, ...) is
+    limiting, only whether a constructor's degradation tracks how much a
+    track turns left vs right overall. Reuses the same qualifying telemetry
+    as track-backtest, so run that first if you want the fetch to be cached.
+    """
+    import json
+
+    from f1_fantasy.pace.tyre_asymmetry import run_backfill
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"correlating degradation vs corner direction for {config.season} rounds {rounds[0]}-{rounds[-1]}...")
+    result = run_backfill(config.season, rounds)
+
+    out_path = Path(args.out or f"data/pace/tyre_asymmetry_{config.season}_r{rounds[0]}-{rounds[-1]}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    print(f"rounds used: {result['rounds_used']}")
+    if result["skipped"]:
+        print(f"skipped: {result['skipped']}")
+    ranked = sorted(
+        result["constructor_direction_sensitivity"].items(),
+        key=lambda kv: -abs(kv[1]["correlation"]) if kv[1]["correlation"] is not None else 1,
+    )
+    for team, stats in ranked:
+        corr = stats["correlation"]
+        print(f"  {team:<16} corr={corr:+.3f} n={stats['n']}" if corr is not None else f"  {team:<16} n/a n={stats['n']}")
+    print(f"written {out_path}")
+    return 0
+
+
 # --------------------------------------------------------------------------
 # capture
 # --------------------------------------------------------------------------
@@ -587,6 +654,22 @@ def build_parser() -> argparse.ArgumentParser:
     pace_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     pace_backtest.add_argument("--out", help="output JSON path (default: data/pace/backtest_...)")
     pace_backtest.set_defaults(func=cmd_pace_backtest)
+
+    track_backtest = sub.add_parser(
+        "track-backtest", help="backfill per-segment track pace and evaluate cross-track prediction"
+    )
+    track_backtest.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    track_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    track_backtest.add_argument("--out", help="output JSON path (default: data/pace/track_backtest_...)")
+    track_backtest.set_defaults(func=cmd_track_backtest)
+
+    tyre_asymmetry = sub.add_parser(
+        "tyre-asymmetry", help="correlate constructor degradation against track corner-direction balance"
+    )
+    tyre_asymmetry.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    tyre_asymmetry.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    tyre_asymmetry.add_argument("--out", help="output JSON path (default: data/pace/tyre_asymmetry_...)")
+    tyre_asymmetry.set_defaults(func=cmd_tyre_asymmetry)
 
     capture = sub.add_parser("capture", help="write a snapshot of each league")
     capture.add_argument(

@@ -1,0 +1,206 @@
+{
+  "season": 2026,
+  "rounds_requested": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "rounds_used": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "skipped": [],
+  "per_round": [
+    {
+      "round": 1,
+      "event_name": "Australian Grand Prix",
+      "target": "quali",
+      "n_drivers": 19,
+      "spearman": 0.6035087719298246
+    },
+    {
+      "round": 1,
+      "event_name": "Australian Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.5143986448334276
+    },
+    {
+      "round": 2,
+      "event_name": "Chinese Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.5674760022586111
+    },
+    {
+      "round": 2,
+      "event_name": "Chinese Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.1609260304912479
+    },
+    {
+      "round": 3,
+      "event_name": "Japanese Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.6081309994353473
+    },
+    {
+      "round": 3,
+      "event_name": "Japanese Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.6058723884810843
+    },
+    {
+      "round": 4,
+      "event_name": "Miami Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.6442687747035574
+    },
+    {
+      "round": 4,
+      "event_name": "Miami Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.7142857142857144
+    },
+    {
+      "round": 5,
+      "event_name": "Canadian Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.6431394692264258
+    },
+    {
+      "round": 5,
+      "event_name": "Canadian Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": -0.02766798418972332
+    },
+    {
+      "round": 6,
+      "event_name": "Monaco Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.681535855448899
+    },
+    {
+      "round": 6,
+      "event_name": "Monaco Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.25465838509316774
+    },
+    {
+      "round": 7,
+      "event_name": "Barcelona Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.7244494635798985
+    },
+    {
+      "round": 7,
+      "event_name": "Barcelona Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.647656691134952
+    },
+    {
+      "round": 8,
+      "event_name": "Austrian Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.6804065499717675
+    },
+    {
+      "round": 8,
+      "event_name": "Austrian Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.6566911349520046
+    },
+    {
+      "round": 9,
+      "event_name": "British Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.5008469791078487
+    },
+    {
+      "round": 9,
+      "event_name": "British Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.36645962732919257
+    },
+    {
+      "round": 10,
+      "event_name": "Belgian Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.52343308865048
+    },
+    {
+      "round": 10,
+      "event_name": "Belgian Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.25578769057029926
+    },
+    {
+      "round": 11,
+      "event_name": "Hungarian Grand Prix",
+      "target": "quali",
+      "n_drivers": 22,
+      "spearman": 0.811405985319029
+    },
+    {
+      "round": 11,
+      "event_name": "Hungarian Grand Prix",
+      "target": "race",
+      "n_drivers": 22,
+      "spearman": 0.479390175042349
+    },
+    {
+      "round": 12,
+      "event_name": "Dutch Grand Prix",
+      "target": "quali",
+      "n_drivers": 21,
+      "spearman": 0.8441558441558441
+    },
+    {
+      "round": 12,
+      "event_name": "Dutch Grand Prix",
+      "target": "race",
+      "n_drivers": 21,
+      "spearman": 0.5467532467532468
+    }
+  ],
+  "summary": {
+    "mean_quali_spearman": 0.6527298153156278,
+    "mean_race_spearman": 0.4312676453980802
+  }
+}
