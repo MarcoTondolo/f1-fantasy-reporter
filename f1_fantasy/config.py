@@ -70,6 +70,7 @@ class Config(Model):
             "recap": True,
             "chips": True,
             "ownership": True,
+            "budget": True,
             "winners_losers": True,
         }
     )

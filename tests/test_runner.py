@@ -43,7 +43,7 @@ def test_lockout_renders_its_companion_cards_when_enabled(tmp_path):
         publisher=publisher,
     )
 
-    assert {report.kind for report in publisher.published} == {"lockout", "chips", "ownership"}
+    assert {report.kind for report in publisher.published} == {"lockout", "chips", "ownership", "budget"}
     assert written and all(path.exists() for path in written)
 
 
@@ -51,7 +51,7 @@ def test_companion_cards_are_skipped_when_toggled_off(tmp_path):
     store = SnapshotStore(tmp_path / "snapshots")
     config = Config(
         output_dir=tmp_path / "out",
-        reports={"lockout": True, "chips": False, "ownership": False},
+        reports={"lockout": True, "chips": False, "ownership": False, "budget": False},
     )
     publisher = NullPublisher()
     snapshot = make_snapshot(11, {"a": make_team("a", 11, ["1", "2", "101"])})

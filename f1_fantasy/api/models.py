@@ -133,6 +133,16 @@ class Team(Model):
         used = {c.chip for c in self.chips if c.used}
         return [chip for chip in Chip if chip not in used]
 
+    @property
+    def budget_cap(self) -> float | None:
+        """Total budget cap: the value of picked drivers/constructors plus the
+        unspent Cost Cap balance -- what the site's own team page labels
+        "Cost Cap" is ``bank`` (``teambal``/``team_info.teamBal``), so this is
+        the site's total-spend figure, not a value this tool invents."""
+        if self.value is None or self.bank is None:
+            return None
+        return self.value + self.bank
+
 
 class Player(Model):
     """A driver or constructor, priced and scored for one race."""

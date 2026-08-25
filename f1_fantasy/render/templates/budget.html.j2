@@ -1,0 +1,56 @@
+{% extends "base.html.j2" %}
+{# Budget cap: total spend per team -- picked assets' value plus unspent Cost
+   Cap, the same total the site's own team page shows. Ranked highest first,
+   since who's carrying the most spend (or squeezed tightest) is the point. #}
+
+{% block content %}
+
+{% if highest or lowest %}
+<section>
+  <div class="tiles">
+    {% if highest %}
+    <div class="tile good">
+      <div class="tile-label">Biggest budget</div>
+      <div class="tile-value">{{ highest.budget_cap_label }}</div>
+      <div class="tile-name">{{ highest.name }}</div>
+      <div class="tile-note">{{ highest.team_name }}</div>
+    </div>
+    {% endif %}
+    {% if lowest %}
+    <div class="tile bad">
+      <div class="tile-label">Tightest squeeze</div>
+      <div class="tile-value">{{ lowest.budget_cap_label }}</div>
+      <div class="tile-name">{{ lowest.name }}</div>
+      <div class="tile-note">{{ lowest.team_name }}</div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+<section>
+  <h2 class="section-title">Total budget cap</h2>
+  <div class="standings">
+    {% for row in rows %}
+    <div class="budget-row">
+      <div class="rank">{{ loop.index }}</div>
+      <div class="who">
+        <div class="who-name">{{ row.name }}</div>
+        <div class="who-team">{{ row.team_name }}</div>
+      </div>
+      <div class="bar-cell">
+        <div class="bar-track">
+          <div class="bar-fill" style="width: {{ row.bar_pct }}%"></div>
+        </div>
+      </div>
+      <div class="total">{{ row.budget_cap_label }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

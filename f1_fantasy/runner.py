@@ -14,6 +14,7 @@ from f1_fantasy.config import Config, Credentials
 from f1_fantasy.publish.base import NullPublisher, Publisher, Report
 from f1_fantasy.publish.email import EmailPublisher
 from f1_fantasy.render import render_card
+from f1_fantasy.report import budget as budget_report
 from f1_fantasy.report import chips as chips_report
 from f1_fantasy.report import lockout as lockout_report
 from f1_fantasy.report import ownership as ownership_report
@@ -47,6 +48,7 @@ COMPANION_BUILDERS: dict[Action, list[tuple[str, object, object, str]]] = {
     Action.LOCKOUT: [
         ("chips", chips_report.build_chips, chips_report.caption, "chips.html.j2"),
         ("ownership", ownership_report.build_ownership, ownership_report.caption, "ownership.html.j2"),
+        ("budget", budget_report.build_budget, budget_report.caption, "budget.html.j2"),
     ],
     Action.RECAP: [
         (

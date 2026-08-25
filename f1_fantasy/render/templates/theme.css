@@ -438,6 +438,19 @@ body {
 .chip-empty { font-size: 17px; color: var(--ink-muted); font-style: italic; }
 .chip-holdouts { font-size: 15px; color: var(--ink-muted); margin-top: 4px; }
 
+/* -- budget cap rows ------------------------------------------------------ */
+
+.budget-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 220px 108px;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 9px 18px;
+  min-height: 50px;
+}
+
 /* -- ownership rows ------------------------------------------------------ */
 
 .own-row {

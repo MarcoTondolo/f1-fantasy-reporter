@@ -287,6 +287,19 @@ def test_opponent_team_cost_cap_is_the_existing_bank_field():
     assert team.bank == pytest.approx(1.3)
 
 
+def test_budget_cap_is_asset_value_plus_cost_cap():
+    (team,) = parse_teams(RAW_OPPONENT_TEAM, guid="opp-guid")
+
+    assert team.budget_cap == pytest.approx(113.3 + 1.3)
+
+
+def test_budget_cap_is_none_when_either_half_is_missing():
+    (team,) = parse_teams(RAW_TEAM, guid="guid-a")
+    team.bank = None
+
+    assert team.budget_cap is None
+
+
 def test_captaincy_falls_back_to_top_level_id_when_flags_are_absent():
     raw = {
         "mdid": 15,

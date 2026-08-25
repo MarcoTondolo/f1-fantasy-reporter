@@ -244,12 +244,13 @@ def cmd_showcase(args: argparse.Namespace) -> int:
     A one-off utility for seeing real cards before committing to a
     ``primary_league``: the automated `tick` flow only ever renders a card for
     one league per run, which isn't useful when you haven't decided which
-    league that should be yet. Only renders chips and ownership -- the two
-    card types that are genuinely rich on a first-ever capture, since they
-    read the API's cumulative season state rather than diffing against a
-    previous snapshot this tool hasn't captured yet.
+    league that should be yet. Only renders chips, ownership and budget --
+    the card types that are genuinely rich on a first-ever capture, since
+    they read the API's cumulative season state rather than diffing against
+    a previous snapshot this tool hasn't captured yet.
     """
     from f1_fantasy.render import render_card
+    from f1_fantasy.report import budget as budget_report
     from f1_fantasy.report import chips as chips_report
     from f1_fantasy.report import ownership as ownership_report
 
@@ -280,6 +281,7 @@ def cmd_showcase(args: argparse.Namespace) -> int:
         for name, build, template in (
             ("chips", chips_report.build_chips, "chips.html.j2"),
             ("ownership", ownership_report.build_ownership, "ownership.html.j2"),
+            ("budget", budget_report.build_budget, "budget.html.j2"),
         ):
             context = build(snapshot, race_label=f"Round {race_id}")
             path = render_card(template, context, out_dir / f"{name}.png")
@@ -420,6 +422,7 @@ def cmd_demo(args: argparse.Namespace) -> int:
     """Render every card from synthetic data, for judging layout by eye."""
     from f1_fantasy.demo import demo_snapshots
     from f1_fantasy.render import render_card
+    from f1_fantasy.report import budget as budget_report
     from f1_fantasy.report import chips as chips_report
     from f1_fantasy.report import lockout as lockout_report
     from f1_fantasy.report import ownership as ownership_report
@@ -435,6 +438,7 @@ def cmd_demo(args: argparse.Namespace) -> int:
     lockout_context = lockout_report.build_lockout(current, previous, race_label=label, you_guid="guid-01")
     chips_context = chips_report.build_chips(current, race_label=label)
     ownership_context = ownership_report.build_ownership(current, race_label=label)
+    budget_context = budget_report.build_budget(current, race_label=label)
     winners_context = winners_losers_report.build_winners_losers(current, previous, race_label=label)
 
     cards = [
@@ -442,6 +446,7 @@ def cmd_demo(args: argparse.Namespace) -> int:
         ("lockout", "lockout.html.j2", lockout_context, lockout_report.caption(lockout_context)),
         ("chips", "chips.html.j2", chips_context, chips_report.caption(chips_context)),
         ("ownership", "ownership.html.j2", ownership_context, ownership_report.caption(ownership_context)),
+        ("budget", "budget.html.j2", budget_context, budget_report.caption(budget_context)),
         (
             "winners_losers",
             "winners_losers.html.j2",
