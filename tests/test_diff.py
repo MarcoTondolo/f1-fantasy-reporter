@@ -10,6 +10,7 @@ import pytest
 from f1_fantasy.api.models import Chip, Phase
 from f1_fantasy.store.diff import (
     chip_activations,
+    chip_status,
     chips_remaining,
     diff_standings,
     diff_teams,
@@ -258,3 +259,47 @@ def test_unknown_player_id_is_surfaced_rather_than_dropped():
     (change,) = diff_teams(previous, current)
 
     assert [p.name for p in change.players_in] == ["999"]
+
+
+def test_chip_status_is_season_wide_from_a_single_snapshot():
+    """No comparison needed -- the isXtaken flags are already cumulative."""
+    current = make_snapshot(
+        11,
+        {
+            "a": make_team("a", 11, BASE, chips={Chip.WILDCARD: 9}),
+            "b": make_team("b", 11, BASE, chips={Chip.WILDCARD: 11}),
+            "c": make_team("c", 11, BASE),
+        },
+    )
+
+    rows = {row.chip: row for row in chip_status(current)}
+    wildcard = rows[Chip.WILDCARD]
+
+    assert {u.member_name for u in wildcard.used} == {"member-a", "member-b"}
+    assert wildcard.available == ["member-c"]
+    # Race played on is preserved even though it's an earlier race than current.
+    assert next(u.race_id for u in wildcard.used if u.member_name == "member-a") == 9
+
+
+def test_chip_status_orders_used_by_the_race_it_was_played():
+    current = make_snapshot(
+        11,
+        {
+            "a": make_team("a", 11, BASE, chips={Chip.LIMITLESS: 10}),
+            "b": make_team("b", 11, BASE, chips={Chip.LIMITLESS: 3}),
+        },
+    )
+
+    limitless = next(row for row in chip_status(current) if row.chip == Chip.LIMITLESS)
+
+    assert [u.member_name for u in limitless.used] == ["member-b", "member-a"]
+
+
+def test_chip_status_covers_every_chip_even_with_none_played():
+    current = make_snapshot(11, {"a": make_team("a", 11, BASE)})
+
+    rows = chip_status(current)
+
+    assert {row.chip for row in rows} == set(Chip)
+    assert all(row.used == [] for row in rows)
+    assert all(row.available == ["member-a"] for row in rows)

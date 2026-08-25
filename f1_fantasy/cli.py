@@ -327,32 +327,27 @@ def cmd_demo(args: argparse.Namespace) -> int:
     """Render every card from synthetic data, for judging layout by eye."""
     from f1_fantasy.demo import demo_snapshots
     from f1_fantasy.render import render_card
+    from f1_fantasy.report import chips as chips_report
     from f1_fantasy.report import lockout as lockout_report
+    from f1_fantasy.report import ownership as ownership_report
     from f1_fantasy.report import recap as recap_report
 
     config = Config.load(args.config)
     out_dir = Path(args.out or config.output_dir / "demo")
     previous, current = demo_snapshots()
+    label = "Dutch Grand Prix"
 
-    context = recap_report.build_recap(
-        current,
-        previous,
-        race_label="Dutch Grand Prix",
-        you_guid="guid-01",
-    )
+    recap_context = recap_report.build_recap(current, previous, race_label=label, you_guid="guid-01")
+    lockout_context = lockout_report.build_lockout(current, previous, race_label=label, you_guid="guid-01")
+    chips_context = chips_report.build_chips(current, race_label=label)
+    ownership_context = ownership_report.build_ownership(current, race_label=label)
+
     cards = [
-        ("recap", "recap.html.j2", context, recap_report.caption(context)),
+        ("recap", "recap.html.j2", recap_context, recap_report.caption(recap_context)),
+        ("lockout", "lockout.html.j2", lockout_context, lockout_report.caption(lockout_context)),
+        ("chips", "chips.html.j2", chips_context, chips_report.caption(chips_context)),
+        ("ownership", "ownership.html.j2", ownership_context, ownership_report.caption(ownership_context)),
     ]
-
-    lockout_context = lockout_report.build_lockout(
-        current,
-        previous,
-        race_label="Dutch Grand Prix",
-        you_guid="guid-01",
-    )
-    cards.append(
-        ("lockout", "lockout.html.j2", lockout_context, lockout_report.caption(lockout_context))
-    )
 
     for name, template, ctx, text in cards:
         png = render_card(template, ctx, out_dir / f"{name}.png")

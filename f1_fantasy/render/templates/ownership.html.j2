@@ -1,0 +1,52 @@
+{% extends "base.html.j2" %}
+{# Ownership: most-picked drivers/constructors, and the differentials that
+   actually separate a private league. #}
+
+{% macro own_row(row) %}
+<div class="own-row">
+  <span class="dot" style="background: {{ row.color }}"></span>
+  <span class="own-name">{{ row.name }}</span>
+  <div class="bar-cell">
+    <div class="bar-track">
+      <div class="bar-fill" style="width: {{ row.pct }}%"></div>
+    </div>
+    <div class="bar-value">{{ row.owners }}</div>
+  </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+
+<section>
+  <h2 class="section-title">Most owned drivers</h2>
+  <div class="standings">
+    {% for row in top_drivers %}{{ own_row(row) }}{% endfor %}
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">Constructors</h2>
+  <div class="standings">
+    {% for row in constructors %}{{ own_row(row) }}{% endfor %}
+  </div>
+</section>
+
+{% if differentials %}
+<section>
+  <h2 class="section-title">Differentials &middot; owned by exactly one team</h2>
+  <div class="badges">
+    {% for row in differentials %}
+    <span class="pill">
+      <span class="chip-dot" style="background: {{ row.color }}"></span>
+      {{ row.name }} — {{ row.owner_names[0] }}
+    </span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

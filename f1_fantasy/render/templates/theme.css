@@ -404,3 +404,65 @@ body {
   break-inside: avoid;
   margin-bottom: 10px;
 }
+
+/* -- chip watch: per-chip status blocks --------------------------------- */
+
+.chip-grid { display: flex; flex-direction: column; gap: 10px; }
+
+.chip-block {
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+}
+.chip-block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.chip-block-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.chip-block-stat { font-size: 16px; color: var(--ink-muted); }
+
+/* Single line of "Name R12 · Name R14 · ..." -- wraps naturally when long. */
+.chip-used-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.chip-user { font-size: 18px; }
+.chip-user .race-tag { color: var(--ink-muted); font-size: 14px; margin-left: 3px; }
+.chip-sep { color: var(--ink-muted); }
+
+.chip-empty { font-size: 17px; color: var(--ink-muted); font-style: italic; }
+.chip-holdouts { font-size: 15px; color: var(--ink-muted); margin-top: 4px; }
+
+/* -- ownership rows ------------------------------------------------------ */
+
+.own-row {
+  display: grid;
+  grid-template-columns: 18px 1fr 200px;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 10px 18px;
+  min-height: 46px;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.own-name { font-size: 21px; font-weight: 600; }
+
+/* A pill reads like a badge but keeps sentence case and a leading dot --
+   .badge's uppercase display type is wrong for "Name — Owner". */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 19px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+}

@@ -14,7 +14,9 @@ from f1_fantasy.config import Config, Credentials
 from f1_fantasy.publish.base import NullPublisher, Publisher, Report
 from f1_fantasy.publish.email import EmailPublisher
 from f1_fantasy.render import render_card
+from f1_fantasy.report import chips as chips_report
 from f1_fantasy.report import lockout as lockout_report
+from f1_fantasy.report import ownership as ownership_report
 from f1_fantasy.report import recap as recap_report
 from f1_fantasy.schedule import Action
 from f1_fantasy.store.snapshots import SnapshotStore
@@ -28,10 +30,21 @@ PHASE_FOR = {
     Action.RECAP: Phase.FINAL,
 }
 
-#: Report builders, keyed by action. Preview and the pace card land in later phases.
+#: The primary card for each action, which diffs against the previous race.
 BUILDERS = {
     Action.LOCKOUT: (lockout_report.build_lockout, lockout_report.caption, "lockout.html.j2"),
     Action.RECAP: (recap_report.build_recap, recap_report.caption, "recap.html.j2"),
+}
+
+#: Companion cards fired alongside a primary action from the same snapshot --
+#: no diff needed, since chip flags and picks are already season-state as of
+#: that snapshot. Each is gated by its own config.reports toggle. Config keys
+#: (name, build(snapshot, *, race_label), caption, template).
+COMPANION_BUILDERS: dict[Action, list[tuple[str, object, object, str]]] = {
+    Action.LOCKOUT: [
+        ("chips", chips_report.build_chips, chips_report.caption, "chips.html.j2"),
+        ("ownership", ownership_report.build_ownership, ownership_report.caption, "ownership.html.j2"),
+    ],
 }
 
 
@@ -96,6 +109,34 @@ def run_action(
     return written
 
 
+def _render_one(
+    name: str,
+    context: dict,
+    caption_fn,
+    template: str,
+    *,
+    out_dir: Path,
+    event: RaceEvent,
+    publisher: Publisher,
+) -> list[Path]:
+    """Render one card's context to a PNG and caption, and publish it."""
+    image = render_card(template, context, out_dir / f"{name}.png")
+
+    text = caption_fn(context)
+    caption_path = out_dir / f"{name}.txt"
+    caption_path.write_text(text + "\n", encoding="utf-8")
+
+    publisher.publish(
+        Report(
+            kind=name,
+            title=f"{event.name} — {context['eyebrow']}",
+            caption=text,
+            images=[image],
+        )
+    )
+    return [image, caption_path]
+
+
 def _render_and_publish(
     action: Action,
     *,
@@ -105,34 +146,43 @@ def _render_and_publish(
     event: RaceEvent,
     publisher: Publisher,
 ) -> list[Path]:
+    written: list[Path] = []
+
     builder = BUILDERS.get(action)
-    if builder is None:
-        return []
-    build, caption, template = builder
+    if builder is not None:
+        build, caption_fn, template = builder
 
-    previous_race = store.previous_race_id(snapshot.season, snapshot.league_id, snapshot.race_id)
-    previous = (
-        store.latest(snapshot.season, snapshot.league_id, previous_race)
-        if previous_race is not None
-        else None
-    )
-
-    context = build(snapshot, previous, race_label=event.name)
-    out_dir = Path(config.output_dir) / str(snapshot.season) / str(snapshot.race_id)
-    image = render_card(template, context, out_dir / f"{action.value}.png")
-
-    text = caption(context)
-    (out_dir / f"{action.value}.txt").write_text(text + "\n", encoding="utf-8")
-
-    publisher.publish(
-        Report(
-            kind=action.value,
-            title=f"{event.name} — {context['eyebrow']}",
-            caption=text,
-            images=[image],
+        previous_race = store.previous_race_id(
+            snapshot.season, snapshot.league_id, snapshot.race_id
         )
-    )
-    return [image, out_dir / f"{action.value}.txt"]
+        previous = (
+            store.latest(snapshot.season, snapshot.league_id, previous_race)
+            if previous_race is not None
+            else None
+        )
+
+        context = build(snapshot, previous, race_label=event.name)
+        out_dir = Path(config.output_dir) / str(snapshot.season) / str(snapshot.race_id)
+        written.extend(
+            _render_one(
+                action.value, context, caption_fn, template,
+                out_dir=out_dir, event=event, publisher=publisher,
+            )
+        )
+
+    for name, build, caption_fn, template in COMPANION_BUILDERS.get(action, []):
+        if not config.wants(name):
+            continue
+        context = build(snapshot, race_label=event.name)
+        out_dir = Path(config.output_dir) / str(snapshot.season) / str(snapshot.race_id)
+        written.extend(
+            _render_one(
+                name, context, caption_fn, template,
+                out_dir=out_dir, event=event, publisher=publisher,
+            )
+        )
+
+    return written
 
 
 def utcnow() -> datetime:

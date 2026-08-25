@@ -1,0 +1,53 @@
+{% extends "base.html.j2" %}
+{# Chip watch: season-wide status. One snapshot is enough -- chip flags are cumulative.
+
+   Deliberately single-column: spelling out every member who still HAS a chip
+   is dead weight most of a season, since most people have most chips left --
+   the "N left" stat already says that. Names are only worth printing for
+   "used" (always the newsworthy list early on) and for "still to come" once
+   that list has shrunk to a handful, near the end of a chip's uptake. #}
+
+{% block content %}
+
+{% if played_this_race %}
+<section>
+  <h2 class="section-title">Played this race</h2>
+  <div class="badges">
+    {% for chip in played_this_race %}
+    <span class="badge hot">{{ chip.label }} &middot; {{ chip.who }}</span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section>
+  <h2 class="section-title">Season status</h2>
+  <div class="chip-grid">
+    {% for row in chips %}
+    <div class="chip-block">
+      <div class="chip-block-head">
+        <span class="chip-block-title">{{ row.label }}</span>
+        <span class="chip-block-stat">{{ row.used_count }} used &middot; {{ row.available_count }} left</span>
+      </div>
+      {% if row.used %}
+      <div class="chip-used-line">
+        {% for u in row.used %}
+        <span class="chip-user">{{ u.name }} <span class="race-tag">R{{ u.race }}</span></span>{% if not loop.last %}<span class="chip-sep">&middot;</span>{% endif %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="chip-empty">Nobody's played it yet</div>
+      {% endif %}
+      {% if row.available and row.available_count <= 3 %}
+      <div class="chip-holdouts">Still to come: {{ row.available | join(', ') }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

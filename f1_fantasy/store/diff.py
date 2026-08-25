@@ -28,6 +28,19 @@ class ScoredPlayer(Model):
     price: float | None = None
 
 
+class ChipUse(Model):
+    member_name: str
+    race_id: int
+
+
+class ChipStatus(Model):
+    """One chip's season-wide status across the whole league."""
+
+    chip: Chip
+    used: list[ChipUse] = []
+    available: list[str] = []
+
+
 class TeamChange(Model):
     """What one member altered between two races."""
 
@@ -353,6 +366,33 @@ def chips_remaining(snapshot: LeagueSnapshot) -> dict[str, list[Chip]]:
             continue
         remaining[member.user_name or member.team_name] = team.chips_remaining()
     return remaining
+
+
+def chip_status(snapshot: LeagueSnapshot) -> list[ChipStatus]:
+    """Season-wide status of every chip across the league.
+
+    A single snapshot is enough for this, unlike the diff-based reports: the
+    API's ``isXtaken`` flags are cumulative for the season, not per-race, so
+    "who's used what, and who still has it" doesn't need a comparison at all.
+    """
+    rows: dict[Chip, ChipStatus] = {chip: ChipStatus(chip=chip) for chip in Chip}
+    for member in snapshot.members:
+        team = snapshot.teams.get(member.guid)
+        if team is None:
+            continue
+        name = member.user_name or member.team_name
+        for usage in team.chips:
+            row = rows[usage.chip]
+            if usage.used:
+                row.used.append(ChipUse(member_name=name, race_id=usage.race_id or 0))
+            else:
+                row.available.append(name)
+
+    for row in rows.values():
+        row.used.sort(key=lambda u: u.race_id)
+        row.available.sort()
+
+    return list(rows.values())
 
 
 def ownership(snapshot: LeagueSnapshot) -> list[tuple[ScoredPlayer, list[str]]]:
