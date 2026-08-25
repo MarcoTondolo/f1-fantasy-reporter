@@ -254,8 +254,16 @@ def parse_team(raw: Mapping[str, Any], *, guid: str, race_id: int) -> Team:
     )
 
 
-def parse_teams(payload: Mapping[str, Any], *, guid: str, race_id: int | None = None) -> list[Team]:
-    """Parse a full ``getteam`` response (a user may hold several teams)."""
+def parse_teams(payload: Any, *, guid: str, race_id: int | None = None) -> list[Team]:
+    """Parse a full ``getteam`` response (a user may hold several teams).
+
+    Expected to be a dict with an ``mdid`` and a ``userTeam`` list, per the
+    only endpoint confirmed so far -- but ``getusergamedaysv1`` turned out to
+    be a bare list where a dict was assumed, so this tolerates the same thing
+    rather than crashing on an unverified assumption.
+    """
+    if not isinstance(payload, Mapping):
+        payload = payload[0] if isinstance(payload, list) and payload else {}
     resolved_race = race_id if race_id is not None else as_int(payload.get("mdid"))
     entries = payload.get("userTeam") or []
     return [
@@ -279,8 +287,13 @@ def parse_member(raw: Mapping[str, Any]) -> Member:
     )
 
 
-def parse_leaderboard(payload: Mapping[str, Any]) -> tuple[LeagueRef, list[Member]]:
-    """Parse ``pvtleagueuserrankget`` into a league ref plus its members."""
+def parse_leaderboard(payload: Any) -> tuple[LeagueRef, list[Member]]:
+    """Parse ``pvtleagueuserrankget`` into a league ref plus its members.
+
+    See ``parse_teams`` for why a bare-list payload is tolerated here too.
+    """
+    if not isinstance(payload, Mapping):
+        payload = payload[0] if isinstance(payload, list) and payload else {}
     info = payload.get("leagueInfo") or {}
     league = LeagueRef(
         league_id=as_int(first(info, "leagueid", "leagueId")),
@@ -371,13 +384,21 @@ def parse_players(payload: Any) -> dict[str, Player]:
     return players
 
 
-def parse_game_days(payload: Mapping[str, Any]) -> tuple[dict[int, float], list[ChipUsage]]:
+def parse_game_days(payload: Any) -> tuple[dict[int, float], list[ChipUsage]]:
     """Parse ``getusergamedaysv1`` into per-race points and season chip state.
 
     This is the one endpoint that backfills a member's scoring history, since
     ``mddetails`` is keyed by race id for every race played so far.
+
+    Confirmed against the live API: ``Data.Value`` here is a bare JSON array,
+    not wrapped in a further "data" key -- unlike most other endpoints, whose
+    unwrapped Value is a dict. Handling both shapes rather than assuming one,
+    since this is undocumented and only checked by hand.
     """
-    entries = payload.get("data") or payload.get("Value") or []
+    if isinstance(payload, Mapping):
+        entries = payload.get("data") or payload.get("Value") or []
+    else:
+        entries = payload or []
     if isinstance(entries, Mapping):
         entries = [entries]
     if not entries:

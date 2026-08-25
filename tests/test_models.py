@@ -135,32 +135,36 @@ RAW_PLAYERS = {
     ]
 }
 
-RAW_GAME_DAYS = {
-    "data": [
-        {
-            "teamno": 1,
-            "teamname": "Box+Box+Baby",
-            "iswildcardtaken": 1,
-            "wildcardtakengd": 15,
-            "islimitlesstaken": 0,
-            "limitlesstakengd": 0,
-            # Note the differing spelling from the team payload.
-            "isautopilottaken": 1,
-            "isautopilottakengd": 9,
-            "isextradrstaken": 0,
-            "extradrstakengd": 0,
-            "isfinalfixtaken": 0,
-            "finalfixtakengd": 0,
-            "isnonigativetaken": 0,
-            "nonigativetakengd": 0,
-            "mddetails": {
-                "13": {"mds": 13, "phId": 1, "pts": 88.0},
-                "14": {"mds": 14, "phId": 1, "pts": 102.5},
-                "15": {"mds": 15, "phId": 1, "pts": None},
-            },
-        }
-    ]
+_GAME_DAYS_ENTRY = {
+    "teamno": 1,
+    "teamname": "Box+Box+Baby",
+    "iswildcardtaken": 1,
+    "wildcardtakengd": 15,
+    "islimitlesstaken": 0,
+    "limitlesstakengd": 0,
+    # Note the differing spelling from the team payload.
+    "isautopilottaken": 1,
+    "isautopilottakengd": 9,
+    "isextradrstaken": 0,
+    "extradrstakengd": 0,
+    "isfinalfixtaken": 0,
+    "finalfixtakengd": 0,
+    "isnonigativetaken": 0,
+    "nonigativetakengd": 0,
+    "mddetails": {
+        "13": {"mds": 13, "phId": 1, "pts": 88.0},
+        "14": {"mds": 14, "phId": 1, "pts": 102.5},
+        "15": {"mds": 15, "phId": 1, "pts": None},
+    },
 }
+
+# Confirmed against the live API (2026-08-25): Data.Value for this endpoint is
+# a bare JSON array, not wrapped in a further "data" key -- unlike most other
+# endpoints. This is what FantasyClient.get() actually hands to the parser.
+RAW_GAME_DAYS = [_GAME_DAYS_ENTRY]
+
+# Kept only as a defensive case in case a future response wraps it after all.
+RAW_GAME_DAYS_WRAPPED = {"data": [_GAME_DAYS_ENTRY]}
 
 
 # -- teams -----------------------------------------------------------------
@@ -176,6 +180,13 @@ def test_team_parses_lineup_captain_and_value():
     assert team.mega_captain_id is None
     assert team.value == pytest.approx(102.4)
     assert team.transfers_made == 2
+
+
+def test_parse_teams_tolerates_a_bare_list_payload():
+    """Same defensive pattern as game_days -- unverified which shape is real."""
+    (team,) = parse_teams([RAW_TEAM], guid="guid-a")
+
+    assert team.player_ids == ["1", "2", "101"]
 
 
 def test_team_chips_record_the_race_they_were_played_on():
@@ -234,6 +245,13 @@ def test_leaderboard_decodes_names_and_sorts_by_rank():
     assert members[0].points == pytest.approx(1301)
 
 
+def test_leaderboard_tolerates_a_bare_list_payload():
+    """Same defensive pattern as game_days -- unverified which shape is real."""
+    _, members = parse_leaderboard([RAW_LEADERBOARD])
+
+    assert [m.user_name for m in members] == ["sam", "chris"]
+
+
 # -- players ---------------------------------------------------------------
 
 
@@ -256,11 +274,28 @@ def test_player_catalogue_handles_api_misspellings_and_string_numbers():
 
 
 def test_game_days_backfills_per_race_points_and_skips_unscored_races():
+    """RAW_GAME_DAYS is a bare list -- the real shape client.get() returns.
+
+    A regression test for a live failure: the parser used to call .get() on
+    this unconditionally, which crashed with AttributeError against the real
+    API on the very first live run of `probe`.
+    """
     points, _ = parse_game_days(RAW_GAME_DAYS)
 
     assert points == {13: pytest.approx(88.0), 14: pytest.approx(102.5)}
     # Race 15 has a null score -- not yet settled -- so it is absent rather than 0.
     assert 15 not in points
+
+
+def test_game_days_also_tolerates_a_dict_wrapped_payload():
+    """Defensive only -- not the shape actually observed, but cheap to allow."""
+    points, _ = parse_game_days(RAW_GAME_DAYS_WRAPPED)
+
+    assert points == {13: pytest.approx(88.0), 14: pytest.approx(102.5)}
+
+
+def test_game_days_handles_an_empty_list_without_crashing():
+    assert parse_game_days([]) == ({}, [])
 
 
 # -- envelope handling -----------------------------------------------------
