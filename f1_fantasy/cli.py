@@ -357,6 +357,37 @@ def cmd_preview(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_pace_backtest(args: argparse.Namespace) -> int:
+    """Backfill the pace pipeline over a range of rounds and evaluate it.
+
+    Fits a pace-based ranking model with leave-one-round-out cross-validation
+    -- each round is scored only by a model that never saw it -- against
+    actual qualifying and race positions, and against a one-lap-pace-only
+    baseline. No league credentials needed: FastF1 and Jolpica are both
+    public. Slow -- FastF1 downloads full session timing data per round.
+    """
+    import json
+
+    from f1_fantasy.pace.backtest import run_backfill
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"backfilling {config.season} rounds {rounds[0]}-{rounds[-1]} (this can take a while)...")
+    result = run_backfill(config.season, rounds)
+
+    out_path = Path(args.out or f"data/pace/backtest_{config.season}_r{rounds[0]}-{rounds[-1]}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    print(f"rounds used: {result['rounds_used']}")
+    if result["skipped"]:
+        print(f"skipped: {result['skipped']}")
+    print("quali:", result["quali"]["summary"])
+    print("race:", result["race"]["summary"])
+    print(f"written {out_path}")
+    return 0
+
+
 # --------------------------------------------------------------------------
 # capture
 # --------------------------------------------------------------------------
@@ -548,6 +579,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     preview.add_argument("--round", type=int, help="round number (default: latest in the calendar)")
     preview.set_defaults(func=cmd_preview)
+
+    pace_backtest = sub.add_parser(
+        "pace-backtest", help="backfill practice pace and evaluate it against actual results"
+    )
+    pace_backtest.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    pace_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    pace_backtest.add_argument("--out", help="output JSON path (default: data/pace/backtest_...)")
+    pace_backtest.set_defaults(func=cmd_pace_backtest)
 
     capture = sub.add_parser("capture", help="write a snapshot of each league")
     capture.add_argument(

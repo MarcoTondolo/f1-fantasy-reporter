@@ -1,0 +1,322 @@
+{
+  "season": 2026,
+  "rounds_requested": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "rounds_used": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "skipped": [],
+  "sessions_by_round": {
+    "1": [
+      "FP1",
+      "FP2",
+      "FP3"
+    ],
+    "2": [
+      "FP1"
+    ],
+    "3": [
+      "FP1",
+      "FP2",
+      "FP3"
+    ],
+    "4": [
+      "FP1"
+    ],
+    "5": [
+      "FP1"
+    ],
+    "6": [
+      "FP1",
+      "FP2",
+      "FP3"
+    ],
+    "7": [
+      "FP1",
+      "FP2",
+      "FP3"
+    ],
+    "8": [
+      "FP1",
+      "FP2",
+      "FP3"
+    ],
+    "9": [
+      "FP1"
+    ],
+    "10": [
+      "FP1",
+      "FP2",
+      "FP3"
+    ],
+    "11": [
+      "FP1",
+      "FP2",
+      "FP3"
+    ],
+    "12": [
+      "FP1"
+    ]
+  },
+  "quali": {
+    "per_round": [
+      {
+        "round_number": 1,
+        "event_name": "Australian Grand Prix",
+        "n_drivers": 19,
+        "combined_spearman": 0.9228070175438597,
+        "one_lap_only_spearman": 0.9298245614035087,
+        "combined_mae": 1.6842105263157894,
+        "one_lap_only_mae": 1.5789473684210527
+      },
+      {
+        "round_number": 2,
+        "event_name": "Chinese Grand Prix",
+        "n_drivers": 17,
+        "combined_spearman": 0.9191176470588237,
+        "one_lap_only_spearman": 0.9093137254901962,
+        "combined_mae": 1.6470588235294117,
+        "one_lap_only_mae": 1.7647058823529411
+      },
+      {
+        "round_number": 3,
+        "event_name": "Japanese Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.9424054206662904,
+        "one_lap_only_spearman": 0.9412761151891589,
+        "combined_mae": 1.5454545454545454,
+        "one_lap_only_mae": 1.6363636363636365
+      },
+      {
+        "round_number": 4,
+        "event_name": "Miami Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.7673630717108978,
+        "one_lap_only_spearman": 0.7673630717108978,
+        "combined_mae": 3.3636363636363638,
+        "one_lap_only_mae": 3.3636363636363638
+      },
+      {
+        "round_number": 5,
+        "event_name": "Canadian Grand Prix",
+        "n_drivers": 20,
+        "combined_spearman": 0.8691729323308269,
+        "one_lap_only_spearman": 0.863157894736842,
+        "combined_mae": 2.5,
+        "one_lap_only_mae": 2.6
+      },
+      {
+        "round_number": 6,
+        "event_name": "Monaco Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.8430265386787127,
+        "one_lap_only_spearman": 0.8430265386787127,
+        "combined_mae": 2.6363636363636362,
+        "one_lap_only_mae": 2.6363636363636362
+      },
+      {
+        "round_number": 7,
+        "event_name": "Barcelona Grand Prix",
+        "n_drivers": 20,
+        "combined_spearman": 0.8857142857142858,
+        "one_lap_only_spearman": 0.8977443609022555,
+        "combined_mae": 2.3,
+        "one_lap_only_mae": 2.2
+      },
+      {
+        "round_number": 8,
+        "event_name": "Austrian Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.9638622247317901,
+        "one_lap_only_spearman": 0.9661208356860531,
+        "combined_mae": 1.1818181818181819,
+        "one_lap_only_mae": 1.0909090909090908
+      },
+      {
+        "round_number": 9,
+        "event_name": "British Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.8904573687182383,
+        "one_lap_only_spearman": 0.8997458703888348,
+        "combined_mae": 2.0,
+        "one_lap_only_mae": 1.8636363636363635
+      },
+      {
+        "round_number": 10,
+        "event_name": "Belgian Grand Prix",
+        "n_drivers": 17,
+        "combined_spearman": 0.928921568627451,
+        "one_lap_only_spearman": 0.928921568627451,
+        "combined_mae": 1.411764705882353,
+        "one_lap_only_mae": 1.411764705882353
+      },
+      {
+        "round_number": 11,
+        "event_name": "Hungarian Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.9785431959345003,
+        "one_lap_only_spearman": 0.9785431959345003,
+        "combined_mae": 0.8181818181818182,
+        "one_lap_only_mae": 0.8181818181818182
+      },
+      {
+        "round_number": 12,
+        "event_name": "Dutch Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.867871259175607,
+        "one_lap_only_spearman": 0.867871259175607,
+        "combined_mae": 2.5454545454545454,
+        "one_lap_only_mae": 2.5454545454545454
+      }
+    ],
+    "summary": {
+      "rounds_evaluated": 12,
+      "mean_combined_spearman": 0.8982718775742736,
+      "mean_one_lap_only_spearman": 0.8994090831603349,
+      "mean_combined_mae": 1.9694952622197202,
+      "mean_one_lap_only_mae": 1.95916361760015
+    }
+  },
+  "race": {
+    "per_round": [
+      {
+        "round_number": 1,
+        "event_name": "Australian Grand Prix",
+        "n_drivers": 19,
+        "combined_spearman": 0.5526315789473685,
+        "one_lap_only_spearman": 0.5526315789473685,
+        "combined_mae": 3.6842105263157894,
+        "one_lap_only_mae": 3.6842105263157894
+      },
+      {
+        "round_number": 2,
+        "event_name": "Chinese Grand Prix",
+        "n_drivers": 17,
+        "combined_spearman": 0.44117647058823534,
+        "one_lap_only_spearman": 0.44117647058823534,
+        "combined_mae": 4.235294117647059,
+        "one_lap_only_mae": 4.235294117647059
+      },
+      {
+        "round_number": 3,
+        "event_name": "Japanese Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.9051383399209487,
+        "one_lap_only_spearman": 0.9040090344438172,
+        "combined_mae": 2.090909090909091,
+        "one_lap_only_mae": 2.1818181818181817
+      },
+      {
+        "round_number": 4,
+        "event_name": "Miami Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.6487859966120837,
+        "one_lap_only_spearman": 0.6578204404291361,
+        "combined_mae": 4.181818181818182,
+        "one_lap_only_mae": 4.090909090909091
+      },
+      {
+        "round_number": 5,
+        "event_name": "Canadian Grand Prix",
+        "n_drivers": 20,
+        "combined_spearman": 0.21654135338345865,
+        "one_lap_only_spearman": 0.23759398496240602,
+        "combined_mae": 6.0,
+        "one_lap_only_mae": 5.8
+      },
+      {
+        "round_number": 6,
+        "event_name": "Monaco Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.2693393562958781,
+        "one_lap_only_spearman": 0.2693393562958781,
+        "combined_mae": 6.090909090909091,
+        "one_lap_only_mae": 6.090909090909091
+      },
+      {
+        "round_number": 7,
+        "event_name": "Barcelona Grand Prix",
+        "n_drivers": 20,
+        "combined_spearman": 0.6105263157894737,
+        "one_lap_only_spearman": 0.6210526315789473,
+        "combined_mae": 4.1,
+        "one_lap_only_mae": 4.0
+      },
+      {
+        "round_number": 8,
+        "event_name": "Austrian Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.9570863918690007,
+        "one_lap_only_spearman": 0.9582156973461323,
+        "combined_mae": 1.4545454545454546,
+        "one_lap_only_mae": 1.4545454545454546
+      },
+      {
+        "round_number": 9,
+        "event_name": "British Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.5110107284020329,
+        "one_lap_only_spearman": 0.5258401791161363,
+        "combined_mae": 5.0,
+        "one_lap_only_mae": 4.863636363636363
+      },
+      {
+        "round_number": 10,
+        "event_name": "Belgian Grand Prix",
+        "n_drivers": 17,
+        "combined_spearman": 0.9362745098039217,
+        "one_lap_only_spearman": 0.9362745098039217,
+        "combined_mae": 1.1764705882352942,
+        "one_lap_only_mae": 1.1764705882352942
+      },
+      {
+        "round_number": 11,
+        "event_name": "Hungarian Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.805759457933371,
+        "one_lap_only_spearman": 0.803500846979108,
+        "combined_mae": 2.272727272727273,
+        "one_lap_only_mae": 2.272727272727273
+      },
+      {
+        "round_number": 12,
+        "event_name": "Dutch Grand Prix",
+        "n_drivers": 22,
+        "combined_spearman": 0.7899491812535292,
+        "one_lap_only_spearman": 0.7899491812535292,
+        "combined_mae": 3.0,
+        "one_lap_only_mae": 3.0
+      }
+    ],
+    "summary": {
+      "rounds_evaluated": 12,
+      "mean_combined_spearman": 0.6370183067332752,
+      "mean_one_lap_only_spearman": 0.6414503259787181,
+      "mean_combined_mae": 3.6072403602589365,
+      "mean_one_lap_only_mae": 3.5708767238952994
+    }
+  }
+}
