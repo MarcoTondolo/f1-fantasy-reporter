@@ -1,0 +1,36 @@
+name: Probe league access
+
+# One-off diagnostic: does this account's session cookie let us read other
+# league members' teams? Every cross-league report depends on the answer.
+# Deliberately separate from f1-fantasy.yml -- no browser, no commit, just a
+# few API calls and their output in the job log.
+on:
+  workflow_dispatch:
+    inputs:
+      league:
+        description: "League id to test against (optional -- defaults to your first private league)"
+        required: false
+        type: string
+      race:
+        description: "Race id (optional -- defaults to the current one)"
+        required: false
+        type: string
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e .
+      - name: Probe
+        env:
+          F1_FANTASY_TOKEN: ${{ secrets.F1_FANTASY_TOKEN }}
+          F1_USER_GUID: ${{ secrets.F1_USER_GUID }}
+        run: |
+          python -m f1_fantasy probe \
+            ${{ inputs.league && format('--league {0}', inputs.league) || '' }} \
+            ${{ inputs.race && format('--race {0}', inputs.race) || '' }}
