@@ -161,6 +161,18 @@ class LeagueRef(Model):
     member_count: int = 0
 
 
+def team_key(guid: str, team_no: int) -> str:
+    """Key for ``LeagueSnapshot.teams``.
+
+    A guid alone is not unique: some leagues let one account run more than one
+    team (``team_no`` 2, 3, ...), confirmed live -- two of the three leagues on
+    this tool's own test account have members running multiple teams,
+    including the account's own. A guid-only key silently let a second team
+    overwrite the first with no error and no warning.
+    """
+    return f"{guid}:{team_no}"
+
+
 class LeagueSnapshot(Model):
     """Everything captured about one league at one moment.
 
@@ -181,6 +193,14 @@ class LeagueSnapshot(Model):
 
     def member(self, guid: str) -> Member | None:
         return next((m for m in self.members if m.guid == guid), None)
+
+    def team_for(self, member: Member) -> Team | None:
+        """The specific team belonging to this member row.
+
+        Always go through this rather than ``self.teams.get(member.guid)`` --
+        see ``team_key`` for why a bare guid isn't a safe key.
+        """
+        return self.teams.get(team_key(member.guid, member.team_no))
 
     def player_name(self, player_id: str) -> str:
         player = self.players.get(player_id)

@@ -20,7 +20,7 @@ import logging
 import time
 
 from f1_fantasy.api.endpoints import FantasyApi
-from f1_fantasy.api.models import LeagueSnapshot, Member, Phase, Team, utcnow
+from f1_fantasy.api.models import LeagueSnapshot, Member, Phase, Team, team_key, utcnow
 
 log = logging.getLogger(__name__)
 
@@ -119,7 +119,7 @@ def collect_league(
             continue
         team = _pick_team(found, member)
         if team is not None:
-            teams[member.guid] = team
+            teams[team_key(member.guid, member.team_no)] = team
             access.readable += 1
 
     log.info("%s", access)

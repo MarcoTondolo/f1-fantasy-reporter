@@ -19,6 +19,7 @@ from f1_fantasy.api.models import (
     Pick,
     Player,
     Team,
+    team_key,
 )
 
 DRIVERS = [
@@ -214,7 +215,7 @@ def demo_snapshots(seed: int = 7) -> tuple[LeagueSnapshot, LeagueSnapshot]:
     current_teams: dict[str, Team] = {}
 
     for index, (guid, _, team_name) in enumerate(MEMBERS):
-        previous_teams[guid] = _random_team(rng, guid, previous_race, team_name)
+        previous_teams[team_key(guid, 1)] = _random_team(rng, guid, previous_race, team_name)
 
         # A realistic weekend: most members make one or two transfers, a couple
         # stand pat, one wildcards and one goes limitless.
@@ -232,8 +233,8 @@ def demo_snapshots(seed: int = 7) -> tuple[LeagueSnapshot, LeagueSnapshot]:
         else:
             swaps = rng.choice([1, 1, 2])
 
-        current_teams[guid] = _evolve(
-            rng, previous_teams[guid], current_race, chips, swaps=swaps
+        current_teams[team_key(guid, 1)] = _evolve(
+            rng, previous_teams[team_key(guid, 1)], current_race, chips, swaps=swaps
         )
 
     previous_points = {guid: round(rng.uniform(880, 1180), 1) for guid, _, _ in MEMBERS}

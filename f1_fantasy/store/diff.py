@@ -234,13 +234,13 @@ def diff_teams(
     """Diff every member's team, in league standing order."""
     changes: list[TeamChange] = []
     for member in current.members:
-        current_team = current.teams.get(member.guid)
+        current_team = current.team_for(member)
         if current_team is None:
             # No team data for this member -- either not shared, or a failed
             # fetch. Skipped rather than reported as "no changes", which would
             # be a lie.
             continue
-        previous_team = previous.teams.get(member.guid) if previous else None
+        previous_team = previous.team_for(member) if previous else None
         changes.append(
             diff_team(
                 previous_team,
@@ -322,7 +322,7 @@ def score_captains(snapshot: LeagueSnapshot) -> list[CaptainCall]:
     """What each member's captain armband actually earned them."""
     calls: list[CaptainCall] = []
     for member in snapshot.members:
-        team = snapshot.teams.get(member.guid)
+        team = snapshot.team_for(member)
         if team is None:
             continue
         captain_id = _effective_captain(team)
@@ -349,7 +349,7 @@ def chip_activations(snapshot: LeagueSnapshot) -> dict[Chip, list[str]]:
     """Who played which chip for this race: ``chip -> member names``."""
     activations: dict[Chip, list[str]] = {}
     for member in snapshot.members:
-        team = snapshot.teams.get(member.guid)
+        team = snapshot.team_for(member)
         if team is None:
             continue
         for chip in team.chips_used_on(snapshot.race_id):
@@ -361,7 +361,7 @@ def chips_remaining(snapshot: LeagueSnapshot) -> dict[str, list[Chip]]:
     """Chips each member still holds: ``member name -> chips``."""
     remaining: dict[str, list[Chip]] = {}
     for member in snapshot.members:
-        team = snapshot.teams.get(member.guid)
+        team = snapshot.team_for(member)
         if team is None:
             continue
         remaining[member.user_name or member.team_name] = team.chips_remaining()
@@ -377,7 +377,7 @@ def chip_status(snapshot: LeagueSnapshot) -> list[ChipStatus]:
     """
     rows: dict[Chip, ChipStatus] = {chip: ChipStatus(chip=chip) for chip in Chip}
     for member in snapshot.members:
-        team = snapshot.teams.get(member.guid)
+        team = snapshot.team_for(member)
         if team is None:
             continue
         name = member.user_name or member.team_name
@@ -403,7 +403,7 @@ def ownership(snapshot: LeagueSnapshot) -> list[tuple[ScoredPlayer, list[str]]]:
     """
     owners: dict[str, list[str]] = {}
     for member in snapshot.members:
-        team = snapshot.teams.get(member.guid)
+        team = snapshot.team_for(member)
         if team is None:
             continue
         name = member.user_name or member.team_name

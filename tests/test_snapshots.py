@@ -20,7 +20,7 @@ def test_snapshot_survives_a_write_read_round_trip(tmp_path):
     restored = store.read(2026, 555, 11, Phase.LOCKED)
 
     assert restored is not None
-    team = restored.teams["a"]
+    team = restored.team_for(restored.members[0])
     assert team.captain_id == "2"
     assert team.chips_used_on(11) == [Chip.WILDCARD]
     assert restored.players["1"].race_points == 25.0
@@ -34,7 +34,7 @@ def test_rewriting_a_phase_corrects_it_rather_than_duplicating(tmp_path):
 
     restored = store.read(2026, 555, 11, Phase.LOCKED)
 
-    assert restored.teams["a"].player_ids == ["1", "2"]
+    assert restored.team_for(restored.members[0]).player_ids == ["1", "2"]
     assert store.race_ids(2026, 555) == [11]
 
 

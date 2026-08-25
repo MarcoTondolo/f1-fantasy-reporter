@@ -8,7 +8,7 @@ trusting a manual re-run to prove it.
 
 from __future__ import annotations
 
-from f1_fantasy.api.models import LeagueRef, Member, Phase
+from f1_fantasy.api.models import LeagueRef, Member, Phase, team_key
 from f1_fantasy.collect import _pick_team, collect_league
 from tests.conftest import make_players, make_team
 
@@ -53,7 +53,7 @@ def test_team_fetches_are_capped_to_the_top_n_by_rank():
     assert access.total == 50
     assert access.readable == 15
     assert api.fetched_guids == [f"g{i}" for i in range(15)]
-    assert set(snapshot.teams) == {f"g{i}" for i in range(15)}
+    assert set(snapshot.teams) == {team_key(f"g{i}", 1) for i in range(15)}
     # Every member still appears in standings -- only team detail is capped.
     assert len(snapshot.members) == 50
 

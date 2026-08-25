@@ -20,6 +20,7 @@ from f1_fantasy.api.models import (
     Pick,
     Player,
     Team,
+    team_key,
 )
 
 # A small, stable catalogue. Points are per-race and set by each test.
@@ -69,8 +70,14 @@ def make_team(
     transfers_made: int = 0,
     team_name: str = "",
     points: float = 0.0,
+    team_no: int = 1,
 ) -> Team:
-    """Build a team. *chips* maps a chip to the race id it was used on."""
+    """Build a team. *chips* maps a chip to the race id it was used on.
+
+    *team_no* defaults to 1; pass 2+ to model an account running more than one
+    team in the same league -- confirmed live, and the reason snapshot.teams
+    is keyed by (guid, team_no) rather than guid alone. See team_key.
+    """
     chips = chips or {}
     picks = [
         Pick(
@@ -84,7 +91,7 @@ def make_team(
     return Team(
         guid=guid,
         race_id=race_id,
-        team_no=1,
+        team_no=team_no,
         team_name=team_name or f"Team {guid}",
         picks=picks,
         value=value,
@@ -109,20 +116,29 @@ def make_snapshot(
     league_id: int = 555,
     season: int = 2026,
 ) -> LeagueSnapshot:
-    """Build a snapshot. *standings* maps guid to (rank, overall points)."""
+    """Build a snapshot. *standings* maps guid to (rank, overall points).
+
+    *teams* is keyed by plain guid here, for every test's convenience -- one
+    team per guid covers everything except the multi-team-per-account
+    scenario, which needs two different ranks for the same guid and so
+    doesn't fit this helper's shape; those tests build a LeagueSnapshot
+    directly. Internally re-keyed to match the real (guid, team_no) scheme
+    LeagueSnapshot.teams actually uses -- see team_key.
+    """
     standings = standings or {guid: (i + 1, 0.0) for i, guid in enumerate(teams)}
     members = [
         Member(
             guid=guid,
             user_name=f"member-{guid}",
             team_id=int(guid) if guid.isdigit() else 0,
-            team_no=1,
+            team_no=teams[guid].team_no if guid in teams else 1,
             team_name=teams[guid].team_name if guid in teams else "",
             rank=standings.get(guid, (0, 0.0))[0],
             points=standings.get(guid, (0, 0.0))[1],
         )
         for guid in standings
     ]
+    keyed_teams = {team_key(guid, team.team_no): team for guid, team in teams.items()}
     return LeagueSnapshot(
         league_id=league_id,
         league_name="Test League",
@@ -131,7 +147,7 @@ def make_snapshot(
         phase=phase,
         captured_at=datetime(2026, 8, 1, 12, 0, tzinfo=timezone.utc),
         members=members,
-        teams=teams,
+        teams=keyed_teams,
         players=make_players(points),
     )
 
