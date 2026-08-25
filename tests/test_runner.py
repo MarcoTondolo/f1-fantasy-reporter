@@ -68,7 +68,25 @@ def test_companion_cards_are_skipped_when_toggled_off(tmp_path):
     assert {report.kind for report in publisher.published} == {"lockout"}
 
 
-def test_recap_has_no_companion_cards_yet():
-    """Companions are lockout-only for now -- recap's own content already
-    covers the weekend's moves."""
-    assert Action.RECAP not in COMPANION_BUILDERS
+def test_recap_renders_the_winners_losers_companion(tmp_path):
+    store = SnapshotStore(tmp_path / "snapshots")
+    config = Config(output_dir=tmp_path / "out")
+    publisher = NullPublisher()
+    snapshot = make_snapshot(
+        11, {"a": make_team("a", 11, ["1", "2", "101"])}, standings={"a": (1, 40.0)}
+    )
+
+    _render_and_publish(
+        Action.RECAP,
+        snapshot=snapshot,
+        store=store,
+        config=config,
+        event=_event(),
+        publisher=publisher,
+    )
+
+    assert {report.kind for report in publisher.published} == {"recap", "winners_losers"}
+
+
+def test_lockout_and_recap_are_the_only_actions_with_companions():
+    assert set(COMPANION_BUILDERS) == {Action.LOCKOUT, Action.RECAP}

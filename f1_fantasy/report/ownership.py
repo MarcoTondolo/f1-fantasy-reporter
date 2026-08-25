@@ -27,7 +27,16 @@ def _row(snapshot: LeagueSnapshot, player: ScoredPlayer, owners: list[str], tota
     }
 
 
-def build_ownership(snapshot: LeagueSnapshot, *, race_label: str = "") -> dict:
+def build_ownership(
+    snapshot: LeagueSnapshot,
+    _previous: LeagueSnapshot | None = None,
+    *,
+    race_label: str = "",
+) -> dict:
+    """``_previous`` is accepted, unused, only for call-signature parity with
+    every other builder -- ownership is read straight off the snapshot, no
+    diff involved.
+    """
     rows = ownership(snapshot)
     total_teams = len(snapshot.teams) or len(snapshot.members)
 

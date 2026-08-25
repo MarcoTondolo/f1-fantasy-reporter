@@ -63,6 +63,7 @@ class Config(Model):
             "recap": True,
             "chips": True,
             "ownership": True,
+            "winners_losers": True,
         }
     )
 

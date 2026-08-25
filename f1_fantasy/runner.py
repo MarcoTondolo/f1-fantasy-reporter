@@ -18,6 +18,7 @@ from f1_fantasy.report import chips as chips_report
 from f1_fantasy.report import lockout as lockout_report
 from f1_fantasy.report import ownership as ownership_report
 from f1_fantasy.report import recap as recap_report
+from f1_fantasy.report import winners_losers as winners_losers_report
 from f1_fantasy.schedule import Action
 from f1_fantasy.store.snapshots import SnapshotStore
 
@@ -36,14 +37,24 @@ BUILDERS = {
     Action.RECAP: (recap_report.build_recap, recap_report.caption, "recap.html.j2"),
 }
 
-#: Companion cards fired alongside a primary action from the same snapshot --
-#: no diff needed, since chip flags and picks are already season-state as of
-#: that snapshot. Each is gated by its own config.reports toggle. Config keys
-#: (name, build(snapshot, *, race_label), caption, template).
+#: Companion cards fired alongside a primary action from the same snapshot.
+#: Every builder, primary or companion, shares the call signature
+#: ``build(current, previous, *, race_label)`` -- chips and ownership simply
+#: ignore ``previous`` (their content is season-state, not a diff), which
+#: keeps the runner's dispatch to one code path instead of two. Each is
+#: gated by its own config.reports toggle.
 COMPANION_BUILDERS: dict[Action, list[tuple[str, object, object, str]]] = {
     Action.LOCKOUT: [
         ("chips", chips_report.build_chips, chips_report.caption, "chips.html.j2"),
         ("ownership", ownership_report.build_ownership, ownership_report.caption, "ownership.html.j2"),
+    ],
+    Action.RECAP: [
+        (
+            "winners_losers",
+            winners_losers_report.build_winners_losers,
+            winners_losers_report.caption,
+            "winners_losers.html.j2",
+        ),
     ],
 }
 
@@ -147,22 +158,21 @@ def _render_and_publish(
     publisher: Publisher,
 ) -> list[Path]:
     written: list[Path] = []
+    out_dir = Path(config.output_dir) / str(snapshot.season) / str(snapshot.race_id)
+
+    # Resolved once and shared: every builder takes (current, previous), and
+    # companions that don't need a diff (chips, ownership) just ignore it.
+    previous_race = store.previous_race_id(snapshot.season, snapshot.league_id, snapshot.race_id)
+    previous = (
+        store.latest(snapshot.season, snapshot.league_id, previous_race)
+        if previous_race is not None
+        else None
+    )
 
     builder = BUILDERS.get(action)
     if builder is not None:
         build, caption_fn, template = builder
-
-        previous_race = store.previous_race_id(
-            snapshot.season, snapshot.league_id, snapshot.race_id
-        )
-        previous = (
-            store.latest(snapshot.season, snapshot.league_id, previous_race)
-            if previous_race is not None
-            else None
-        )
-
         context = build(snapshot, previous, race_label=event.name)
-        out_dir = Path(config.output_dir) / str(snapshot.season) / str(snapshot.race_id)
         written.extend(
             _render_one(
                 action.value, context, caption_fn, template,
@@ -173,8 +183,7 @@ def _render_and_publish(
     for name, build, caption_fn, template in COMPANION_BUILDERS.get(action, []):
         if not config.wants(name):
             continue
-        context = build(snapshot, race_label=event.name)
-        out_dir = Path(config.output_dir) / str(snapshot.season) / str(snapshot.race_id)
+        context = build(snapshot, previous, race_label=event.name)
         written.extend(
             _render_one(
                 name, context, caption_fn, template,

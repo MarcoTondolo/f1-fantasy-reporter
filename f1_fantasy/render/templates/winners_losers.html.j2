@@ -1,0 +1,141 @@
+{% extends "base.html.j2" %}
+{# Post-race verdict: who called it right. Headline duel, then four supporting
+   measures -- rank movement, transfers, captaincy, chip payoff. #}
+
+{% block content %}
+
+{% if headline_winner or headline_loser %}
+<section class="tiles">
+  {% if headline_winner %}
+  <div class="tile good">
+    <div class="tile-label">Best race</div>
+    <div class="tile-value delta pos">{{ headline_winner.points | signed }}</div>
+    <div class="tile-name">{{ headline_winner.name }}</div>
+    <div class="tile-note">Now P{{ headline_winner.rank }} overall</div>
+  </div>
+  {% endif %}
+  {% if headline_loser %}
+  <div class="tile bad">
+    <div class="tile-label">Roughest race</div>
+    <div class="tile-value delta neg">{{ headline_loser.points | signed }}</div>
+    <div class="tile-name">{{ headline_loser.name }}</div>
+    <div class="tile-note">Now P{{ headline_loser.rank }} overall</div>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if rank_gainers or rank_losers %}
+<section>
+  <h2 class="section-title">Table movement</h2>
+  <div class="mover-cols">
+    <div class="mover-col">
+      <div class="chip-col-label">Climbing</div>
+      {% for m in rank_gainers %}
+      <div class="mover-line">
+        <span class="move up">▲{{ m.rank_change }}</span>
+        <span class="mover-line-name">{{ m.name }}</span>
+        <span class="mover-line-rank">P{{ m.rank }}</span>
+      </div>
+      {% else %}
+      <div class="chip-empty">Nobody moved up</div>
+      {% endfor %}
+    </div>
+    <div class="mover-col">
+      <div class="chip-col-label">Sliding</div>
+      {% for m in rank_losers %}
+      <div class="mover-line">
+        <span class="move down">▼{{ -m.rank_change }}</span>
+        <span class="mover-line-name">{{ m.name }}</span>
+        <span class="mover-line-rank">P{{ m.rank }}</span>
+      </div>
+      {% else %}
+      <div class="chip-empty">Nobody dropped</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if best_transfers or worst_transfers %}
+<section>
+  <h2 class="section-title">Transfer verdicts</h2>
+  <div class="mover-cols">
+    <div class="mover-col">
+      <div class="chip-col-label">Paid off</div>
+      {% for t in best_transfers %}
+      <div class="verdict-row">
+        <div class="verdict-head">
+          <span class="verdict-name">{{ t.name }}</span>
+          <span class="delta pos">{{ t.delta | signed }}</span>
+        </div>
+        <div class="verdict-detail">{{ t.detail }}</div>
+      </div>
+      {% else %}
+      <div class="chip-empty">No transfers this round</div>
+      {% endfor %}
+    </div>
+    <div class="mover-col">
+      <div class="chip-col-label">Backfired</div>
+      {% for t in worst_transfers %}
+      <div class="verdict-row">
+        <div class="verdict-head">
+          <span class="verdict-name">{{ t.name }}</span>
+          <span class="delta neg">{{ t.delta | signed }}</span>
+        </div>
+        <div class="verdict-detail">{{ t.detail }}</div>
+      </div>
+      {% else %}
+      <div class="chip-empty">No losing transfers</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if best_captain or worst_captain %}
+<section>
+  <h2 class="section-title">Captain calls</h2>
+  <div class="tiles">
+    {% if best_captain %}
+    <div class="tile good">
+      <div class="tile-label">Best armband</div>
+      <div class="tile-value delta pos">{{ best_captain.bonus | signed }}</div>
+      <div class="tile-name">{{ best_captain.name }}</div>
+      <div class="tile-note">{{ best_captain.captain }} &times;{{ best_captain.multiplier }}</div>
+    </div>
+    {% endif %}
+    {% if worst_captain %}
+    <div class="tile bad">
+      <div class="tile-label">Least reward</div>
+      <div class="tile-value delta neg">{{ worst_captain.bonus | signed }}</div>
+      <div class="tile-name">{{ worst_captain.name }}</div>
+      <div class="tile-note">{{ worst_captain.captain }} &times;{{ worst_captain.multiplier }}</div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if chip_bets %}
+<section>
+  <h2 class="section-title">Chip bets this round</h2>
+  <div class="standings">
+    {% for bet in chip_bets %}
+    <div class="bet-row">
+      <span class="badge hot">{{ bet.chip }}</span>
+      <span class="bet-name">{{ bet.name }}</span>
+      {% if bet.points is not none %}
+      <span class="delta {{ 'pos' if bet.points >= 0 else 'neg' }} bet-points">{{ bet.points | signed }}</span>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

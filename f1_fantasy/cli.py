@@ -331,6 +331,7 @@ def cmd_demo(args: argparse.Namespace) -> int:
     from f1_fantasy.report import lockout as lockout_report
     from f1_fantasy.report import ownership as ownership_report
     from f1_fantasy.report import recap as recap_report
+    from f1_fantasy.report import winners_losers as winners_losers_report
 
     config = Config.load(args.config)
     out_dir = Path(args.out or config.output_dir / "demo")
@@ -341,12 +342,19 @@ def cmd_demo(args: argparse.Namespace) -> int:
     lockout_context = lockout_report.build_lockout(current, previous, race_label=label, you_guid="guid-01")
     chips_context = chips_report.build_chips(current, race_label=label)
     ownership_context = ownership_report.build_ownership(current, race_label=label)
+    winners_context = winners_losers_report.build_winners_losers(current, previous, race_label=label)
 
     cards = [
         ("recap", "recap.html.j2", recap_context, recap_report.caption(recap_context)),
         ("lockout", "lockout.html.j2", lockout_context, lockout_report.caption(lockout_context)),
         ("chips", "chips.html.j2", chips_context, chips_report.caption(chips_context)),
         ("ownership", "ownership.html.j2", ownership_context, ownership_report.caption(ownership_context)),
+        (
+            "winners_losers",
+            "winners_losers.html.j2",
+            winners_context,
+            winners_losers_report.caption(winners_context),
+        ),
     ]
 
     for name, template, ctx, text in cards:

@@ -466,3 +466,40 @@ body {
   border: 1px solid var(--hairline);
   color: var(--ink);
 }
+
+/* -- winners & losers: two-column verdict lists -------------------------- */
+
+.mover-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.mover-col { display: flex; flex-direction: column; gap: 4px; }
+
+.mover-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 9px 14px;
+}
+.mover-line-name { font-size: 19px; font-weight: 600; flex: 1; }
+.mover-line-rank { font-size: 15px; color: var(--ink-muted); }
+
+.verdict-row {
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 4px;
+}
+.verdict-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.verdict-name { font-size: 19px; font-weight: 600; }
+.verdict-detail { font-size: 15px; color: var(--ink-secondary); margin-top: 2px; }
+
+.bet-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+}
+.bet-name { font-size: 19px; font-weight: 600; flex: 1; }
+.bet-points { font-size: 19px; font-variant-numeric: tabular-nums; }

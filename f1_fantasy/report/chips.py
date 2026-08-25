@@ -11,7 +11,16 @@ from f1_fantasy.api.models import CHIP_LABELS, LeagueSnapshot
 from f1_fantasy.store.diff import chip_activations, chip_status
 
 
-def build_chips(snapshot: LeagueSnapshot, *, race_label: str = "") -> dict:
+def build_chips(
+    snapshot: LeagueSnapshot,
+    _previous: LeagueSnapshot | None = None,
+    *,
+    race_label: str = "",
+) -> dict:
+    """``_previous`` is accepted, unused, only so this matches every other
+    builder's call signature -- the runner dispatches every card the same way,
+    and chip status needs no diff (the API's flags are already cumulative).
+    """
     statuses = chip_status(snapshot)
     played_this_race = chip_activations(snapshot)
     total_teams = len(snapshot.teams) or len(snapshot.members)
