@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-08-25T02:54:21.944559Z",
+  "captured_at": "2026-08-25T03:03:08.790421Z",
   "league_id": 4512504,
   "league_name": "Ciao Squadra 2026",
   "members": [
@@ -751,7 +751,7 @@
   "race_id": 12,
   "season": 2026,
   "teams": {
-    "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849": {
+    "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849:1": {
       "bank": 0.7,
       "chips": [
         {
@@ -838,7 +838,181 @@
       "transfers_made": 3,
       "value": 124.8
     },
-    "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702": {
+    "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849:2": {
+      "bank": 0.5,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "110",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "27",
+          "slot": 6
+        }
+      ],
+      "points": 2742.0,
+      "race_id": 12,
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "transfers_left": -1,
+      "transfers_made": 4,
+      "value": 120.3
+    },
+    "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702:1": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702:2": {
       "bank": 0.5,
       "chips": [
         {
@@ -925,7 +1099,7 @@
       "transfers_made": 4,
       "value": 120.3
     },
-    "5a9bc96e-1961-11f1-9075-aba426ce3dce-0-179187119": {
+    "5a9bc96e-1961-11f1-9075-aba426ce3dce-0-179187119:1": {
       "bank": 0.7,
       "chips": [
         {
@@ -1012,7 +1186,7 @@
       "transfers_made": 3,
       "value": 124.8
     },
-    "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141": {
+    "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141:1": {
       "bank": 0.7,
       "chips": [
         {
@@ -1099,7 +1273,94 @@
       "transfers_made": 3,
       "value": 124.8
     },
-    "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062": {
+    "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141:3": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062:1": {
       "bank": 0.7,
       "chips": [
         {
@@ -1186,7 +1447,94 @@
       "transfers_made": 3,
       "value": 124.8
     },
-    "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194": {
+    "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062:2": {
+      "bank": 0.5,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "110",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "27",
+          "slot": 6
+        }
+      ],
+      "points": 2742.0,
+      "race_id": 12,
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "transfers_left": -1,
+      "transfers_made": 4,
+      "value": 120.3
+    },
+    "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194:2": {
       "bank": 0.5,
       "chips": [
         {
@@ -1273,7 +1621,94 @@
       "transfers_made": 4,
       "value": 120.3
     },
-    "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229": {
+    "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229:1": {
+      "bank": 0.7,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": true,
+          "player_id": "117",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3066.0,
+      "race_id": 12,
+      "team_name": "Chucky Layclercks",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 3,
+      "value": 124.8
+    },
+    "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229:2": {
       "bank": 0.5,
       "chips": [
         {
@@ -1360,7 +1795,7 @@
       "transfers_made": 4,
       "value": 120.3
     },
-    "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951": {
+    "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951:1": {
       "bank": 0.7,
       "chips": [
         {
@@ -1447,7 +1882,7 @@
       "transfers_made": 3,
       "value": 124.8
     },
-    "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931": {
+    "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931:2": {
       "bank": 0.5,
       "chips": [
         {
@@ -1534,7 +1969,7 @@
       "transfers_made": 4,
       "value": 120.3
     },
-    "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714": {
+    "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714:1": {
       "bank": 0.7,
       "chips": [
         {
