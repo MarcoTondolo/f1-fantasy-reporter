@@ -46,6 +46,17 @@ def build_api(credentials: Credentials) -> FantasyApi:
 # --------------------------------------------------------------------------
 
 
+def _team_signature(team) -> tuple:
+    """A cheap fingerprint for "is this actually the same team as that one".
+
+    Comparing full objects would flag two genuinely different teams that
+    happen to share a captain as distinct-but-similar; comparing just this is
+    enough to catch the real failure mode confirmed live -- an endpoint that
+    silently hands back the caller's own team for every guid requested.
+    """
+    return (team.team_name, tuple(sorted(team.player_ids)))
+
+
 def _dump_raw(api: FantasyApi, label: str, path: str) -> None:
     """Print an endpoint's raw JSON, for diagnosing an unverified payload shape
     without needing another CI round-trip to add ad-hoc logging.
@@ -119,31 +130,57 @@ def cmd_probe(args: argparse.Namespace) -> int:
     team = own[0]
     print(f"  ok -- {len(team.picks)} picks, captain {team.captain_id}, value {team.value}")
 
-    # The actual question.
+    # The actual question -- and the one a non-empty response alone cannot
+    # answer. Confirmed live: getteam ignores the guid in its URL and just
+    # returns the caller's own team every time, so a naive "did I get
+    # something back" check gives a false "full access" verdict. Comparing
+    # content against the caller's own team is what actually tells readable
+    # apart from "this endpoint is just handing back my team again".
     print("\n== Other members' teams ==")
     others = [m for m in members if m.guid != api.guid]
     if not others:
         print("  you are the only member; cannot test")
         return 0
 
-    readable, unreadable = [], []
+    own_signature = _team_signature(team)
+    readable, echoing_own, unreadable = [], [], []
     for member in others:
         result = api.try_teams(race_id, guid=member.guid)
-        (readable if result else unreadable).append(member.user_name)
+        if not result:
+            unreadable.append(member.user_name)
+            continue
+        if any(_team_signature(t) == own_signature for t in result):
+            echoing_own.append(member.user_name)
+        else:
+            readable.append(member.user_name)
 
-    print(f"  readable:   {len(readable)}/{len(others)}")
+    print(f"  readable:      {len(readable)}/{len(others)}")
     if readable:
         print(f"    {', '.join(readable[:8])}{' ...' if len(readable) > 8 else ''}")
+    if echoing_own:
+        print(f"  echoing own:   {len(echoing_own)}/{len(others)} (same picks as your team -- not real)")
+        print(f"    {', '.join(echoing_own[:8])}{' ...' if len(echoing_own) > 8 else ''}")
     if unreadable:
-        print(f"  unreadable: {', '.join(unreadable[:8])}{' ...' if len(unreadable) > 8 else ''}")
+        print(f"  unreadable:    {len(unreadable)}/{len(others)}")
+        print(f"    {', '.join(unreadable[:8])}{' ...' if len(unreadable) > 8 else ''}")
 
     print("\n== Verdict ==")
-    if not unreadable:
-        print("  Full access. Every report in the plan is possible:")
+    if echoing_own and len(echoing_own) == len(others):
+        print("  This endpoint does not support reading other members' teams --")
+        print("  it silently returns your own team for every guid requested.")
+        print("  Ownership, chip watch, and lockout diffs for other members are NOT")
+        print("  real data right now and must not be trusted or shipped as-is.")
+        print("  Next step: open the league standings page with DevTools -> Network,")
+        print("  click into a rival's team, and note which request the site itself")
+        print("  makes. That endpoint can then be wired in. Until then, reports")
+        print("  fall back to leaderboard-only: standings, rank movement, points.")
+        return 2
+    if not unreadable and not echoing_own:
+        print("  Full access, content-verified. Every report in the plan is possible:")
         print("  lockout changes, chip watch, ownership, transfer winners and losers.")
         return 0
     if readable:
-        print("  Partial access. Reports will cover only the readable members,")
+        print("  Partial access. Reports will cover only the content-verified members,")
         print("  and will say so rather than implying the league is fully covered.")
         return 0
 

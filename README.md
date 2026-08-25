@@ -12,7 +12,7 @@ Nothing posts to WhatsApp automatically — see [Why not auto-post](#why-not-aut
 
 | Phase | State |
 | --- | --- |
-| 0 — Access spike (`probe`) | **Confirmed live: full access to other members' teams** |
+| 0 — Access spike (`probe`) | `getteam` **cannot** read other members (ignores guid); real endpoint found via DevTools, response shape pending |
 | 1 — API client, models, snapshot store | Done, confirmed against the live API |
 | 2 — Diff engine | Done |
 | 3 — Render pipeline + cards | Recap, lockout, chips, ownership done; preview remaining |
@@ -54,11 +54,16 @@ f1-fantasy probe
 ```
 
 `probe` answers the question the whole design depends on: **can this account read
-other league members' teams?** Confirmed live (2026-08-25): **yes, full access** —
-every report in the plan is possible. Re-run it any time credentials change or
-you want to sanity-check a league; it's also how three real payload-shape bugs
-in the parsers got caught and fixed on first contact with the live API (see
-"Endpoints confirmed live" below).
+other league members' teams?** As of 2026-08-25: **not via `getteam`** — that
+endpoint silently returns the caller's own team for every guid requested, which
+`probe` initially mistook for success until it was corrected to compare content
+rather than just check for a non-empty response (see below). The real endpoint
+was located via a DevTools capture on the live site:
+`/services/user/opponentteam/opponentgamedayget/1/{guid}/{team_no}` — response
+shape not yet captured, so it isn't wired in yet. Re-run `probe` any time
+credentials change or you want to sanity-check a league; it's also how three
+real payload-shape bugs in the parsers got caught and fixed on first contact
+with the live API (see "Endpoints confirmed live" below).
 
 ### Seeing a card without credentials
 
@@ -120,15 +125,53 @@ tracked here rather than left as folklore.
 | `getusergamedaysv1` | `Data.Value` is a **bare list**, not `{"data": [...]}` | Live, 2026-08-25 |
 | `.../1/0/0/privateleague` | `Data.Value.Details` — mixes in F1's own promotional league (`isJoined: 0`), filtered out | Live, 2026-08-25 |
 | `.../getuserleague/1` | `Data.Value.leaguesdata` — its own distinct misspelling, `memeberCount` | Live, 2026-08-25 |
-| `pvtleagueuserrankget` (leaderboard) | `Data.Value.{leagueInfo, memRank}` | Live, 2026-08-25 — the "full access" verdict requires this to have parsed real members |
-| `getteam`, own team and every other member's | `Data.Value.{mdid, userTeam}` | Live, 2026-08-25 — same verdict; every member in the league came back readable |
+| `pvtleagueuserrankget` (leaderboard) | `Data.Value.{leagueInfo, memRank}` | Live, 2026-08-25 — correctly differentiated per member (real distinct names, ranks, points) |
+| `getteam`, **own team only** | `Data.Value.{mdid, userTeam}` | Live, 2026-08-25 |
+| `getteam`, **another member's team** | same shape, **but ignores the requested guid** | **Broken, confirmed 2026-08-25 — see below** |
 | `/feeds/drivers/{race}_en.json` | Public, `Value` is a list of player dicts | Not exercised by `probe` — first real test is the first rendered card against live data |
 
 `probe` deliberately dumps raw JSON to the Actions log when a result looks
 suspicious (zero leagues, zero members, zero picks) rather than trusting an
-empty parse — that's what caught the first three. If a future run hits one of
-the "not yet confirmed" rows and something looks off, the same dump will show
-up in the log; update this table and the corresponding parser together.
+empty parse — that's what caught the first three rows above. If a future run
+hits one of the "not yet confirmed" rows and something looks off, the same
+dump will show up in the log; update this table and the corresponding parser
+together.
+
+### `getteam` does not actually support reading another member's team
+
+**Correction to an earlier claim in this file:** `probe`'s first live run
+reported "Full access" — full text below — but that verdict was a false
+positive from an inadequate check (a non-empty response, not a content
+comparison). A subsequent live `showcase` run against all three of the
+account's leagues showed something `probe` never checked for: **every one of
+35 distinct member rows across three leagues returned byte-for-byte the same
+two teams** — the caller's own. `getteam` silently ignores the `guid` in its
+URL path and always serves the authenticated session's own team, regardless
+of whose guid was requested.
+
+`probe` has since been corrected to catch this itself: it now compares each
+fetched team's `(team_name, sorted player_ids)` against the caller's own
+before calling it "readable", and reports a distinct `echoing own` count
+rather than folding a false positive into `readable`. A run where every
+other member echoes the caller's own team now prints that diagnosis directly
+instead of a false "Full access".
+
+**What's still genuinely real:** the leaderboard (standings, ranks, points,
+real per-member names) is unaffected — it comes from a different endpoint
+and was independently confirmed distinct per row. Only *team detail* — picks,
+captain, chips — is currently fake for everyone except the authenticated
+account. That means the ownership card, chip-watch content for other members,
+and every diff-based report's treatment of anyone but the account holder are
+**not real data as things stand**, even though they render without error.
+
+**Next step, in progress:** finding the endpoint the site's own frontend
+actually calls to show a rival's team, via DevTools Network capture on a live
+league page. The leading community client this project's endpoint guesses
+were based on never implemented this at all — it only ever fetched the
+authenticated user's own team — so there was no prior art to lean on here.
+Until a working endpoint is wired in, reports should fall back to
+leaderboard-only content: standings, rank movement, points scored. Ownership
+and cross-member chip-watch should not ship enabled by default.
 
 ## Design notes
 
