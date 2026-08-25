@@ -1,0 +1,63 @@
+{% extends "base.html.j2" %}
+{# Pre-race preview: session times, grid penalties confirmed since the last
+   race (never the upcoming race's own -- jolpica only knows a starting grid
+   once a race has run), and flagged headlines. #}
+
+{% block content %}
+
+<section>
+  <div class="tiles">
+    <div class="tile good" style="grid-column: 1 / -1;">
+      <div class="tile-label">Lockout</div>
+      <div class="tile-name">{{ lockout_label }}</div>
+      {% if is_sprint_weekend %}
+      <div class="tile-note">Sprint weekend -- lineups lock before Sprint Qualifying, not Qualifying</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">Session times</h2>
+  <div class="chip-grid">
+    {% for row in sessions %}
+    <div class="chip-block{% if row.is_lockout %} is-lockout{% endif %}">
+      <div class="chip-block-head">
+        <span class="chip-block-title">{{ row.label }}</span>
+        <span class="chip-block-stat">{{ row.day }} {{ row.time }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if penalties %}
+<section>
+  <h2 class="section-title">Grid penalties from {{ last_race_name }}</h2>
+  <div class="badges">
+    {% for row in penalties %}
+    <span class="badge hot">{{ row.driver }} &middot; P{{ row.from }} &rarr; P{{ row.to }} (-{{ row.places_lost }})</span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if headlines %}
+<section>
+  <h2 class="section-title">Worth knowing</h2>
+  {% for h in headlines %}
+  <div class="verdict-row">
+    <div class="verdict-head">
+      <span class="verdict-name">{{ h.title }}</span>
+    </div>
+    {% if h.matched %}<div class="verdict-detail">{{ h.matched | join(', ') }}</div>{% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

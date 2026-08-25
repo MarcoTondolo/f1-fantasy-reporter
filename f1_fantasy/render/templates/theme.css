@@ -516,3 +516,7 @@ body {
 }
 .bet-name { font-size: 19px; font-weight: 600; flex: 1; }
 .bet-points { font-size: 19px; font-variant-numeric: tabular-nums; }
+
+/* -- preview: the session about to lock is picked out from the rest ----- */
+
+.chip-block.is-lockout { box-shadow: inset 3px 0 0 var(--accent); }

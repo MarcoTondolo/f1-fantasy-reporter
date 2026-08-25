@@ -290,6 +290,73 @@ def cmd_showcase(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_preview(args: argparse.Namespace) -> int:
+    """Render the preview card for the next race: session times, grid
+    penalties confirmed from the last race, and flagged headlines.
+
+    No league credentials needed -- calendar, results and news are all public.
+    """
+    from datetime import datetime, timezone
+
+    from f1_fantasy.calendar import current_event, fetch_calendar, previous_event
+    from f1_fantasy.news.bulletins import headlines as fetch_headlines
+    from f1_fantasy.render import render_card
+    from f1_fantasy.report import preview as preview_report
+    from f1_fantasy.results import detect_grid_penalties, fetch_qualifying, fetch_race_results
+
+    config = Config.load(args.config)
+    events = fetch_calendar(config.season)
+    if not events:
+        print("no calendar data", file=sys.stderr)
+        return 1
+
+    if args.round is not None:
+        by_round = {e.round: e for e in events}
+        next_event = by_round.get(args.round)
+        if next_event is None:
+            print(f"round {args.round} not found in the {config.season} calendar", file=sys.stderr)
+            return 1
+        last_event = by_round.get(args.round - 1)
+    else:
+        now = datetime.now(timezone.utc)
+        next_event = current_event(events, now)
+        if next_event is None:
+            print("no upcoming race found in the calendar", file=sys.stderr)
+            return 1
+        last_event = previous_event(events, now)
+
+    penalties = []
+    if last_event is not None:
+        try:
+            qualifying = fetch_qualifying(config.season, last_event.round)
+            results = fetch_race_results(config.season, last_event.round)
+            penalties = detect_grid_penalties(qualifying, results)
+        except Exception as exc:  # noqa: BLE001 -- results may not exist yet
+            log.warning("could not fetch last race's results: %s", exc)
+
+    try:
+        news = [
+            {"title": h.title, "summary": h.summary, "matched": list(h.matched)}
+            for h in fetch_headlines()
+        ]
+    except Exception as exc:  # noqa: BLE001 -- news is a nice-to-have, not a hard dependency
+        log.warning("could not fetch headlines: %s", exc)
+        news = []
+
+    context = preview_report.build_preview(
+        next_event,
+        last_race_name=last_event.name if last_event else "",
+        last_race_penalties=penalties,
+        headlines=news,
+        timezone=config.timezone,
+    )
+    out_dir = Path(config.output_dir) / str(config.season) / str(next_event.round)
+    path = render_card("preview.html.j2", context, out_dir / "preview.png")
+    (out_dir / "preview.txt").write_text(preview_report.caption(context) + "\n", encoding="utf-8")
+    print(f"rendered {path}")
+    return 0
+
+
 # --------------------------------------------------------------------------
 # capture
 # --------------------------------------------------------------------------
@@ -475,6 +542,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     doctor = sub.add_parser("doctor", help="validate credentials and configuration")
     doctor.set_defaults(func=cmd_doctor)
+
+    preview = sub.add_parser(
+        "preview", help="render the preview card for the next race (no credentials needed)"
+    )
+    preview.add_argument("--round", type=int, help="round number (default: latest in the calendar)")
+    preview.set_defaults(func=cmd_preview)
 
     capture = sub.add_parser("capture", help="write a snapshot of each league")
     capture.add_argument(
