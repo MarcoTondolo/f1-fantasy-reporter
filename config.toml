@@ -1,0 +1,25 @@
+season = 2026
+
+# Capture every private league the account is in: Ciao Squadra 2026 (4512504),
+# F1 Fantasy Tools Private (268105), DTOUR 2026 (2623604) -- confirmed via
+# `probe` on 2026-08-25.
+leagues = []
+
+# Not set yet -- deliberately undecided which league gets a rendered/emailed
+# card. All three are captured either way, so history accumulates regardless
+# of when this gets set.
+# primary_league = 4512504
+
+# Where reports are emailed for you to forward into the chat.
+email_to = ""
+
+# Used to render session times in the preview card.
+timezone = "Europe/London"
+
+[reports]
+preview = true
+lockout = true
+recap = true
+chips = true
+ownership = true
+winners_losers = true

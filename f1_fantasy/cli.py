@@ -197,6 +197,56 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------
+# showcase
+# --------------------------------------------------------------------------
+
+
+def cmd_showcase(args: argparse.Namespace) -> int:
+    """Capture and render every configured league -- not just a primary one.
+
+    A one-off utility for seeing real cards before committing to a
+    ``primary_league``: the automated `tick` flow only ever renders a card for
+    one league per run, which isn't useful when you haven't decided which
+    league that should be yet. Only renders chips and ownership -- the two
+    card types that are genuinely rich on a first-ever capture, since they
+    read the API's cumulative season state rather than diffing against a
+    previous snapshot this tool hasn't captured yet.
+    """
+    from f1_fantasy.render import render_card
+    from f1_fantasy.report import chips as chips_report
+    from f1_fantasy.report import ownership as ownership_report
+
+    config = Config.load(args.config)
+    credentials = Credentials.from_env()
+    api = build_api(credentials)
+    store = SnapshotStore(config.snapshot_dir)
+
+    race_id = args.race or api.current_race_id()
+    league_ids = config.leagues or [league.league_id for league in api.private_leagues()]
+    if not league_ids:
+        print("no leagues found", file=sys.stderr)
+        return 1
+
+    for league_id in league_ids:
+        snapshot, access = collect_league(
+            api, league_id=league_id, race_id=race_id, phase=Phase.LOCKED, season=config.season
+        )
+        store.write(snapshot)
+        print(f"{snapshot.league_name} ({league_id}): {access}")
+
+        out_dir = Path(config.output_dir) / str(config.season) / str(race_id) / f"league-{league_id}"
+        for name, build, template in (
+            ("chips", chips_report.build_chips, "chips.html.j2"),
+            ("ownership", ownership_report.build_ownership, "ownership.html.j2"),
+        ):
+            context = build(snapshot, race_label=f"Round {race_id}")
+            path = render_card(template, context, out_dir / f"{name}.png")
+            print(f"  {path}")
+
+    return 0
+
+
+# --------------------------------------------------------------------------
 # capture
 # --------------------------------------------------------------------------
 
@@ -386,6 +436,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     capture.add_argument("--race", type=int, help="race id (default: current)")
     capture.set_defaults(func=cmd_capture)
+
+    showcase = sub.add_parser(
+        "showcase", help="capture and render chips/ownership for every configured league"
+    )
+    showcase.add_argument("--race", type=int, help="race id (default: current)")
+    showcase.set_defaults(func=cmd_showcase)
 
     demo = sub.add_parser("demo", help="render cards from synthetic data")
     demo.add_argument("--out", help="output directory (default: out/demo)")

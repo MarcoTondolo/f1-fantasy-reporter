@@ -1,0 +1,49 @@
+name: Showcase live cards
+
+# One-off: capture every configured league and render chip watch + ownership
+# for each, without committing to a primary league yet. Renders images and
+# commits them, unlike probe.yml which only prints diagnostics.
+on:
+  workflow_dispatch:
+    inputs:
+      race:
+        description: "Race id (optional -- defaults to the current one)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  showcase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install -e .
+      - run: playwright install --with-deps chromium
+
+      - name: Showcase
+        env:
+          F1_FANTASY_TOKEN: ${{ secrets.F1_FANTASY_TOKEN }}
+          F1_USER_GUID: ${{ secrets.F1_USER_GUID }}
+        run: |
+          python -m f1_fantasy showcase \
+            ${{ inputs.race && format('--race {0}', inputs.race) || '' }}
+
+      - name: Commit snapshots and cards
+        run: |
+          git config user.name "f1-fantasy-bot"
+          git config user.email "actions@github.com"
+          git add snapshots out 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "Showcase: capture and render every league"
+            git push
+          fi
