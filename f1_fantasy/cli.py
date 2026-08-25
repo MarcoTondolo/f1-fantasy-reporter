@@ -8,6 +8,7 @@ possible at all.
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 from pathlib import Path
@@ -56,9 +57,32 @@ def cmd_probe(args: argparse.Namespace) -> int:
 
     print("\n== Leagues ==")
     leagues = api.private_leagues()
+    source = "/privateleague"
     if not leagues:
-        print("  no private leagues found for this account")
+        # Two unverified guesses already turned out wrong once each (payload
+        # shape, and possibly this filtered endpoint itself), so try the
+        # unfiltered listing before concluding anything -- it costs one extra
+        # call and might save a full CI round-trip.
+        print("  /privateleague returned none -- trying the unfiltered league list")
+        leagues = api.all_leagues()
+        source = "/getuserleague"
+
+    if not leagues:
+        print("  no leagues found via either endpoint. Raw responses:")
+        for label, path in (
+            ("/privateleague", f"/services/user/league/{api.guid}/1/0/0/privateleague"),
+            ("/getuserleague", f"/services/user/league/{api.guid}/getuserleague/1"),
+        ):
+            try:
+                raw = api.client.get_raw(path)
+            except Exception as exc:  # noqa: BLE001 - this is a diagnostic dump
+                print(f"  {label}: request failed: {exc}")
+                continue
+            dumped = json.dumps(raw, indent=2)[:4000]
+            print(f"\n  -- {label} --\n{dumped}")
         return 1
+
+    print(f"  ({source}) found {len(leagues)} league(s):")
     for league in leagues:
         print(f"  {league.league_id:>8}  {league.league_name}  ({league.member_count} members)")
 
