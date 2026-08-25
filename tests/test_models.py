@@ -166,6 +166,63 @@ RAW_GAME_DAYS = [_GAME_DAYS_ENTRY]
 # Kept only as a defensive case in case a future response wraps it after all.
 RAW_GAME_DAYS_WRAPPED = {"data": [_GAME_DAYS_ENTRY]}
 
+# Real capture (2026-08-25) of Data.Value from
+# /opponentteam/opponentgamedayplayerteamget/1/{guid}/1/{raceId}/{teamNo} --
+# the endpoint that genuinely reads another member's picks, unlike getteam.
+# Its shape (lowercase field names, "userTeam" list) turned out identical to
+# getteam's own response, so parse_teams needs no opponent-specific branch --
+# this fixture exists to pin that down rather than trust it by inspection.
+RAW_OPPONENT_TEAM = {
+    "mdid": 12,
+    "userTeam": [
+        {
+            "gdrank": 79259,
+            "ovrank": 42231,
+            "teamno": 1,
+            "teambal": 1.3,
+            "gdpoints": 251.0,
+            "matchday": 1,
+            "ovpoints": 2834.0,
+            "playerid": [
+                {"id": "11059", "isfinal": 0, "iscaptain": 0, "ismgcaptain": 0, "playerpostion": 3},
+                {"id": "11149", "isfinal": 0, "iscaptain": 0, "ismgcaptain": 0, "playerpostion": 2},
+                {"id": "11161", "isfinal": 0, "iscaptain": 1, "ismgcaptain": 0, "playerpostion": 1},
+                {"id": "12", "isfinal": 0, "iscaptain": 0, "ismgcaptain": 0, "playerpostion": 5},
+                {"id": "13", "isfinal": 0, "iscaptain": 0, "ismgcaptain": 0, "playerpostion": 4},
+                {"id": "25", "isfinal": 0, "iscaptain": 0, "ismgcaptain": 0, "playerpostion": 6},
+                {"id": "28", "isfinal": 0, "iscaptain": 0, "ismgcaptain": 0, "playerpostion": 7},
+            ],
+            "socialId": 198616229,
+            "teamname": "dbdbdb",
+            "usersubs": 0,
+            "boosterid": None,
+            "team_info": {
+                "teamBal": 1.3,
+                "teamVal": 113.3,
+                "maxTeambal": 114.6,
+                "subsallowed": 3,
+                "userSubsleft": 3,
+            },
+            "capplayerid": "11161",
+            "subsallowed": 3,
+            "usersubsleft": 0,
+            "mgcapplayerid": None,
+            "isextradrstaken": 0,
+            "isfinalfixtaken": 0,
+            "iswildcardtaken": 0,
+            "wildcardtakengd": 0,
+            "autopilottakengd": None,
+            "isautopilottaken": 0,
+            "islimitlesstaken": 0,
+            "limitlesstakengd": None,
+            "isnonigativetaken": 5,
+            "nonigativetakengd": 1,
+            "inactive_driver_penality_points": 0,
+        }
+    ],
+    "retval": 1,
+}
+
 
 # -- teams -----------------------------------------------------------------
 
@@ -207,6 +264,27 @@ def test_autopilot_race_id_is_read_under_either_spelling():
     by_chip = {chip.chip: chip for chip in chips}
 
     assert by_chip[Chip.AUTOPILOT].race_id == 9
+
+
+def test_opponent_team_parses_via_the_same_parser_as_own_team():
+    """getteam echoes the caller's own team for any other guid -- confirmed
+    live -- but the dedicated opponent endpoint genuinely returns another
+    member's picks, and its response shape matches getteam's exactly."""
+    (team,) = parse_teams(RAW_OPPONENT_TEAM, guid="opp-guid")
+
+    assert team.race_id == 12  # taken from mdid
+    assert team.team_name == "dbdbdb"
+    assert team.player_ids == ["11059", "11149", "11161", "12", "13", "25", "28"]
+    assert team.captain_id == "11161"
+    assert team.transfers_made == 0
+
+
+def test_opponent_team_cost_cap_is_the_existing_bank_field():
+    """teambal and team_info.teamBal agree here -- the field the site's UI
+    labels "Cost Cap" is the same one already parsed into Team.bank."""
+    (team,) = parse_teams(RAW_OPPONENT_TEAM, guid="opp-guid")
+
+    assert team.bank == pytest.approx(1.3)
 
 
 def test_captaincy_falls_back_to_top_level_id_when_flags_are_absent():

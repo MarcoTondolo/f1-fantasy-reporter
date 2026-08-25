@@ -14,12 +14,29 @@ from tests.conftest import make_players, make_team
 
 
 class FakeApi:
-    """Duck-typed stand-in for FantasyApi: only what collect_league calls."""
+    """Duck-typed stand-in for FantasyApi: only what collect_league calls.
 
-    def __init__(self, members: list[Member], teams_by_guid: dict[str, list]) -> None:
+    Tracks which of the two team-fetch paths each guid went through, since
+    that routing -- own guid via try_teams, everyone else via
+    try_opponent_teams -- is itself the fix for a real bug: getteam silently
+    echoes the caller's own team for any other guid rather than erroring.
+    """
+
+    def __init__(
+        self,
+        members: list[Member],
+        teams_by_guid: dict[str, list],
+        *,
+        guid: str = "self-guid",
+        opponent_teams_by_guid: dict[str, list] | None = None,
+    ) -> None:
         self._members = members
         self._teams_by_guid = teams_by_guid
+        self._opponent_teams_by_guid = opponent_teams_by_guid or {}
+        self.guid = guid
         self.fetched_guids: list[str] = []
+        self.own_path_guids: list[str] = []
+        self.opponent_path_guids: list[str] = []
 
     def leaderboard(self, league_id: int):
         return LeagueRef(league_id=league_id, league_name="Test League"), self._members
@@ -29,7 +46,13 @@ class FakeApi:
 
     def try_teams(self, race_id: int, *, guid: str):
         self.fetched_guids.append(guid)
+        self.own_path_guids.append(guid)
         return self._teams_by_guid.get(guid)
+
+    def try_opponent_teams(self, guid: str, race_id: int, team_no: int):
+        self.fetched_guids.append(guid)
+        self.opponent_path_guids.append(guid)
+        return self._opponent_teams_by_guid.get(guid) or self._teams_by_guid.get(guid)
 
 
 def _member(guid: str, rank: int) -> Member:
@@ -118,3 +141,28 @@ def test_pick_team_falls_back_to_the_first_when_no_number_matches():
 
 def test_pick_team_handles_no_teams_at_all():
     assert _pick_team([], _member("a", 1)) is None
+
+
+def test_own_team_uses_try_teams_but_other_members_use_try_opponent_teams():
+    """getteam silently echoes the caller's own team for any other guid --
+    confirmed live -- so only the authenticated account's own guid may ever
+    go through try_teams; everyone else must route through the dedicated
+    opponent endpoint.
+    """
+    members = [_member("self-guid", 1), _member("other-guid", 2)]
+    api = FakeApi(
+        members,
+        teams_by_guid={"self-guid": [make_team("self-guid", 11, ["1"])]},
+        guid="self-guid",
+        opponent_teams_by_guid={"other-guid": [make_team("other-guid", 11, ["2"])]},
+    )
+
+    snapshot, access = collect_league(
+        api, league_id=1, race_id=11, phase=Phase.LOCKED, season=2026, spacing=0
+    )
+
+    assert api.own_path_guids == ["self-guid"]
+    assert api.opponent_path_guids == ["other-guid"]
+    assert access.readable == 2
+    assert team_key("self-guid", 1) in snapshot.teams
+    assert team_key("other-guid", 1) in snapshot.teams

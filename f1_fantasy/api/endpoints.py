@@ -83,6 +83,12 @@ class FantasyApi:
 
         Used when sweeping a whole league, where one unreadable member must not
         abort the run.
+
+        Only ever call this with the authenticated account's own guid --
+        confirmed live 2026-08-25 that ``getteam`` silently echoes the
+        caller's own team for any other guid rather than erroring, which
+        looks exactly like success. For another member, use
+        :meth:`opponent_teams` instead.
         """
         try:
             return self.teams(race_id, guid=guid)
@@ -90,6 +96,38 @@ class FantasyApi:
             return None
         except FantasyError as exc:
             log.warning("could not read team for %s: %s", guid, exc)
+            return None
+
+    def opponent_teams(self, guid: str, race_id: int, team_no: int) -> list[Team]:
+        """Another league member's actual team: picks, captain, chips.
+
+        Confirmed live 2026-08-25 via a DevTools capture on the site itself:
+        ``/opponentteam/opponentgamedayplayerteamget/1/{guid}/1/{race_id}/{team_no}``.
+        Unlike ``getteam``, this genuinely reads another member's data rather
+        than echoing the caller's own -- and its response shape turned out to
+        be identical to ``getteam``'s own (same field names, same lowercase
+        chip keys), a real sibling action rather than a rewrite, so
+        ``parse_teams`` handles it unchanged.
+
+        ``team_no`` is a required URL segment here, not something picked from
+        a returned list afterward -- the endpoint answers for one specific
+        team.
+        """
+        path = (
+            "/services/user/opponentteam/opponentgamedayplayerteamget"
+            f"/1/{guid}/1/{race_id}/{team_no}"
+        )
+        payload = self.client.get(path)
+        return parse_teams(payload, guid=guid, race_id=race_id)
+
+    def try_opponent_teams(self, guid: str, race_id: int, team_no: int) -> list[Team] | None:
+        """Like :meth:`opponent_teams` but returns None rather than raising."""
+        try:
+            return self.opponent_teams(guid, race_id, team_no)
+        except NotShared:
+            return None
+        except FantasyError as exc:
+            log.warning("could not read opponent team for %s: %s", guid, exc)
             return None
 
     # -- scoring history ---------------------------------------------------
@@ -112,10 +150,10 @@ class FantasyApi:
         Confirmed live 2026-08-25, via a DevTools capture on the site itself --
         ``getteam`` cannot read another member (it silently echoes the caller's
         own team regardless of guid), but this dedicated opponent endpoint
-        genuinely does. It does not carry picks/roster, only points and chips;
-        a further endpoint for the opponent's actual driver/constructor
-        selections has not yet been found. Race id is not part of this URL --
-        unlike ``getteam``, it always reflects the account's current gameday.
+        genuinely does. It carries points and chip state only, not picks/roster
+        -- for that, see :meth:`opponent_teams`. Race id is not part of this
+        URL -- unlike ``getteam``, it always reflects the account's current
+        gameday.
         """
         payload = self.client.get(
             f"/services/user/opponentteam/opponentgamedayget/1/{guid}/{team_no}"

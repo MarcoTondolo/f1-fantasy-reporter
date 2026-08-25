@@ -113,7 +113,14 @@ def collect_league(
     for index, member in enumerate(fetchable):
         if index and spacing:
             time.sleep(spacing)
-        found = api.try_teams(race_id, guid=member.guid)
+        # getteam silently echoes the caller's own team for any other guid
+        # rather than erroring (confirmed live) -- it must only ever be used
+        # for the authenticated account itself. Every other member goes
+        # through the dedicated opponent endpoint instead.
+        if member.guid == api.guid:
+            found = api.try_teams(race_id, guid=member.guid)
+        else:
+            found = api.try_opponent_teams(member.guid, race_id, member.team_no)
         if not found:
             log.debug("no team data for %s (%s)", member.user_name, member.guid)
             continue
