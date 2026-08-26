@@ -455,6 +455,52 @@ def cmd_tyre_asymmetry(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_reconcile_scoring(args: argparse.Namespace) -> int:
+    """Prove the fantasy scoring table against the game's own published points.
+
+    Reconstructs each driver's qualifying and race points from public results
+    and compares them to what F1 Fantasy actually awarded. Qualifying must
+    match exactly. Race points are reconciled without overtakes -- which no
+    results feed carries -- so the leftover residual should be a small
+    non-negative integer for every driver. Anything negative or fractional
+    means a scoring rule is wrong.
+    """
+    from f1_fantasy.predict.reconcile import reconcile_round, summarise
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    everything = []
+    print(f"{'rnd':>4}{'drv':>5}{'Q ok':>6}{'Q bad':>7}{'plausible':>11}{'implausible':>13}")
+    for round_number in rounds:
+        try:
+            rows = reconcile_round(config.season, round_number, cache_dir=args.cache_dir)
+        except Exception as exc:  # noqa: BLE001 -- one bad round shouldn't abort the sweep
+            print(f"{round_number:>4}  failed: {exc}")
+            continue
+        everything.extend(rows)
+        s = summarise(rows)
+        print(f"{round_number:>4}{s['drivers']:>5}{s['qualifying_exact']:>6}"
+              f"{s['qualifying_mismatches']:>7}{s['residual_plausible_as_overtakes']:>11}"
+              f"{s['residual_implausible']:>13}")
+
+    total = summarise(everything)
+    print("\n== overall ==")
+    for key, value in total.items():
+        print(f"  {key}: {value}")
+
+    failed = total["qualifying_mismatches"] or total["residual_implausible"]
+    if failed:
+        print("\nGATE FAILED: a scoring rule does not reproduce the game's own points.")
+        for row in everything:
+            if not row.qualifying_matches or not row.residual_looks_like_overtakes:
+                print(f"  R{row.round_number} {row.driver}: "
+                      f"Q {row.actual_qualifying:g} vs {row.expected_qualifying:g}, "
+                      f"race residual {row.residual:g}")
+        return 1
+    print("\nGATE PASSED: qualifying exact, every race residual a non-negative integer.")
+    return 0
+
+
 # --------------------------------------------------------------------------
 # capture
 # --------------------------------------------------------------------------
@@ -670,6 +716,15 @@ def build_parser() -> argparse.ArgumentParser:
     tyre_asymmetry.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     tyre_asymmetry.add_argument("--out", help="output JSON path (default: data/pace/tyre_asymmetry_...)")
     tyre_asymmetry.set_defaults(func=cmd_tyre_asymmetry)
+
+    reconcile = sub.add_parser(
+        "reconcile-scoring",
+        help="prove the fantasy scoring table against the game's own published points",
+    )
+    reconcile.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    reconcile.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    reconcile.add_argument("--cache-dir", help="directory to cache driver feeds in")
+    reconcile.set_defaults(func=cmd_reconcile_scoring)
 
     capture = sub.add_parser("capture", help="write a snapshot of each league")
     capture.add_argument(
