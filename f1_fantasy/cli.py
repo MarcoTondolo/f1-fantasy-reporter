@@ -419,6 +419,38 @@ def cmd_track_backtest(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_hers_backtest(args: argparse.Namespace) -> int:
+    """Gate 3: falsification test for the H-ERS (circuit energy x PU efficiency) hypothesis.
+
+    Checks whether 2026 clipping severity (time spent at full throttle but
+    decelerating -- energy depletion under the new power-unit regs) predicts
+    each circuit's year-on-year lap-time loss versus 2025, better than a flat
+    per-team offset would. Requires FastF1 telemetry for both seasons at
+    every matched circuit -- slow, and the 2025 side is not yet cached by
+    anything else in this project.
+    """
+    import json
+
+    from f1_fantasy.pace.hers import hers_falsification_test
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"H-ERS falsification test: {config.season} rounds {rounds[0]}-{rounds[-1]} vs {args.compare_season}...")
+    result = hers_falsification_test(config.season, args.compare_season, rounds)
+
+    out_path = Path(args.out or f"data/pace/hers_backtest_{config.season}_r{rounds[0]}-{rounds[-1]}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    print(f"circuits checked: {result['circuits_checked']}")
+    print(f"ranked by clipping: {result['ranked_circuits_by_clipping']}")
+    print(f"Spa rank: {result['spa_rank']}, Monaco rank: {result['monaco_rank']} of {result['n_circuits_ranked']}")
+    print(f"correlation (severity vs YoY delta): {result['correlation_severity_vs_delta']}")
+    print(f"Mercedes Monaco rank: {result['mercedes_monaco_rank']} of {result['mercedes_monaco_n_teams']}")
+    print(f"written {out_path}")
+    return 0
+
+
 def cmd_tyre_asymmetry(args: argparse.Namespace) -> int:
     """Correlate each constructor's degradation against track corner-direction balance.
 
@@ -791,6 +823,16 @@ def build_parser() -> argparse.ArgumentParser:
     track_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     track_backtest.add_argument("--out", help="output JSON path (default: data/pace/track_backtest_...)")
     track_backtest.set_defaults(func=cmd_track_backtest)
+
+    hers_backtest = sub.add_parser(
+        "hers-backtest",
+        help="Gate 3: does circuit clipping severity predict year-on-year team lap-time loss",
+    )
+    hers_backtest.add_argument("--start", type=int, default=1, help="first round, new season (default: 1)")
+    hers_backtest.add_argument("--end", type=int, default=12, help="last round, new season, inclusive (default: 12)")
+    hers_backtest.add_argument("--compare-season", type=int, default=2025, help="prior season to compare against (default: 2025)")
+    hers_backtest.add_argument("--out", help="output JSON path (default: data/pace/hers_backtest_...)")
+    hers_backtest.set_defaults(func=cmd_hers_backtest)
 
     tyre_asymmetry = sub.add_parser(
         "tyre-asymmetry", help="correlate constructor degradation against track corner-direction balance"
