@@ -501,6 +501,32 @@ def cmd_reconcile_scoring(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_race_backtest(args: argparse.Namespace) -> int:
+    """Falsification test: does discounting for DNF risk beat the plain form-predicted grid?
+
+    Walk-forward only -- each round's prediction sees strictly earlier rounds.
+    Reports Spearman correlation and rank MAE against actual race order for
+    the form-only baseline and the reliability-gated predictor side by side.
+    """
+    import json
+
+    from f1_fantasy.predict.race import backtest_race_order
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"walk-forward race-order backtest, {config.season} rounds {rounds[0]}-{rounds[-1]}...")
+    result = backtest_race_order(config.season, rounds)
+
+    out_path = Path(args.out or f"data/pace/race_backtest_{config.season}_r{rounds[0]}-{rounds[-1]}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    for label in ("baseline_grid_rank", "reliability_gated"):
+        print(f"{label}: {result[label]['summary']}")
+    print(f"written {out_path}")
+    return 0
+
+
 # --------------------------------------------------------------------------
 # capture
 # --------------------------------------------------------------------------
@@ -725,6 +751,15 @@ def build_parser() -> argparse.ArgumentParser:
     reconcile.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     reconcile.add_argument("--cache-dir", help="directory to cache driver feeds in")
     reconcile.set_defaults(func=cmd_reconcile_scoring)
+
+    race_backtest = sub.add_parser(
+        "race-backtest",
+        help="walk-forward test: does DNF-risk discounting beat the plain form-predicted grid",
+    )
+    race_backtest.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    race_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    race_backtest.add_argument("--out", help="output JSON path (default: data/pace/race_backtest_...)")
+    race_backtest.set_defaults(func=cmd_race_backtest)
 
     capture = sub.add_parser("capture", help="write a snapshot of each league")
     capture.add_argument(
