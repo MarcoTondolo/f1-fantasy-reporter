@@ -707,6 +707,36 @@ def cmd_race_backtest(args: argparse.Namespace) -> int:
 DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 12}
 
 
+def cmd_points_backtest(args: argparse.Namespace) -> int:
+    """The integrative Phase-8 gate: walk-forward expected-points MAE, rank
+    correlation, top-pick hit-rate per season, benchmarked against the
+    game's own ProjectedGamedayPoints (2026 only), plus the full optimiser
+    backtest for 2026. 2024/2025 use reconstruct_points (Jolpica-only, no
+    overtakes, no public feed) rather than faking a number that can't exist.
+    """
+    import json
+
+    from f1_fantasy.predict.backtest_points import backtest_points_seasons
+
+    seasons = [int(s) for s in args.seasons.split(",")]
+    season_rounds = {season: list(range(1, DEFAULT_SEASON_ROUNDS.get(season, 24) + 1)) for season in seasons}
+    print(f"walk-forward points-accuracy backtest: {season_rounds} (n_samples={args.n_samples})...")
+    result = backtest_points_seasons(season_rounds, cache_dir=args.cache_dir, n_samples=args.n_samples)
+
+    out_path = Path(args.out or "data/pace/points_backtest.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    for season, by_season in result.items():
+        print(f"season {season}: rounds_evaluated={by_season['rounds_evaluated']}")
+        for key, value in by_season["summary"].items():
+            print(f"  {key}: {value}")
+        if "optimiser_backtest" in by_season:
+            print(f"  optimiser_backtest: {by_season['optimiser_backtest']['summary']}")
+    print(f"written {out_path}")
+    return 0
+
+
 def cmd_optimiser_backtest(args: argparse.Namespace) -> int:
     """Gate: does the optimiser beat a naive and a harder baseline on
     realised points and budget growth, walk-forward against real 2026 data?
@@ -1051,6 +1081,15 @@ def build_parser() -> argparse.ArgumentParser:
     race_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     race_backtest.add_argument("--out", help="output JSON path (default: data/pace/race_backtest_...)")
     race_backtest.set_defaults(func=cmd_race_backtest)
+
+    points_backtest = sub.add_parser(
+        "points-backtest", help="the integrative gate: walk-forward expected-points accuracy per season"
+    )
+    points_backtest.add_argument("--seasons", default="2024,2025,2026", help="comma-separated seasons (default: 2024,2025,2026)")
+    points_backtest.add_argument("--cache-dir", help="directory to cache driver feeds in")
+    points_backtest.add_argument("--n-samples", type=int, default=500, help="Monte Carlo samples per round (default: 500)")
+    points_backtest.add_argument("--out", help="output JSON path (default: data/pace/points_backtest.json)")
+    points_backtest.set_defaults(func=cmd_points_backtest)
 
     optimiser_backtest = sub.add_parser(
         "optimiser-backtest", help="does the team optimiser beat a naive and a harder baseline on realised outcomes"

@@ -20,7 +20,7 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
-from f1_fantasy.predict.scoring import qualifying_points, race_points
+from f1_fantasy.predict.scoring import PointsBreakdown, qualifying_points, race_points
 from f1_fantasy.results import fetch_qualifying, fetch_race_results
 
 log = logging.getLogger(__name__)
@@ -114,51 +114,63 @@ def _as_float(value) -> float:
         return 0.0
 
 
-def reconcile_round(
-    season: int, round_number: int, *, cache_dir: Path | str | None = None
-) -> list[DriverReconciliation]:
-    """Reconstruct one round's points and compare against the feed."""
-    feed = fetch_driver_feed(round_number, cache_dir=cache_dir)
+def reconstruct_points(season: int, round_number: int) -> dict[str, PointsBreakdown]:
+    """Per-driver qualifying+race PointsBreakdown from Jolpica alone.
+
+    No overtakes (Jolpica carries no lap-by-lap positions -- see the module
+    docstring) and no public-feed dependency, unlike reconcile_round. This is
+    the path backtest_points.py uses for 2024/2025, where the public fantasy
+    feed does not exist at all (it only ever serves the current season).
+    """
     quali = {q.driver_code: q for q in fetch_qualifying(season, round_number)}
     race = fetch_race_results(season, round_number)
-    results = {r.driver_code: r for r in race}
     winner_laps = max((r.laps for r in race), default=0)
 
-    out: list[DriverReconciliation] = []
-    for code, row in feed.items():
-        if code in KNOWN_INCONSISTENT_DRIVERS:
-            continue
-        result = results.get(code)
-        if result is None:
-            continue
-
-        q = quali.get(code)
-        expected_q = qualifying_points(
-            q.position if q else None, set_a_time=q.set_a_time if q else False
-        )
-
+    breakdowns: dict[str, PointsBreakdown] = {}
+    for result in race:
+        q = quali.get(result.driver_code)
         breakdown = race_points(
             grid=result.grid,
             position=result.position,
             status=result.status,
             overtakes=0,
             fastest_lap=result.fastest_lap,
-            # Driver of the Day is fan-voted and appears in no results feed,
-            # so it cannot be supplied here. It surfaces instead as exactly
-            # one driver per round whose residual is 10 higher than their
-            # overtake count -- see `driver_of_the_day_candidates`.
+            # Driver of the Day is fan-voted and appears in no results feed --
+            # see driver_of_the_day_candidates for how it's recovered instead.
             driver_of_the_day=False,
             laps=result.laps,
             winner_laps=winner_laps,
         )
+        breakdown.qualifying = qualifying_points(
+            q.position if q else None, set_a_time=q.set_a_time if q else False
+        )
+        breakdowns[result.driver_code] = breakdown
+    return breakdowns
+
+
+def reconcile_round(
+    season: int, round_number: int, *, cache_dir: Path | str | None = None
+) -> list[DriverReconciliation]:
+    """Reconstruct one round's points and compare against the feed."""
+    feed = fetch_driver_feed(round_number, cache_dir=cache_dir)
+    reconstructed = reconstruct_points(season, round_number)
+
+    out: list[DriverReconciliation] = []
+    for code, row in feed.items():
+        if code in KNOWN_INCONSISTENT_DRIVERS:
+            continue
+        breakdown = reconstructed.get(code)
+        if breakdown is None:
+            continue
+
         out.append(
             DriverReconciliation(
                 round_number=round_number,
                 driver=code,
                 actual_qualifying=_as_float(row.get("QualifyingPoints")),
-                expected_qualifying=expected_q,
+                expected_qualifying=breakdown.qualifying,
                 actual_race=_as_float(row.get("RacePoints")),
-                expected_race_without_overtakes=breakdown.total,
+                expected_race_without_overtakes=breakdown.total - breakdown.qualifying,
             )
         )
     return out

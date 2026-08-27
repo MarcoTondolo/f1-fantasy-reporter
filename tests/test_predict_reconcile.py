@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from f1_fantasy.predict.reconcile import (
     DriverReconciliation,
     driver_of_the_day_candidates,
@@ -155,3 +157,33 @@ def test_fetch_driver_feed_and_fetch_constructor_feed_rows_share_one_cached_payl
     assert set(drivers) == {"VER"}
     assert set(constructors) == {"Red Bull Racing"}
     assert constructors["Red Bull Racing"]["Value"] == 30.0
+
+
+def test_reconstruct_points_matches_reconcile_rounds_split(monkeypatch):
+    """Regression test for the reconstruct_points extraction: reconcile_round
+    must still report the exact same expected_qualifying and
+    expected_race_without_overtakes it did before the refactor, now that
+    both are derived from one shared reconstruct_points call."""
+    from f1_fantasy.predict import reconcile as reconcile_module
+
+    monkeypatch.setattr(reconcile_module, "fetch_qualifying", lambda season, rnd: parse_qualifying(RAW_QUALI_R11))
+    monkeypatch.setattr(reconcile_module, "fetch_race_results", lambda season, rnd: parse_race_results(RAW_RESULTS_R11))
+    monkeypatch.setattr(
+        reconcile_module,
+        "fetch_driver_feed",
+        lambda race_id, cache_dir=None: {
+            "NOR": {"QualifyingPoints": "10", "RacePoints": "25"},
+            "HAM": {"QualifyingPoints": "6", "RacePoints": "20"},
+        },
+    )
+
+    breakdowns = reconcile_module.reconstruct_points(2026, 11)
+    rows = reconcile_module.reconcile_round(2026, 11)
+    rows_by_driver = {r.driver: r for r in rows}
+
+    # Norris: pole (10 quali pts), win with no places gained (25 race pts, 0 gained).
+    assert breakdowns["NOR"].qualifying == 10
+    assert rows_by_driver["NOR"].expected_qualifying == 10
+    assert rows_by_driver["NOR"].expected_race_without_overtakes == pytest.approx(
+        breakdowns["NOR"].total - breakdowns["NOR"].qualifying
+    )
