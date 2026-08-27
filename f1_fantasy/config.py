@@ -72,6 +72,8 @@ class Config(Model):
             "ownership": True,
             "budget": True,
             "winners_losers": True,
+            "picks": True,
+            "hindsight": True,
         }
     )
 

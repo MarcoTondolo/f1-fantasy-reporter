@@ -1,0 +1,64 @@
+{% extends "base.html.j2" %}
+{# Pre-race picks: expected points, price-rise probability, captain call,
+   optimal team -- a model projection, not the game's own ProjectedGamedayPoints. #}
+
+{% block content %}
+
+{% if captain_suggestion %}
+<section class="tiles">
+  <div class="tile good">
+    <div class="tile-label">Captain suggestion</div>
+    <div class="tile-value">{{ captain_suggestion.ev }}</div>
+    <div class="tile-name">{{ captain_suggestion.driver }}</div>
+    <div class="tile-note">expected value (&times;2)</div>
+  </div>
+  {% if optimal_team %}
+  <div class="tile">
+    <div class="tile-label">Optimal team</div>
+    <div class="tile-value">{{ optimal_team.expected_points }}</div>
+    <div class="tile-name">${{ optimal_team.total_price }}M</div>
+    <div class="tile-note">{{ optimal_team.drivers | join(', ') }} + {{ optimal_team.constructors | join(', ') }}</div>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if top_picks %}
+<section>
+  <h2 class="section-title">Expected points</h2>
+  <div class="standings">
+    {% for row in top_picks %}
+    <div class="picks-row">
+      <div class="rank">{{ loop.index }}</div>
+      <div class="who">
+        <div class="who-name">{{ row.driver }}</div>
+        <div class="who-team">${{ row.price }}M</div>
+      </div>
+      <div class="total">{{ row.mean }}</div>
+      <div class="picks-range">p10 {{ row.p10 }} / p90 {{ row.p90 }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if price_risers %}
+<section>
+  <h2 class="section-title">Likely price risers</h2>
+  <div class="standings">
+    {% for row in price_risers %}
+    <div class="bet-row">
+      <span class="bet-name">{{ row.driver }}</span>
+      <span class="badge hot">{{ row.p_price_rise }}%</span>
+      <span class="delta pos bet-points">{{ row.mean_delta_budget | signed }}M</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

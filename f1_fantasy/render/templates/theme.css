@@ -451,6 +451,26 @@ body {
   min-height: 50px;
 }
 
+/* -- picks rows (expected points, with a p10/p90 range column) ----------- */
+
+.picks-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 90px 180px;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: 9px 18px;
+  min-height: 50px;
+}
+.picks-range {
+  font-size: 15px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 /* -- ownership rows ------------------------------------------------------ */
 
 .own-row {

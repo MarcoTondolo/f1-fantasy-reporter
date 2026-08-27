@@ -592,6 +592,89 @@ def cmd_collect_odds(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_picks(args: argparse.Namespace) -> int:
+    """Render the picks card for the next race: expected points, price-rise
+    probability, captain suggestion, optimal team.
+
+    No league credentials needed -- calendar and the public driver feed are
+    both public. Needs at least one round of real results to train form
+    from, and the public driver feed for the most recent completed round to
+    get real current prices -- see predict/simulate.py and predict/prices.py.
+    """
+    from datetime import datetime, timezone
+
+    from f1_fantasy.calendar import current_event, fetch_calendar
+    from f1_fantasy.predict.optimise import optimise_team
+    from f1_fantasy.predict.prices import round_history
+    from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed
+    from f1_fantasy.predict.simulate import simulate_round
+    from f1_fantasy.render import render_card
+    from f1_fantasy.report import picks as picks_report
+    from f1_fantasy.results import fetch_qualifying
+
+    config = Config.load(args.config)
+    events = fetch_calendar(config.season)
+    if not events:
+        print("no calendar data", file=sys.stderr)
+        return 1
+
+    if args.round is not None:
+        by_round = {e.round: e for e in events}
+        next_event = by_round.get(args.round)
+        if next_event is None:
+            print(f"round {args.round} not found in the {config.season} calendar", file=sys.stderr)
+            return 1
+    else:
+        next_event = current_event(events, datetime.now(timezone.utc))
+        if next_event is None:
+            print("no upcoming race found in the calendar", file=sys.stderr)
+            return 1
+
+    target_round = next_event.round
+    train_rounds = list(range(1, target_round))
+    if not train_rounds:
+        print(f"no prior rounds to train from for round {target_round}", file=sys.stderr)
+        return 1
+    last_round = train_rounds[-1]
+
+    try:
+        driver_feed = fetch_driver_feed(last_round, cache_dir=args.cache_dir)
+        constructor_feed = fetch_constructor_feed_rows(last_round, cache_dir=args.cache_dir)
+    except Exception as exc:  # noqa: BLE001 -- the public feed may be briefly unavailable, not worth a traceback
+        print(f"could not fetch the public driver feed for round {last_round}: {exc}", file=sys.stderr)
+        return 1
+
+    price_before = {code: float(row.get("Value") or 0) for code, row in driver_feed.items()}
+    constructor_prices = {name: float(row.get("Value") or 0) for name, row in constructor_feed.items()}
+    recent_price_history = round_history(train_rounds, cache_dir=args.cache_dir)
+
+    summaries = simulate_round(
+        config.season, train_rounds, target_round,
+        price_before=price_before, recent_price_history=recent_price_history,
+        sprint=next_event.is_sprint_weekend, n_samples=args.n_samples,
+    )
+    if not summaries:
+        print("not enough form history to build picks yet", file=sys.stderr)
+        return 1
+
+    constructor_of = {q.driver_code: q.constructor for q in fetch_qualifying(config.season, last_round)}
+    driver_points = {d: s.mean for d, s in summaries.items()}
+    constructor_points: dict[str, float] = {}
+    for d, s in summaries.items():
+        constructor = constructor_of.get(d)
+        if constructor:
+            constructor_points[constructor] = constructor_points.get(constructor, 0.0) + s.mean
+
+    team_selection = optimise_team(driver_points, price_before, constructor_points, constructor_prices)
+
+    context = picks_report.build_picks(next_event, summaries, team_selection, league_name=args.league_name or "")
+    out_dir = Path(config.output_dir) / str(config.season) / str(target_round)
+    path = render_card("picks.html.j2", context, out_dir / "picks.png")
+    (out_dir / "picks.txt").write_text(picks_report.caption(context) + "\n", encoding="utf-8")
+    print(f"written {path}")
+    return 0
+
+
 def cmd_race_backtest(args: argparse.Namespace) -> int:
     """Falsification test: does discounting for DNF risk beat the plain form-predicted grid?
 
@@ -893,6 +976,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     preview.add_argument("--round", type=int, help="round number (default: latest in the calendar)")
     preview.set_defaults(func=cmd_preview)
+
+    picks = sub.add_parser("picks", help="render the picks card for the next race (no credentials needed)")
+    picks.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")
+    picks.add_argument("--cache-dir", help="directory to cache driver feeds in")
+    picks.add_argument("--n-samples", type=int, default=2000, help="Monte Carlo samples per driver (default: 2000)")
+    picks.add_argument("--league-name", help="league name to show on the card")
+    picks.set_defaults(func=cmd_picks)
 
     pace_backtest = sub.add_parser(
         "pace-backtest", help="backfill practice pace and evaluate it against actual results"

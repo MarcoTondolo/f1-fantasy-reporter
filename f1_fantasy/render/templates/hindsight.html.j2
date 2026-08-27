@@ -1,0 +1,47 @@
+{% extends "base.html.j2" %}
+{# Post-race hindsight: the optimal team this round, vs what members actually
+   picked -- validation and chat content, not a prediction. #}
+
+{% block content %}
+
+{% if optimal_total is not none %}
+<section class="tiles">
+  <div class="tile good">
+    <div class="tile-label">Optimal team scored</div>
+    <div class="tile-value">{{ optimal_total }}</div>
+    <div class="tile-name">captain: {{ optimal_captain }}</div>
+    <div class="tile-note">{{ optimal_team | join(', ') }}</div>
+  </div>
+</section>
+{% endif %}
+
+{% if closest or furthest %}
+<section class="tiles">
+  {% if closest %}
+  <div class="tile good">
+    <div class="tile-label">Closest to perfect</div>
+    <div class="tile-value">{{ closest.actual }}</div>
+    <div class="tile-name">{{ closest.name }}</div>
+    <div class="tile-note">-{{ closest.gap }} off optimal</div>
+  </div>
+  {% endif %}
+  {% if furthest %}
+  <div class="tile bad">
+    <div class="tile-label">Furthest from perfect</div>
+    <div class="tile-value">{{ furthest.actual }}</div>
+    <div class="tile-name">{{ furthest.name }}</div>
+    <div class="tile-note">-{{ furthest.gap }} off optimal</div>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if average_gap is not none %}
+<div class="note">League average gap to optimal this round: {{ average_gap }} pts.</div>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

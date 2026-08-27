@@ -68,7 +68,7 @@ def test_companion_cards_are_skipped_when_toggled_off(tmp_path):
     assert {report.kind for report in publisher.published} == {"lockout"}
 
 
-def test_recap_renders_the_winners_losers_companion(tmp_path):
+def test_recap_renders_the_winners_losers_and_hindsight_companions(tmp_path):
     store = SnapshotStore(tmp_path / "snapshots")
     config = Config(output_dir=tmp_path / "out")
     publisher = NullPublisher()
@@ -85,7 +85,7 @@ def test_recap_renders_the_winners_losers_companion(tmp_path):
         publisher=publisher,
     )
 
-    assert {report.kind for report in publisher.published} == {"recap", "winners_losers"}
+    assert {report.kind for report in publisher.published} == {"recap", "winners_losers", "hindsight"}
 
 
 def test_lockout_and_recap_are_the_only_actions_with_companions():
