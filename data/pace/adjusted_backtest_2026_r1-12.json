@@ -1,0 +1,17 @@
+{
+  "baseline_grid_rank": {
+    "rounds_evaluated": 11,
+    "mean_spearman": 0.635745580263991,
+    "mean_mae": 3.770790612895877
+  },
+  "raw_reliability_gated": {
+    "rounds_evaluated": 11,
+    "mean_spearman": 0.6241185968874756,
+    "mean_mae": 3.8846703535698754
+  },
+  "adjusted_reliability_gated": {
+    "rounds_evaluated": 11,
+    "mean_spearman": 0.6232972838131982,
+    "mean_mae": 3.8929348163797926
+  }
+}

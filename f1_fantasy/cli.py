@@ -624,6 +624,30 @@ def cmd_race_backtest(args: argparse.Namespace) -> int:
 DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 12}
 
 
+def cmd_adjusted_backtest(args: argparse.Namespace) -> int:
+    """Falsification test: does excluding high-confidence collision DNFs from
+    reliability beat the plain grid-rank baseline, where raw reliability-
+    gating (race.py, task #15) did not?
+    """
+    import json
+
+    from f1_fantasy.predict.adjusted import backtest_adjusted_reliability
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"walk-forward incident-adjusted reliability backtest, {config.season} rounds {rounds[0]}-{rounds[-1]}...")
+    result = backtest_adjusted_reliability(config.season, rounds)
+
+    out_path = Path(args.out or f"data/pace/adjusted_backtest_{config.season}_r{rounds[0]}-{rounds[-1]}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    for label in ("baseline_grid_rank", "raw_reliability_gated", "adjusted_reliability_gated"):
+        print(f"{label}: {result[label]}")
+    print(f"written {out_path}")
+    return 0
+
+
 def cmd_multi_season_backtest(args: argparse.Namespace) -> int:
     """Robustness check: do the form/reliability walk-forward numbers hold outside 2026?
 
@@ -913,6 +937,15 @@ def build_parser() -> argparse.ArgumentParser:
     race_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     race_backtest.add_argument("--out", help="output JSON path (default: data/pace/race_backtest_...)")
     race_backtest.set_defaults(func=cmd_race_backtest)
+
+    adjusted_backtest = sub.add_parser(
+        "adjusted-backtest",
+        help="does excluding high-confidence collision DNFs from reliability beat the grid-rank baseline",
+    )
+    adjusted_backtest.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    adjusted_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    adjusted_backtest.add_argument("--out", help="output JSON path (default: data/pace/adjusted_backtest_...)")
+    adjusted_backtest.set_defaults(func=cmd_adjusted_backtest)
 
     multi_season_backtest = sub.add_parser(
         "multi-season-backtest",

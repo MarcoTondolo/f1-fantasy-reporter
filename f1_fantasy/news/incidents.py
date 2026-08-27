@@ -26,6 +26,7 @@ a bug.
 
 from __future__ import annotations
 
+import functools
 import re
 from dataclasses import dataclass
 
@@ -177,9 +178,16 @@ def summarise_driver_incidents(
     return summaries
 
 
+@functools.lru_cache(maxsize=None)
 def round_incidents(season: int, round_number: int) -> dict[str, DriverIncidentSummary]:
     """Convenience entry point: load, parse and summarise one round's race
-    control messages against its own race results."""
+    control messages against its own race results.
+
+    Cached: a scored round's messages never change, and adjusted.py's
+    walk-forward backtest refetches the same early rounds on every later
+    round's prediction (the same rationale results.py's fetchers are cached
+    for).
+    """
     from f1_fantasy.results import fetch_race_results
 
     raw = _load_race_control_messages(season, round_number)
