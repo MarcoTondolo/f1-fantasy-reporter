@@ -501,6 +501,27 @@ def cmd_reconcile_scoring(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_price_backtest(args: argparse.Namespace) -> int:
+    """Gate 2: check the PPM price-tier mechanism against real recorded price changes.
+
+    The thresholds are not fitted here -- they are the publicly documented
+    F1 Fantasy algorithm (see predict/prices.py) -- this just checks how
+    often it reproduces what the game actually did, round by round, using
+    the same public driver feed reconcile-scoring caches.
+    """
+    from f1_fantasy.predict.prices import backtest_prices
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"checking PPM price-tier predictions for {config.season} rounds {rounds[0]}-{rounds[-1]}...")
+    result = backtest_prices(rounds, cache_dir=args.cache_dir)
+
+    print(f"matches: {result['matches']}/{result['total']} ({result['match_rate']:.1%})" if result["total"] else "no data")
+    for row in result["mismatches"]:
+        print(f"  R{row['round']} {row['driver']}: actual {row['actual']:+.1f} vs predicted {row['predicted']:+.1f}")
+    return 0
+
+
 def cmd_race_backtest(args: argparse.Namespace) -> int:
     """Falsification test: does discounting for DNF risk beat the plain form-predicted grid?
 
@@ -751,6 +772,15 @@ def build_parser() -> argparse.ArgumentParser:
     reconcile.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     reconcile.add_argument("--cache-dir", help="directory to cache driver feeds in")
     reconcile.set_defaults(func=cmd_reconcile_scoring)
+
+    price_backtest = sub.add_parser(
+        "price-backtest",
+        help="check the PPM price-tier mechanism against real recorded price changes",
+    )
+    price_backtest.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    price_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    price_backtest.add_argument("--cache-dir", help="directory to cache driver feeds in")
+    price_backtest.set_defaults(func=cmd_price_backtest)
 
     race_backtest = sub.add_parser(
         "race-backtest",
