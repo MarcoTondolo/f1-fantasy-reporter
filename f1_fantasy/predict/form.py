@@ -6,6 +6,16 @@ it scores 0.898 mean Spearman against actual qualifying order, statistically
 indistinguishable from the entire FastF1 practice-pace pipeline (0.905). Every
 more elaborate predictor in this project is measured against this baseline,
 not against zero.
+
+**This number is specific to 2026, not general.** The identical code run
+against 2024 and 2025 (see predict/multi_season.py) scores 0.714 and 0.702
+respectively -- still a strong baseline, but a real and consistent gap below
+2026, not sampling noise (2024/25 each have double 2026's evaluated rounds,
+which should shrink the gap if it were noise, not preserve it). Likely cause:
+2026's new regulations produced a wider, more entrenched spread of car
+performance in year one than the settled 2024-25 grids, which a pure ranking
+signal like rolling form tracks more easily. Treat "0.898" as a 2026 result;
+treat "~0.7" as the number to expect in a settled-regulations season.
 """
 
 from __future__ import annotations

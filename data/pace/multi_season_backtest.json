@@ -1,0 +1,56 @@
+{
+  "2024": {
+    "season": 2024,
+    "form_vs_qualifying": {
+      "rounds_evaluated": 23,
+      "mean_spearman": 0.7140689998445318,
+      "mean_mae": 3.1862700228832956
+    },
+    "baseline_grid_rank_vs_race": {
+      "rounds_evaluated": 23,
+      "mean_spearman": 0.6558352402745994,
+      "mean_mae": 3.474141876430206
+    },
+    "reliability_gated_vs_race": {
+      "rounds_evaluated": 23,
+      "mean_spearman": 0.6517489375612946,
+      "mean_mae": 3.491533180778032
+    }
+  },
+  "2025": {
+    "season": 2025,
+    "form_vs_qualifying": {
+      "rounds_evaluated": 23,
+      "mean_spearman": 0.7016731620682104,
+      "mean_mae": 3.298398169336385
+    },
+    "baseline_grid_rank_vs_race": {
+      "rounds_evaluated": 23,
+      "mean_spearman": 0.5706548981148523,
+      "mean_mae": 3.9205949656750567
+    },
+    "reliability_gated_vs_race": {
+      "rounds_evaluated": 23,
+      "mean_spearman": 0.568083251607279,
+      "mean_mae": 3.916475972540045
+    }
+  },
+  "2026": {
+    "season": 2026,
+    "form_vs_qualifying": {
+      "rounds_evaluated": 11,
+      "mean_spearman": 0.8873913133534519,
+      "mean_mae": 2.195695851198243
+    },
+    "baseline_grid_rank_vs_race": {
+      "rounds_evaluated": 11,
+      "mean_spearman": 0.635745580263991,
+      "mean_mae": 3.770790612895877
+    },
+    "reliability_gated_vs_race": {
+      "rounds_evaluated": 11,
+      "mean_spearman": 0.6241185968874756,
+      "mean_mae": 3.8846703535698754
+    }
+  }
+}

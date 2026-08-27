@@ -9,8 +9,11 @@ guesswork about wording.
 
 from __future__ import annotations
 
+import functools
 import json
 import logging
+import time
+import urllib.error
 import urllib.request
 from typing import Any, Mapping
 
@@ -95,11 +98,27 @@ class GridPenalty(Model):
 PENALTY_THRESHOLD = 3
 
 
-def _fetch(path: str, *, timeout: float = 20.0) -> Mapping[str, Any]:
+def _fetch(path: str, *, timeout: float = 20.0, retries: int = 4) -> Mapping[str, Any]:
+    """Fetch one Jolpica path, retrying on 429 with backoff.
+
+    Walk-forward evaluation refetches the same early rounds on every later
+    round's prediction, so a multi-season sweep can throw dozens of requests
+    at Jolpica in quick succession -- this is the backstop, caching in
+    ``fetch_qualifying``/``fetch_race_results`` is the actual fix.
+    """
     url = f"{BASE_URL}/{path}"
     log.debug("fetching %s", url)
-    with urllib.request.urlopen(url, timeout=timeout) as response:
-        return json.loads(response.read().decode("utf-8"))
+    delay = 1.0
+    for attempt in range(retries + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            if exc.code != 429 or attempt == retries:
+                raise
+            time.sleep(delay)
+            delay *= 2
+    raise AssertionError("unreachable")
 
 
 def parse_qualifying(payload: Mapping[str, Any]) -> list[QualifyingResult]:
@@ -154,10 +173,14 @@ def parse_race_results(payload: Mapping[str, Any]) -> list[RaceResult]:
     return results
 
 
+@functools.lru_cache(maxsize=None)
 def fetch_qualifying(season: int, round_number: int) -> list[QualifyingResult]:
+    """Cached: a scored round's results never change, and walk-forward
+    evaluation refetches the same early rounds on every later round."""
     return parse_qualifying(_fetch(f"{season}/{round_number}/qualifying.json"))
 
 
+@functools.lru_cache(maxsize=None)
 def fetch_race_results(season: int, round_number: int) -> list[RaceResult]:
     return parse_race_results(_fetch(f"{season}/{round_number}/results.json"))
 

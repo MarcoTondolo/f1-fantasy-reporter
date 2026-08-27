@@ -548,6 +548,42 @@ def cmd_race_backtest(args: argparse.Namespace) -> int:
     return 0
 
 
+#: Default round count per season -- 2024 and 2025 both ran the full 24-race
+#: calendar; 2026 is backfilled only through the 12 rounds this project has
+#: covered elsewhere.
+DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 12}
+
+
+def cmd_multi_season_backtest(args: argparse.Namespace) -> int:
+    """Robustness check: do the form/reliability walk-forward numbers hold outside 2026?
+
+    Only form.py and reliability.py are checked here -- Gate 1 (scoring) and
+    Gate 2 (prices) cannot run on 2024/2025 at all, since the public fantasy
+    feeds only ever carry the current season.
+    """
+    import json
+
+    from f1_fantasy.predict.multi_season import backtest_seasons
+
+    seasons = [int(s) for s in args.seasons.split(",")]
+    season_rounds = {
+        season: list(range(1, DEFAULT_SEASON_ROUNDS.get(season, 24) + 1)) for season in seasons
+    }
+    print(f"walk-forward multi-season backtest: {season_rounds}...")
+    result = backtest_seasons(season_rounds)
+
+    out_path = Path(args.out or "data/pace/multi_season_backtest.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    for season, by_season in result.items():
+        print(f"season {season}:")
+        for label in ("form_vs_qualifying", "baseline_grid_rank_vs_race", "reliability_gated_vs_race"):
+            print(f"  {label}: {by_season[label]}")
+    print(f"written {out_path}")
+    return 0
+
+
 # --------------------------------------------------------------------------
 # capture
 # --------------------------------------------------------------------------
@@ -790,6 +826,16 @@ def build_parser() -> argparse.ArgumentParser:
     race_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     race_backtest.add_argument("--out", help="output JSON path (default: data/pace/race_backtest_...)")
     race_backtest.set_defaults(func=cmd_race_backtest)
+
+    multi_season_backtest = sub.add_parser(
+        "multi-season-backtest",
+        help="check whether the form/reliability walk-forward numbers hold outside 2026",
+    )
+    multi_season_backtest.add_argument(
+        "--seasons", default="2024,2025,2026", help="comma-separated seasons (default: 2024,2025,2026)"
+    )
+    multi_season_backtest.add_argument("--out", help="output JSON path (default: data/pace/multi_season_backtest.json)")
+    multi_season_backtest.set_defaults(func=cmd_multi_season_backtest)
 
     capture = sub.add_parser("capture", help="write a snapshot of each league")
     capture.add_argument(
