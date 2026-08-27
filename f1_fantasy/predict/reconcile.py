@@ -58,30 +58,52 @@ class DriverReconciliation:
         return r >= -0.01 and abs(r - round(r)) < 0.01
 
 
-def fetch_driver_feed(race_id: int, *, cache_dir: Path | str | None = None) -> dict[str, dict]:
-    """Driver rows from the public fantasy feed, keyed by three-letter code.
-
-    Public and unauthenticated. Cached on disk when *cache_dir* is given,
+def _fetch_feed_payload(race_id: int, *, cache_dir: Path | str | None = None) -> dict:
+    """The raw driver-feed payload (driver *and* constructor rows together),
+    fetched once and shared by fetch_driver_feed and
+    fetch_constructor_feed_rows. Cached on disk when *cache_dir* is given,
     since these are immutable once a round has been scored.
     """
-    payload = None
     cache_path = None
     if cache_dir is not None:
         cache_path = Path(cache_dir) / f"ffeed_{race_id}.json"
         if cache_path.exists():
-            payload = json.loads(cache_path.read_text(encoding="utf-8"))
-    if payload is None:
-        with urllib.request.urlopen(DRIVER_FEED.format(race_id=race_id), timeout=30) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-        if cache_path is not None:
-            cache_path.parent.mkdir(parents=True, exist_ok=True)
-            cache_path.write_text(json.dumps(payload), encoding="utf-8")
+            return json.loads(cache_path.read_text(encoding="utf-8"))
 
+    with urllib.request.urlopen(DRIVER_FEED.format(race_id=race_id), timeout=30) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    if cache_path is not None:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(payload), encoding="utf-8")
+    return payload
+
+
+def fetch_driver_feed(race_id: int, *, cache_dir: Path | str | None = None) -> dict[str, dict]:
+    """Driver rows from the public fantasy feed, keyed by three-letter code.
+
+    Public and unauthenticated.
+    """
+    payload = _fetch_feed_payload(race_id, cache_dir=cache_dir)
     rows = payload.get("Data", payload).get("Value") or []
     return {
         row["DriverTLA"]: row
         for row in rows
         if row.get("PositionName") == "DRIVER" and row.get("DriverTLA")
+    }
+
+
+def fetch_constructor_feed_rows(race_id: int, *, cache_dir: Path | str | None = None) -> dict[str, dict]:
+    """Constructor rows from the same feed, keyed by full team name (e.g.
+    "Red Bull Racing") -- matching the naming Jolpica's own Constructor.name
+    field uses, so callers can join against form.py/reliability.py's
+    constructor keys directly rather than the feed's own 3-letter team code.
+    """
+    payload = _fetch_feed_payload(race_id, cache_dir=cache_dir)
+    rows = payload.get("Data", payload).get("Value") or []
+    return {
+        row["FUllName"]: row
+        for row in rows
+        if row.get("PositionName") == "CONSTRUCTOR" and row.get("FUllName")
     }
 
 

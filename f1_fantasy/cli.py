@@ -624,6 +624,30 @@ def cmd_race_backtest(args: argparse.Namespace) -> int:
 DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 12}
 
 
+def cmd_optimiser_backtest(args: argparse.Namespace) -> int:
+    """Gate: does the optimiser beat a naive and a harder baseline on
+    realised points and budget growth, walk-forward against real 2026 data?
+    """
+    import json
+
+    from f1_fantasy.predict.optimise import backtest_optimiser
+
+    config = Config.load(args.config)
+    rounds = list(range(args.start, args.end + 1))
+    print(f"walk-forward optimiser backtest, {config.season} rounds {rounds[0]}-{rounds[-1]}...")
+    result = backtest_optimiser(config.season, rounds, cache_dir=args.cache_dir)
+
+    out_path = Path(args.out or f"data/pace/optimiser_backtest_{config.season}_r{rounds[0]}-{rounds[-1]}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    print(f"rounds evaluated: {result['rounds_evaluated']}")
+    for key, value in result["summary"].items():
+        print(f"  {key}: {value}")
+    print(f"written {out_path}")
+    return 0
+
+
 def cmd_adjusted_backtest(args: argparse.Namespace) -> int:
     """Falsification test: does excluding high-confidence collision DNFs from
     reliability beat the plain grid-rank baseline, where raw reliability-
@@ -937,6 +961,15 @@ def build_parser() -> argparse.ArgumentParser:
     race_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     race_backtest.add_argument("--out", help="output JSON path (default: data/pace/race_backtest_...)")
     race_backtest.set_defaults(func=cmd_race_backtest)
+
+    optimiser_backtest = sub.add_parser(
+        "optimiser-backtest", help="does the team optimiser beat a naive and a harder baseline on realised outcomes"
+    )
+    optimiser_backtest.add_argument("--start", type=int, default=1, help="first round (default: 1)")
+    optimiser_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
+    optimiser_backtest.add_argument("--cache-dir", help="directory to cache driver feeds in")
+    optimiser_backtest.add_argument("--out", help="output JSON path (default: data/pace/optimiser_backtest_...)")
+    optimiser_backtest.set_defaults(func=cmd_optimiser_backtest)
 
     adjusted_backtest = sub.add_parser(
         "adjusted-backtest",

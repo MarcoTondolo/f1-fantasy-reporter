@@ -8,7 +8,15 @@ scoring table fails here rather than only against the network.
 
 from __future__ import annotations
 
-from f1_fantasy.predict.reconcile import DriverReconciliation, driver_of_the_day_candidates, summarise
+import json
+
+from f1_fantasy.predict.reconcile import (
+    DriverReconciliation,
+    driver_of_the_day_candidates,
+    fetch_constructor_feed_rows,
+    fetch_driver_feed,
+    summarise,
+)
 from f1_fantasy.predict.scoring import qualifying_points, race_points
 from f1_fantasy.results import parse_qualifying, parse_race_results
 
@@ -124,3 +132,26 @@ def test_a_driver_who_reached_q1_only_still_counts_as_having_set_a_time():
 
     assert quali["SAI"].set_a_time is True
     assert qualifying_points(18, set_a_time=True) == 0
+
+
+def test_fetch_driver_feed_and_fetch_constructor_feed_rows_share_one_cached_payload(tmp_path):
+    """Regression test for the _fetch_feed_payload extraction: both
+    functions must still read the same cached file and split driver vs
+    constructor rows exactly as before the refactor."""
+    payload = {
+        "Data": {
+            "Value": [
+                {"PositionName": "DRIVER", "DriverTLA": "VER", "Value": 28.0},
+                {"PositionName": "CONSTRUCTOR", "FUllName": "Red Bull Racing", "Value": 30.0},
+            ]
+        }
+    }
+    cache_path = tmp_path / "ffeed_1.json"
+    cache_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    drivers = fetch_driver_feed(1, cache_dir=tmp_path)
+    constructors = fetch_constructor_feed_rows(1, cache_dir=tmp_path)
+
+    assert set(drivers) == {"VER"}
+    assert set(constructors) == {"Red Bull Racing"}
+    assert constructors["Red Bull Racing"]["Value"] == 30.0
