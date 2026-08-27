@@ -1,0 +1,295 @@
+"""Expected fantasy points: a joint Monte Carlo draw over the whole field.
+
+Race and qualifying order are a permutation of the *whole* field, and
+positions-gained needs a consistent ``(grid, finish)`` pair -- so the core
+primitive here is a joint draw over every driver at once, not independent
+per-driver distributions. ``sample_field`` draws one full scenario (a
+qualifying order, a set of DNFs, a race order among the survivors, one
+fastest-lap winner, one driver-of-the-day winner) and scores every driver
+within that one consistent scenario via ``scoring.qualifying_points`` /
+``scoring.race_points``. A point estimate and a full distribution are the
+same mechanism at different sample counts, not two separate models --
+``build_round_distributions`` just runs many draws and averages.
+
+This keeps "classified" and "DNF" as genuinely separate terms in every
+single draw, which is exactly what ``predict.race.predict_race_order`` got
+wrong by collapsing both into one discounted expected rank (task #15's
+documented null result). Here, a DNF draw takes the flat -20 in that
+scenario; a classified draw takes its position/gained points in that
+scenario; averaging the *draws* is not the same as averaging the *inputs*
+first, and that difference is the whole reason this module exists.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+import numpy as np
+from scipy.stats import spearmanr
+
+from f1_fantasy.predict.form import rolling_form
+from f1_fantasy.predict.reliability import PRIOR_RATE as DEFAULT_DNF_PROBABILITY
+from f1_fantasy.predict.reliability import constructor_history, dnf_probability
+from f1_fantasy.predict.scoring import PointsBreakdown, qualifying_points, race_points
+from f1_fantasy.results import fetch_qualifying
+
+#: Calibrated via calibrate_noise_scale so a simulated field's own Spearman
+#: against its true strength ordering matches this project's already-gated
+#: walk-forward numbers: 0.898 for quali (form.py, 2026) and 0.846 for race
+#: order restricted to classified finishers (reliability.py's documented
+#: grid-ceiling). Frozen constants, not recomputed at import time -- rerun
+#: calibrate_noise_scale(0.898, 20) / calibrate_noise_scale(0.846, 20) to
+#: reproduce them (trials=3000, seed=0 gave 2.355 / 3.063).
+QUALI_NOISE_SCALE_2026 = 2.355
+RACE_NOISE_SCALE = 3.063
+
+N_POINT_ESTIMATE_SAMPLES = 1000
+
+#: Fit from 2026's reconciliation residual across 252 driver-rounds where the
+#: residual looked like a plausible overtake count (reconcile.py). Two
+#: hypotheses were tested and both failed: overtake points scaling with net
+#: position change |grid - finish| (slope ~ -0.05, no real relationship) and
+#: with how many cars retired in that race (correlation -0.03). Modelled
+#: instead as a flat, overdispersed count: mean 5.31, variance 21.0 --
+#: variance is ~4x the mean, which a Poisson fit (variance = mean) cannot
+#: represent, so this samples from a negative binomial fit to those two
+#: real moments instead. 2026-specific like form.py's 0.898 -- overtakes
+#: cannot be recovered from Jolpica for 2024/2025 to check whether this
+#: holds outside the new-regulation season's unusually high overtake rate.
+OVERTAKE_MEAN = 5.31
+OVERTAKE_VARIANCE = 21.0
+
+#: Fastest-lap rate by starting-grid bucket, fit from real fetch_race_results
+#: data across all of 2024, 2025 and 2026 (1221 driver-races). Cleanly
+#: monotonic and the bucket rates already sum close to 1 across a typical
+#: field (0.172*3 + 0.072*3 + 0.021*4 + 0.018*10 ~= 1.0), consistent with
+#: "exactly one fastest lap per race" -- a real, well-evidenced calibration,
+#: not a guess.
+GRID_BUCKET_FASTEST_LAP_RATE: dict[tuple[int, int], float] = {
+    (1, 3): 0.1722,
+    (4, 6): 0.0722,
+    (7, 10): 0.0208,
+    (11, 99): 0.0177,
+}
+
+@dataclass
+class DriverPointsDistribution:
+    """A Monte Carlo summary of one driver's expected fantasy points for a round."""
+
+    driver: str
+    constructor: str
+    mean: float
+    components: dict[str, float] = field(default_factory=dict)
+    p_dnf: float = 0.0
+
+
+def _negative_binomial_params(mean: float, variance: float) -> tuple[float, float]:
+    """n, p for numpy's negative_binomial(n, p) matching a target mean/variance."""
+    p = mean / variance
+    n = mean * p / (1 - p)
+    return n, p
+
+
+_OVERTAKE_N, _OVERTAKE_P = _negative_binomial_params(OVERTAKE_MEAN, OVERTAKE_VARIANCE)
+
+
+def _sample_overtake_points(rng: np.random.Generator) -> int:
+    return int(rng.negative_binomial(_OVERTAKE_N, _OVERTAKE_P))
+
+
+def _grid_bucket_rate(grid_position: int) -> float:
+    for (lo, hi), rate in GRID_BUCKET_FASTEST_LAP_RATE.items():
+        if lo <= grid_position <= hi:
+            return rate
+    return GRID_BUCKET_FASTEST_LAP_RATE[(11, 99)]
+
+
+def _sample_fastest_lap_winner(survivors: list[str], grid: dict[str, int], rng: np.random.Generator) -> str | None:
+    if not survivors:
+        return None
+    weights = np.array([_grid_bucket_rate(grid[d]) for d in survivors])
+    weights = weights / weights.sum()
+    return str(rng.choice(survivors, p=weights))
+
+
+def _sample_dotd_winner(
+    survivors: list[str], grid: dict[str, int], race_position: dict[str, int], rng: np.random.Generator
+) -> str | None:
+    """Weighted toward drivers who gained places, the pattern in the only 4
+    confirmed real Driver of the Day cases (reconcile.py) -- all 4 gained
+    places (+1, +3, +2, +2). n=4 is too small to fit confidently; this is a
+    documented heuristic, not a calibrated rate, same honesty standard as
+    form.py's "0.898 is 2026-specific" caveat."""
+    if not survivors:
+        return None
+    gains = np.array([max(0.0, grid[d] - race_position[d]) + 0.1 for d in survivors])
+    weights = gains / gains.sum()
+    return str(rng.choice(survivors, p=weights))
+
+
+def plackett_luce_order(strengths: dict[str, float], noise_scale: float, rng: np.random.Generator) -> list[str]:
+    """Sample a finishing order (best first) via the Gumbel-max trick.
+
+    ``strengths`` maps driver -> a score where LOWER is better (e.g.
+    form.py's gap-to-best %, where 0 is fastest). ``noise_scale`` controls
+    how far the sampled order can deviate from the deterministic strength
+    ranking: 0 reproduces it exactly every time; larger values randomize it
+    more. This is an exact sample from the Plackett-Luce distribution
+    implied by the strengths when the noise is standard Gumbel.
+    """
+    drivers = list(strengths)
+    if not drivers:
+        return []
+    if noise_scale <= 0:
+        return sorted(drivers, key=lambda d: strengths[d])
+    gumbel = rng.gumbel(0.0, 1.0, size=len(drivers))
+    keys = {d: -strengths[d] / noise_scale + g for d, g in zip(drivers, gumbel)}
+    return sorted(drivers, key=lambda d: -keys[d])
+
+
+def calibrate_noise_scale(target_spearman: float, field_size: int, *, trials: int = 3000, seed: int = 0) -> float:
+    """Binary-search the noise_scale whose sampled order, compared against
+    its own true strength ranking, averages ``target_spearman`` Spearman
+    correlation over ``trials`` draws. This is how QUALI_NOISE_SCALE_2026
+    and RACE_NOISE_SCALE above were derived -- kept callable (not just
+    baked in) so the derivation is inspectable and reproducible, matching
+    how reliability.py documents PRIOR_RATE's own derivation.
+    """
+    rng = np.random.default_rng(seed)
+    strengths = {str(i): float(i) for i in range(field_size)}
+    true_rank = list(range(1, field_size + 1))
+
+    def mean_spearman(noise_scale: float) -> float:
+        correlations = []
+        for _ in range(trials):
+            order = plackett_luce_order(strengths, noise_scale, rng)
+            predicted_rank = [order.index(str(i)) + 1 for i in range(field_size)]
+            correlation, _ = spearmanr(predicted_rank, true_rank)
+            if not np.isnan(correlation):
+                correlations.append(correlation)
+        return float(np.mean(correlations)) if correlations else 0.0
+
+    lo, hi = 0.0, 1.0
+    while mean_spearman(hi) > target_spearman and hi < 1e5:
+        hi *= 2
+    for _ in range(25):
+        mid = (lo + hi) / 2
+        if mean_spearman(mid) > target_spearman:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2
+
+
+def sample_field(
+    strengths: dict[str, float],
+    constructor_of: dict[str, str],
+    dnf_probabilities: dict[str, float],
+    *,
+    sprint: bool = False,
+    rng: np.random.Generator,
+) -> dict[str, PointsBreakdown]:
+    """One joint Monte Carlo draw for the whole field.
+
+    A Plackett-Luce qualifying permutation, independent per-constructor DNF
+    draws, a Plackett-Luce race permutation restricted to survivors (DNFs
+    are appended after every survivor, ordered by grid -- they are never
+    scored on that placement, ``scoring.race_points`` gives every DNF the
+    flat charge regardless), one fastest-lap winner and one driver-of-the-day
+    winner drawn field-wide so their probabilities sum to 1 and nothing
+    double-counts, and an overtake-points draw per driver. Every driver is
+    then scored via ``scoring.qualifying_points``/``scoring.race_points``
+    within this one consistent scenario.
+    """
+    drivers = list(strengths)
+    if not drivers:
+        return {}
+
+    quali_order = plackett_luce_order(strengths, QUALI_NOISE_SCALE_2026, rng)
+    quali_position = {d: i + 1 for i, d in enumerate(quali_order)}
+    grid = dict(quali_position)
+
+    dnf = {
+        d: bool(rng.random() < dnf_probabilities.get(constructor_of.get(d, ""), DEFAULT_DNF_PROBABILITY))
+        for d in drivers
+    }
+    survivors = [d for d in drivers if not dnf[d]]
+    retirees = sorted((d for d in drivers if dnf[d]), key=lambda d: grid[d])
+
+    race_strengths = {d: strengths[d] for d in survivors}
+    race_order = plackett_luce_order(race_strengths, RACE_NOISE_SCALE, rng)
+    full_order = race_order + retirees
+    race_position = {d: i + 1 for i, d in enumerate(full_order)}
+
+    fastest_lap_winner = _sample_fastest_lap_winner(survivors, grid, rng)
+    dotd_winner = _sample_dotd_winner(survivors, grid, race_position, rng)
+
+    breakdowns = {}
+    for d in drivers:
+        status = "Retired" if dnf[d] else "Finished"
+        overtakes = _sample_overtake_points(rng)
+        breakdown = race_points(
+            grid=grid[d],
+            position=race_position[d],
+            status=status,
+            overtakes=overtakes,
+            fastest_lap=(d == fastest_lap_winner),
+            driver_of_the_day=(d == dotd_winner),
+            sprint=sprint,
+        )
+        breakdown.qualifying = qualifying_points(quali_position[d])
+        breakdowns[d] = breakdown
+    return breakdowns
+
+
+def build_round_distributions(
+    season: int,
+    train_rounds: list[int],
+    target_round: int,
+    *,
+    sprint: bool = False,
+    n_samples: int = N_POINT_ESTIMATE_SAMPLES,
+    seed: int | None = None,
+) -> dict[str, DriverPointsDistribution]:
+    """Wire form.rolling_form (strength) and reliability's constructor
+    history/DNF probability (hazard) into ``n_samples`` draws of
+    ``sample_field``, reduced to a DriverPointsDistribution per driver.
+    ``target_round`` is accepted for signature symmetry with the rest of
+    this project's walk-forward predictors (form.py, race.py) but the
+    strength/hazard inputs already come only from ``train_rounds`` -- it is
+    never peeked at.
+    """
+    strengths = rolling_form(season, train_rounds)
+    if not strengths:
+        return {}
+
+    constructor_of = {q.driver_code: q.constructor for q in fetch_qualifying(season, train_rounds[-1])}
+    history = constructor_history(season, train_rounds)
+    dnf_probabilities = {constructor: dnf_probability(record) for constructor, record in history.items()}
+
+    rng = np.random.default_rng(seed)
+    totals: dict[str, list[float]] = {d: [] for d in strengths}
+    component_totals: dict[str, dict[str, list[float]]] = {d: {} for d in strengths}
+    dnf_counts: dict[str, int] = dict.fromkeys(strengths, 0)
+
+    component_fields = ("position", "positions_gained", "overtakes", "fastest_lap", "driver_of_the_day", "dnf", "qualifying")
+
+    for _ in range(n_samples):
+        draw = sample_field(strengths, constructor_of, dnf_probabilities, sprint=sprint, rng=rng)
+        for d, breakdown in draw.items():
+            totals[d].append(breakdown.total)
+            if breakdown.dnf:
+                dnf_counts[d] += 1
+            for name in component_fields:
+                component_totals[d].setdefault(name, []).append(getattr(breakdown, name))
+
+    return {
+        d: DriverPointsDistribution(
+            driver=d,
+            constructor=constructor_of.get(d, ""),
+            mean=float(np.mean(totals[d])) if totals[d] else 0.0,
+            components={name: float(np.mean(values)) for name, values in component_totals[d].items()},
+            p_dnf=dnf_counts[d] / n_samples if n_samples else 0.0,
+        )
+        for d in strengths
+    }
