@@ -554,6 +554,44 @@ def cmd_price_backtest(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_collect_odds(args: argparse.Namespace) -> int:
+    """Best-effort betting-odds snapshot for the next race. No real source is
+    wired in yet (see predict/odds.py) -- this always exits 0, even on total
+    failure, so it can never break automation."""
+    import json
+    from datetime import datetime, timezone
+
+    from f1_fantasy.calendar import current_event, fetch_calendar
+    from f1_fantasy.predict.odds import fetch_odds_snapshot
+
+    config = Config.load(args.config)
+    events = fetch_calendar(config.season)
+    if not events:
+        print("no calendar data", file=sys.stderr)
+        return 0
+
+    if args.round is not None:
+        by_round = {e.round: e for e in events}
+        event = by_round.get(args.round)
+    else:
+        event = current_event(events, datetime.now(timezone.utc))
+    if event is None:
+        print("no matching race found in the calendar", file=sys.stderr)
+        return 0
+
+    snapshot = fetch_odds_snapshot(event)
+    out_path = Path(args.out or f"data/pace/odds_{config.season}_r{event.round}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(snapshot.__dict__, indent=2, default=str), encoding="utf-8")
+
+    if snapshot.fetch_succeeded:
+        print(f"collected {len(snapshot.entries)} entries from {snapshot.source!r}")
+    else:
+        print(f"no odds collected: {snapshot.note}")
+    print(f"written {out_path}")
+    return 0
+
+
 def cmd_race_backtest(args: argparse.Namespace) -> int:
     """Falsification test: does discounting for DNF risk beat the plain form-predicted grid?
 
@@ -859,6 +897,13 @@ def build_parser() -> argparse.ArgumentParser:
     price_backtest.add_argument("--end", type=int, default=12, help="last round, inclusive (default: 12)")
     price_backtest.add_argument("--cache-dir", help="directory to cache driver feeds in")
     price_backtest.set_defaults(func=cmd_price_backtest)
+
+    collect_odds = sub.add_parser(
+        "collect-odds", help="best-effort betting-odds snapshot for the next race (no credentials needed)"
+    )
+    collect_odds.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")
+    collect_odds.add_argument("--out", help="output JSON path (default: data/pace/odds_...)")
+    collect_odds.set_defaults(func=cmd_collect_odds)
 
     race_backtest = sub.add_parser(
         "race-backtest",
