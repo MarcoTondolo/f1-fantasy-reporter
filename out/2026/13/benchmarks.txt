@@ -1,0 +1,32 @@
+📊 *2026 round 13 benchmarks*
+3 snapshot(s) captured
+
+Our top picks:
+  HAM: 16.5 (p10 -5.0 / p90 37.0)
+  LEC: 15.4 (p10 -8.0 / p90 37.1)
+  RUS: 15.2 (p10 -8.0 / p90 38.0)
+  GAS: 15.1 (p10 -2.0 / p90 36.1)
+  LIN: 14.6 (p10 -5.0 / p90 35.0)
+
+official_projected (pre_FP1) (n=23):
+  ALB: 0.0
+  ALO: 0.0
+  ANT: 0.0
+  BEA: 0.0
+  BOR: 0.0
+
+crowd_consensus (ownership) (n=23):
+  BEA: 51.0
+  LIN: 45.0
+  ANT: 36.0
+  HUL: 36.0
+  BOR: 35.0
+
+ours (pre_FP1) (n=23):
+  HAM: 15.3
+  RUS: 15.2
+  LEC: 14.9
+  ANT: 14.9
+  GAS: 14.2
+
+Our backtested track record: MAE 13.2, Spearman 0.462

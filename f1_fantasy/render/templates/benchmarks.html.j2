@@ -1,0 +1,78 @@
+{% extends "base.html.j2" %}
+{# Benchmark tracker: our own expected-points model next to every external/
+   automated signal this project tracks (manual f1fantasytools.com captures,
+   the official feed's ProjectedGamedayPoints, crowd-consensus ownership,
+   our own backtested track record) -- a living comparison, re-run through
+   a race weekend as snapshots accumulate, not a one-shot backtest. #}
+
+{% block content %}
+
+{% if our_track_record %}
+<section class="tiles">
+  <div class="tile">
+    <div class="tile-label">Our backtested track record</div>
+    <div class="tile-value">{{ our_track_record.mean_spearman }}</div>
+    <div class="tile-name">Spearman</div>
+    <div class="tile-note">MAE {{ our_track_record.mean_mae }} pts, walk-forward</div>
+  </div>
+</section>
+{% endif %}
+
+{% if our_top_picks %}
+<section>
+  <h2 class="section-title">Our top picks</h2>
+  <div class="standings">
+    {% for row in our_top_picks %}
+    <div class="picks-row">
+      <div class="rank">{{ loop.index }}</div>
+      <div class="who">
+        <div class="who-name">{{ row.driver }}</div>
+      </div>
+      <div class="total">{{ row.mean }}</div>
+      <div class="picks-range">p10 {{ row.p10 }} / p90 {{ row.p90 }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if latest_by_source %}
+<section>
+  <h2 class="section-title">Latest by source</h2>
+  <div class="standings">
+    {% for source in latest_by_source %}
+    <div class="verdict-row">
+      <div class="verdict-name">{{ source.label }}</div>
+      <div class="verdict-detail">
+        {{ source.captured_at }} &middot; n={{ source.n_drivers }}
+        {% if source.note %} &middot; {{ source.note }}{% endif %}
+      </div>
+      <div class="picks-range">
+        {% for entry in source.top_entries %}{{ entry.driver }}: {{ entry.value }}{% if not loop.last %} &middot; {% endif %}{% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if snapshot_history %}
+<section>
+  <h2 class="section-title">Snapshot history</h2>
+  <div class="standings">
+    {% for row in snapshot_history %}
+    <div class="bet-row">
+      <span class="bet-name">{{ row.label }}</span>
+      <span class="badge">n={{ row.n_drivers }}</span>
+      <span class="picks-range">{{ row.captured_at }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}

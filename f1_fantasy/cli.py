@@ -641,6 +641,173 @@ def cmd_track_upgrades(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_record_benchmark(args: argparse.Namespace) -> int:
+    """Append a manually-captured external benchmark snapshot to this
+    season's benchmark store -- e.g. numbers copied by hand off
+    f1fantasytools.com's Elite Data table. No scraping: that table loads
+    client-side and is not reachable by a plain fetch or headless-browser
+    automation (see predict/benchmarks.py's module docstring); this is the
+    deliberate manual-capture path instead.
+    """
+    from datetime import datetime, timezone
+
+    from f1_fantasy.predict.benchmarks import ExternalBenchmarkSnapshot, append_snapshot, parse_manual_entries
+
+    config = Config.load(args.config)
+    entries = parse_manual_entries(args.entries)
+    if not entries:
+        print("no usable entries parsed from --entries", file=sys.stderr)
+        return 1
+
+    snapshot = ExternalBenchmarkSnapshot(
+        source=args.source,
+        season=config.season,
+        round_number=args.round,
+        session_label=args.session or "",
+        captured_at=datetime.now(timezone.utc),
+        entries=entries,
+        note=args.note or "",
+    )
+    path = append_snapshot(snapshot)
+
+    print(f"recorded {len(entries)} entries from {args.source!r} (round {args.round}, session {args.session or '-'})")
+    print(f"written {path}")
+    return 0
+
+
+def cmd_collect_benchmark_snapshot(args: argparse.Namespace) -> int:
+    """Capture the automatable benchmark signals for one round -- the
+    official feed's own ProjectedGamedayPoints, crowd-consensus ownership
+    %, and our own current expected-points mean -- and append each as a
+    dated snapshot. Safe to run repeatedly through a race weekend; never
+    hard-fails on one bad source, matching predict/odds.py's
+    never-raises standard.
+    """
+    from datetime import datetime, timezone
+
+    from f1_fantasy.predict.benchmarks import (
+        ExternalBenchmarkSnapshot,
+        append_snapshot,
+        crowd_consensus_snapshot,
+        official_projected_snapshot,
+    )
+    from f1_fantasy.predict.points import build_round_distributions
+
+    config = Config.load(args.config)
+    season = config.season
+    round_number = args.round
+    session_label = args.session or ""
+
+    captured: list[str] = []
+
+    try:
+        snapshot = official_projected_snapshot(
+            season, round_number, session_label=session_label, cache_dir=args.cache_dir
+        )
+        append_snapshot(snapshot)
+        captured.append("official_projected")
+    except Exception as exc:  # noqa: BLE001 -- one bad source must not block the others
+        print(f"could not capture official_projected snapshot: {exc}", file=sys.stderr)
+
+    try:
+        snapshot = crowd_consensus_snapshot(season, round_number, cache_dir=args.cache_dir)
+        append_snapshot(snapshot)
+        captured.append("crowd_consensus")
+    except Exception as exc:  # noqa: BLE001
+        print(f"could not capture crowd_consensus snapshot: {exc}", file=sys.stderr)
+
+    train_rounds = list(range(1, round_number))
+    if train_rounds:
+        try:
+            distributions = build_round_distributions(season, train_rounds, round_number)
+            if distributions:
+                snapshot = ExternalBenchmarkSnapshot(
+                    source="ours",
+                    season=season,
+                    round_number=round_number,
+                    session_label=session_label,
+                    captured_at=datetime.now(timezone.utc),
+                    entries={driver: dist.mean for driver, dist in distributions.items()},
+                )
+                append_snapshot(snapshot)
+                captured.append("ours")
+        except Exception as exc:  # noqa: BLE001
+            print(f"could not capture our own distribution snapshot: {exc}", file=sys.stderr)
+
+    if not captured:
+        print("no benchmark snapshots captured", file=sys.stderr)
+        return 0
+    print(f"captured snapshots: {', '.join(captured)}")
+    return 0
+
+
+def cmd_benchmarks(args: argparse.Namespace) -> int:
+    """Render the benchmark tracker card: our own current picks next to
+    every snapshot captured so far for this round, plus our own
+    already-committed backtested track record. No league credentials
+    needed -- same class of card as picks.py/upgrades.py.
+    """
+    from datetime import datetime, timezone
+
+    from f1_fantasy.calendar import current_event, fetch_calendar
+    from f1_fantasy.predict.benchmarks import load_backtest_track_record, load_snapshots
+    from f1_fantasy.predict.prices import round_history
+    from f1_fantasy.predict.reconcile import fetch_driver_feed
+    from f1_fantasy.predict.simulate import simulate_round
+    from f1_fantasy.render import render_card
+    from f1_fantasy.report import benchmarks as benchmarks_report
+
+    config = Config.load(args.config)
+    events = fetch_calendar(config.season)
+    if not events:
+        print("no calendar data", file=sys.stderr)
+        return 1
+
+    if args.round is not None:
+        by_round = {e.round: e for e in events}
+        next_event = by_round.get(args.round)
+        if next_event is None:
+            print(f"round {args.round} not found in the {config.season} calendar", file=sys.stderr)
+            return 1
+    else:
+        next_event = current_event(events, datetime.now(timezone.utc))
+        if next_event is None:
+            print("no upcoming race found in the calendar", file=sys.stderr)
+            return 1
+
+    target_round = next_event.round
+    train_rounds = list(range(1, target_round))
+    summaries = {}
+    if train_rounds:
+        last_round = train_rounds[-1]
+        try:
+            driver_feed = fetch_driver_feed(last_round, cache_dir=args.cache_dir)
+        except Exception as exc:  # noqa: BLE001 -- show whatever snapshots exist even if the live feed is down
+            print(f"could not fetch the public driver feed for round {last_round}: {exc}", file=sys.stderr)
+            driver_feed = {}
+        if driver_feed:
+            price_before = {code: float(row.get("Value") or 0) for code, row in driver_feed.items()}
+            recent_price_history = round_history(train_rounds, cache_dir=args.cache_dir)
+            summaries = simulate_round(
+                config.season, train_rounds, target_round,
+                price_before=price_before, recent_price_history=recent_price_history,
+                sprint=next_event.is_sprint_weekend, n_samples=args.n_samples,
+            )
+
+    snapshots = load_snapshots(config.season)
+    backtest_summary = load_backtest_track_record(config.season)
+
+    context = benchmarks_report.build_benchmarks(
+        snapshots, summaries, backtest_summary,
+        season=config.season, round_number=target_round, league_name=args.league_name or "",
+    )
+    out_dir = Path(config.output_dir) / str(config.season) / str(target_round)
+    path = render_card("benchmarks.html.j2", context, out_dir / "benchmarks.png")
+    (out_dir / "benchmarks.txt").write_text(benchmarks_report.caption(context) + "\n", encoding="utf-8")
+    print(f"written {path}")
+    return 0
+
+
 def cmd_picks(args: argparse.Namespace) -> int:
     """Render the picks card for the next race: expected points, price-rise
     probability, captain suggestion, optimal team.
@@ -1067,6 +1234,39 @@ def build_parser() -> argparse.ArgumentParser:
     track_upgrades.add_argument("--window", type=int, default=3, help="rounds either side of the upgrade round to average (default: 3)")
     track_upgrades.add_argument("--out", help="output JSON path (default: data/pace/upgrades_<season>.json)")
     track_upgrades.set_defaults(func=cmd_track_upgrades)
+
+    record_benchmark = sub.add_parser(
+        "record-benchmark",
+        help="append a manually-captured external benchmark snapshot (e.g. numbers pasted off f1fantasytools.com)",
+    )
+    record_benchmark.add_argument("--round", type=int, required=True, help="round number this snapshot is for")
+    record_benchmark.add_argument(
+        "--source", default="f1fantasytools", help="source label for this snapshot (default: f1fantasytools)"
+    )
+    record_benchmark.add_argument("--session", help="session label, e.g. FP1/FP2/FP3/pre_quali")
+    record_benchmark.add_argument(
+        "--entries", required=True, help='comma-separated driver:value pairs, e.g. "VER:185,NOR:172.5"'
+    )
+    record_benchmark.add_argument("--note", help="free-text note to store alongside the snapshot")
+    record_benchmark.set_defaults(func=cmd_record_benchmark)
+
+    collect_benchmark_snapshot = sub.add_parser(
+        "collect-benchmark-snapshot",
+        help="capture the official feed's ProjectedGamedayPoints, crowd-consensus ownership, and our own current estimate for one round",
+    )
+    collect_benchmark_snapshot.add_argument("--round", type=int, required=True, help="round number to capture")
+    collect_benchmark_snapshot.add_argument("--session", help="session label, e.g. FP1/FP2/FP3/pre_quali")
+    collect_benchmark_snapshot.add_argument("--cache-dir", help="directory to cache driver feeds in")
+    collect_benchmark_snapshot.set_defaults(func=cmd_collect_benchmark_snapshot)
+
+    benchmarks = sub.add_parser(
+        "benchmarks", help="render the benchmark tracker card for the next race (no credentials needed)"
+    )
+    benchmarks.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")
+    benchmarks.add_argument("--cache-dir", help="directory to cache driver feeds in")
+    benchmarks.add_argument("--n-samples", type=int, default=2000, help="Monte Carlo samples per driver (default: 2000)")
+    benchmarks.add_argument("--league-name", help="league name to show on the card")
+    benchmarks.set_defaults(func=cmd_benchmarks)
 
     picks = sub.add_parser("picks", help="render the picks card for the next race (no credentials needed)")
     picks.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")
