@@ -592,6 +592,55 @@ def cmd_collect_odds(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_track_upgrades(args: argparse.Namespace) -> int:
+    """Fetch upgrade-package mentions across autosport/motorsport/racefans/
+    F1.com, attribute them to constructors and rounds, measure each
+    attributed upgrade's before/after competitiveness step-change relative
+    to the field, and render the upgrade tracker card. No league
+    credentials needed -- everything here is public.
+    """
+    import dataclasses
+    import json
+
+    from f1_fantasy.news.upgrades import track_upgrades
+    from f1_fantasy.predict.upgrades import evaluate_attributed_upgrades
+    from f1_fantasy.render import render_card
+    from f1_fantasy.report import upgrades as upgrades_report
+
+    config = Config.load(args.config)
+    print(f"fetching upgrade mentions for {config.season}...")
+    tracked = track_upgrades(config.season)
+
+    available_rounds = list(range(args.start, args.end + 1))
+    effects = evaluate_attributed_upgrades(config.season, tracked["groups"], available_rounds, window=args.window)
+
+    result = {
+        "season": config.season,
+        "mentions": [m.model_dump(mode="json") for m in tracked["mentions"]],
+        "effects": [dataclasses.asdict(e) for e in effects],
+    }
+
+    out_path = Path(args.out or f"data/pace/upgrades_{config.season}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+    print(f"mentions found: {len(tracked['mentions'])}")
+    print(f"attributed (constructor, round) pairs: {len(tracked['groups'])}")
+    print(f"measured effects: {len(effects)}")
+    for effect in effects:
+        verdict = "improved vs field" if effect.relative_delta is not None and effect.relative_delta < 0 else "no measurable edge vs field"
+        print(f"  {effect.constructor} r{effect.upgrade_round}: relative_delta={effect.relative_delta} (n_before={effect.n_before}, n_after={effect.n_after}) -- {verdict}")
+
+    context = upgrades_report.build_upgrades(tracked["mentions"], effects, season=config.season)
+    out_dir = Path(config.output_dir) / str(config.season) / "upgrades"
+    image = render_card("upgrades.html.j2", context, out_dir / "upgrades.png")
+    (out_dir / "upgrades.txt").write_text(upgrades_report.caption(context) + "\n", encoding="utf-8")
+
+    print(f"written {out_path}")
+    print(f"written {image}")
+    return 0
+
+
 def cmd_picks(args: argparse.Namespace) -> int:
     """Render the picks card for the next race: expected points, price-rise
     probability, captain suggestion, optimal team.
@@ -1006,6 +1055,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     preview.add_argument("--round", type=int, help="round number (default: latest in the calendar)")
     preview.set_defaults(func=cmd_preview)
+
+    track_upgrades = sub.add_parser(
+        "track-upgrades",
+        help="fetch upgrade-package news mentions, attribute to constructors/rounds, and measure before/after effect",
+    )
+    track_upgrades.add_argument("--start", type=int, default=1, help="first round considered available (default: 1)")
+    track_upgrades.add_argument(
+        "--end", type=int, default=12, help="last round considered available, inclusive (default: 12)"
+    )
+    track_upgrades.add_argument("--window", type=int, default=3, help="rounds either side of the upgrade round to average (default: 3)")
+    track_upgrades.add_argument("--out", help="output JSON path (default: data/pace/upgrades_<season>.json)")
+    track_upgrades.set_defaults(func=cmd_track_upgrades)
 
     picks = sub.add_parser("picks", help="render the picks card for the next race (no credentials needed)")
     picks.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")

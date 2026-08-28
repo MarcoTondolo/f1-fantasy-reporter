@@ -1,0 +1,52 @@
+{% extends "base.html.j2" %}
+{# Upgrade tracker: recent upgrade-package mentions and their measured
+   field-relative before/after effect -- a living digest, not a one-shot
+   backtest, re-run through the season as mentions/rounds accumulate. #}
+
+{% block content %}
+
+{% if measured_effects %}
+<section>
+  <h2 class="section-title">Measured effects</h2>
+  <div class="standings">
+    {% for row in measured_effects %}
+    <div class="bet-row">
+      <span class="bet-name">{{ row.constructor }} R{{ row.round }}</span>
+      {% if row.relative_delta is not none %}
+      <span class="delta {{ 'pos' if row.relative_delta < 0 else 'neg' }} bet-points">{{ row.relative_delta }}pp</span>
+      {% else %}
+      <span class="badge">n/a</span>
+      {% endif %}
+      <span class="picks-range">n={{ row.n_before }}/{{ row.n_after }} &middot; {{ row.verdict }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if recent_mentions %}
+<section>
+  <h2 class="section-title">Recent mentions</h2>
+  <div class="standings">
+    {% for row in recent_mentions %}
+    <div class="verdict-row">
+      <div class="verdict-name">{{ row.title }}</div>
+      <div class="verdict-detail">
+        {{ row.source }}{% if row.published_at %} &middot; {{ row.published_at }}{% endif %}
+        {% if row.constructors %} &middot; {{ row.constructors | join(', ') }}{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if unattributed_count %}
+<div class="note">{{ unattributed_count }} additional upgrade-keyword mention(s) matched no known constructor.</div>
+{% endif %}
+
+{% if caveat %}
+<div class="note">{{ caveat }}</div>
+{% endif %}
+
+{% endblock %}
