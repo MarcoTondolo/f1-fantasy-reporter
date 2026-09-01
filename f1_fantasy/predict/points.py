@@ -37,11 +37,32 @@ from f1_fantasy.results import fetch_qualifying
 #: against its true strength ordering matches this project's already-gated
 #: walk-forward numbers: 0.898 for quali (form.py, 2026) and 0.846 for race
 #: order restricted to classified finishers (reliability.py's documented
-#: grid-ceiling). Frozen constants, not recomputed at import time -- rerun
-#: calibrate_noise_scale(0.898, 20) / calibrate_noise_scale(0.846, 20) to
-#: reproduce them (trials=3000, seed=0 gave 2.355 / 3.063).
-QUALI_NOISE_SCALE_2026 = 2.355
-RACE_NOISE_SCALE = 3.063
+#: grid-ceiling). **Calibrated against real strengths, not a synthetic
+#: ladder** -- see calibrate_noise_scale's docstring for why that distinction
+#: matters: an earlier version of this file calibrated against a synthetic
+#: uniformly-spaced field (field_size=20, giving 2.355 / 3.063) and applied
+#: the result to the real, tightly-clustered 2026 top group. That silently
+#: passed this module's own field-mean parity check (predicted 10.35 vs
+#: actual 11.09 for round 10) while badly compressing predicted spread
+#: *within* the top group -- confirmed live against a real per-driver
+#: points-per-race screenshot the user supplied (2026 rounds 1-12): actual
+#: GamedayPoints for ANT/HAM/LEC/RUS/NOR/VER/PIA span 38.8 down to 15.1
+#: points/race, while the ladder-calibrated model predicted them within
+#: 14.8-9.2 of each other -- roughly half the real spread, and in the
+#: wrong order (NOR/PIA, McLaren's actual points leaders, predicted lowest
+#: of the seven). Root cause: Spearman across a 20+ driver field is
+#: dominated by getting the widely-separated majority right and is nearly
+#: insensitive to shuffling within an already-adjacent cluster, so a
+#: noise_scale fit to hit a target Spearman on a *uniform* ladder ends up
+#: far too large for the real field's tightly-bunched leaders. Frozen
+#: constants, not recomputed at import time -- rerun
+#: calibrate_noise_scale(0.898, strengths=snapshot) /
+#: calibrate_noise_scale(0.846, strengths=snapshot) across several real
+#: form.rolling_form snapshots (trains ending rounds 2-12, trials=1200,
+#: seed=round index) to reproduce them: per-round quali values ranged
+#: 0.418-0.512 (mean 0.4733), race 0.572-0.687 (mean 0.6403).
+QUALI_NOISE_SCALE_2026 = 0.4733
+RACE_NOISE_SCALE = 0.6403
 
 N_POINT_ESTIMATE_SAMPLES = 1000
 
@@ -166,23 +187,58 @@ def plackett_luce_order(strengths: dict[str, float], noise_scale: float, rng: np
     return sorted(drivers, key=lambda d: -keys[d])
 
 
-def calibrate_noise_scale(target_spearman: float, field_size: int, *, trials: int = 3000, seed: int = 0) -> float:
+def calibrate_noise_scale(
+    target_spearman: float,
+    field_size: int | None = None,
+    *,
+    strengths: dict[str, float] | None = None,
+    trials: int = 3000,
+    seed: int = 0,
+) -> float:
     """Binary-search the noise_scale whose sampled order, compared against
     its own true strength ranking, averages ``target_spearman`` Spearman
-    correlation over ``trials`` draws. This is how QUALI_NOISE_SCALE_2026
-    and RACE_NOISE_SCALE above were derived -- kept callable (not just
-    baked in) so the derivation is inspectable and reproducible, matching
-    how reliability.py documents PRIOR_RATE's own derivation.
+    correlation over ``trials`` draws. Kept callable (not just baked in) so
+    the derivation is inspectable and reproducible, matching how
+    reliability.py documents PRIOR_RATE's own derivation.
+
+    Pass ``strengths`` -- a real snapshot from ``form.rolling_form`` -- to
+    calibrate against real, non-uniformly-spaced strength gaps. Real
+    competitors are not evenly spaced: this project's own 2026 top group
+    (Mercedes/Ferrari/McLaren/Red Bull) sits within ~0.5 percentage points
+    of each other in qualifying-gap terms, while the gap down to the
+    midfield is several times that. A noise_scale fit against the
+    synthetic ``field_size`` ladder below (uniform integer spacing) and
+    then applied to that real, clustered field over-randomizes the tightly
+    bunched leaders while barely touching the widely-separated rest --
+    Spearman across a 20+ driver field is dominated by getting the
+    separated majority right and is nearly insensitive to shuffling within
+    an already-adjacent cluster, so a ladder-calibrated noise_scale can hit
+    the same aggregate target while still erasing real, persistent
+    differentiation between the leaders. This was confirmed live: a
+    ladder-calibrated noise_scale reproduced the correct field-mean
+    expected points (predicted 10.35 vs actual 11.09 for round 10) while
+    compressing the top group's predicted spread to roughly half of the
+    real one (predicted ANT/RUS/HAM/LEC/NOR/VER/PIA within ~14.8-9.2
+    points/race of each other; actual GamedayPoints spans 38.8-15.1 over
+    the same seven drivers, 2026 rounds 1-12) -- the ``field_size`` path is
+    kept only for cheap synthetic unit tests, never for deriving the real
+    constants below.
     """
     rng = np.random.default_rng(seed)
-    strengths = {str(i): float(i) for i in range(field_size)}
-    true_rank = list(range(1, field_size + 1))
+    if strengths is None:
+        if field_size is None:
+            raise ValueError("calibrate_noise_scale needs either field_size or strengths")
+        strengths = {str(i): float(i) for i in range(field_size)}
+
+    drivers = list(strengths)
+    true_order = sorted(drivers, key=lambda d: strengths[d])
+    true_rank = [true_order.index(d) + 1 for d in drivers]
 
     def mean_spearman(noise_scale: float) -> float:
         correlations = []
         for _ in range(trials):
             order = plackett_luce_order(strengths, noise_scale, rng)
-            predicted_rank = [order.index(str(i)) + 1 for i in range(field_size)]
+            predicted_rank = [order.index(d) + 1 for d in drivers]
             correlation, _ = spearmanr(predicted_rank, true_rank)
             if not np.isnan(correlation):
                 correlations.append(correlation)
@@ -228,13 +284,22 @@ def sample_field(
     this function's single-session output against that real total
     understates it substantially (confirmed live: round 12, a sprint
     weekend, field-mean actual GamedayPoints was 10.41 against a
-    single-session predicted mean of 9.68 -- close in isolation, but the
+    single-session predicted mean of 9.59 -- close in isolation, but the
     real total also includes the sprint session's own points on top,
     unaccounted for here). Every non-sprint round checked (10, 11) shows
-    close field-mean parity between predicted and actual (10.24 vs 11.09,
-    10.35 vs 10.64), which is what confirms the core mechanism is
-    correctly calibrated -- this gap is specific to sprint weekends, not a
-    general miscalibration. Round 13 (Monza) is not a sprint weekend.
+    close field-mean parity between predicted and actual (10.17 vs 11.09,
+    10.23 vs 10.64).
+
+    **Field-mean parity alone is not sufficient evidence of correct
+    calibration** -- an earlier version of this note claimed it was. Points
+    scoring is close to zero-sum across the field (position points are a
+    fixed pool being sliced up), so a model can get the *average* exactly
+    right while badly misallocating it between drivers -- which is exactly
+    what happened here until QUALI_NOISE_SCALE_2026/RACE_NOISE_SCALE were
+    recalibrated against real strength spacing instead of a synthetic
+    ladder (see their docstring). Field-mean parity is a necessary check,
+    not a sufficient one; the per-driver comparison against real
+    GamedayPoints is what actually caught the bug.
     """
     drivers = list(strengths)
     if not drivers:

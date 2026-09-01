@@ -47,6 +47,28 @@ def test_calibrate_noise_scale_is_monotonic_in_target_spearman():
     assert loose > tight
 
 
+def test_calibrate_noise_scale_requires_field_size_or_strengths():
+    with pytest.raises(ValueError):
+        calibrate_noise_scale(0.9, trials=10, seed=0)
+
+
+def test_calibrate_noise_scale_with_real_strengths_needs_far_less_noise_than_a_uniform_ladder():
+    """The whole reason ``strengths`` exists: real competitors are not
+    evenly spaced. A tightly-clustered real field (most drivers within 1.0
+    of each other, like this project's own 2026 top group in quali-gap%
+    terms) needs a much smaller noise_scale to hit the same target
+    Spearman than a uniform ladder spanning the same range, because
+    Spearman over a large field barely moves when a tight cluster gets
+    reshuffled -- the ladder path was silently overestimating how much
+    noise real, clustered fields need (the bug this test guards against)."""
+    clustered = {f"D{i}": float(i) * 0.05 for i in range(10)}  # spans 0.0-0.45
+
+    ladder_noise = calibrate_noise_scale(0.9, field_size=10, trials=400, seed=0)
+    clustered_noise = calibrate_noise_scale(0.9, strengths=clustered, trials=400, seed=0)
+
+    assert clustered_noise < ladder_noise
+
+
 def test_sample_field_is_empty_for_an_empty_field():
     rng = np.random.default_rng(0)
     assert sample_field({}, {}, {}, rng=rng) == {}
