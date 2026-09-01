@@ -56,6 +56,25 @@ N_POINT_ESTIMATE_SAMPLES = 1000
 #: real moments instead. 2026-specific like form.py's 0.898 -- overtakes
 #: cannot be recovered from Jolpica for 2024/2025 to check whether this
 #: holds outside the new-regulation season's unusually high overtake rate.
+#:
+#: **A third hypothesis was tested and also mostly failed: circuit
+#: identity.** Real per-circuit mean overtake-residual across rounds 2-12
+#: ranges from 2.38 (Monaco) to 7.43 (Miami) -- a genuine ~3x spread, and
+#: Monaco's own outlier status is real and large. But a continuous proxy
+#: (full-throttle-time fraction from race-control telemetry, computed the
+#: same way pace/energy.py's clipping metrics are) correlates only weakly
+#: and not significantly across those 11 circuits (Pearson r=0.36, p=0.28,
+#: n=11) -- Spa's long straights (0.686 full-throttle fraction, the
+#: highest of the 11) don't bring correspondingly high overtaking, likely
+#: because modern-car dirty air suppresses passing there despite the
+#: straight-line opportunity. Monza's own full-throttle fraction, measured
+#: from a real 2025 reference session since 2026's race hasn't run yet, is
+#: 0.736 -- higher than every 2026 circuit measured so far -- but with no
+#: reliable general relationship established, this is reported as
+#: descriptive context only, not used to adjust OVERTAKE_MEAN for Monza or
+#: any other single circuit. Revisit if a full season's worth of circuits
+#: (n=20+) shows a cleaner signal, or if Monaco is worth special-casing on
+#: its own (a real, large outlier) independent of a general model.
 OVERTAKE_MEAN = 5.31
 OVERTAKE_VARIANCE = 21.0
 
@@ -200,6 +219,22 @@ def sample_field(
     double-counts, and an overtake-points draw per driver. Every driver is
     then scored via ``scoring.qualifying_points``/``scoring.race_points``
     within this one consistent scenario.
+
+    **Known gap on a sprint weekend:** ``sprint`` selects which position
+    table ``scoring.race_points`` uses (the smaller sprint table or the
+    full race table) for the *one* session this draw scores -- it does not
+    score both a sprint and a full race in the same draw. A real sprint
+    weekend's ``GamedayPoints`` sums qualifying + sprint + race; comparing
+    this function's single-session output against that real total
+    understates it substantially (confirmed live: round 12, a sprint
+    weekend, field-mean actual GamedayPoints was 10.41 against a
+    single-session predicted mean of 9.68 -- close in isolation, but the
+    real total also includes the sprint session's own points on top,
+    unaccounted for here). Every non-sprint round checked (10, 11) shows
+    close field-mean parity between predicted and actual (10.24 vs 11.09,
+    10.35 vs 10.64), which is what confirms the core mechanism is
+    correctly calibrated -- this gap is specific to sprint weekends, not a
+    general miscalibration. Round 13 (Monza) is not a sprint weekend.
     """
     drivers = list(strengths)
     if not drivers:
