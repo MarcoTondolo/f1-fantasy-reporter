@@ -166,3 +166,41 @@ def test_own_team_uses_try_teams_but_other_members_use_try_opponent_teams():
     assert access.readable == 2
     assert team_key("self-guid", 1) in snapshot.teams
     assert team_key("other-guid", 1) in snapshot.teams
+
+
+def test_own_accounts_second_team_falls_back_to_the_opponent_endpoint():
+    """getteam also echoes the caller's own *primary* team for a second
+    team_no under the same guid (confirmed live: an account running two
+    teams in one league) -- it never actually serves anything but that one
+    team, no matter which team_no was requested. The opponent endpoint takes
+    team_no as an explicit URL segment and discriminates correctly by it, so
+    it recovers this account's own non-primary team too. Without the
+    fallback, this member's team_no-2 pick list would silently be a
+    duplicate of team_no-1's -- exactly the bug this test pins.
+    """
+    primary = _member("self-guid", 1)
+    second = _member("self-guid", 2)
+    second.team_no = 2
+    primary_team = make_team("self-guid", 11, ["1"], team_no=1)
+    real_second_team = make_team("self-guid", 11, ["2"], team_no=2)
+    api = FakeApi(
+        [primary, second],
+        # getteam always returns only the primary team, regardless of guid --
+        # this is the echo the fallback must detect and route around.
+        teams_by_guid={"self-guid": [primary_team]},
+        guid="self-guid",
+        opponent_teams_by_guid={"self-guid": [real_second_team]},
+    )
+
+    snapshot, access = collect_league(
+        api, league_id=1, race_id=11, phase=Phase.LOCKED, season=2026, spacing=0
+    )
+
+    assert access.readable == 2
+    assert snapshot.teams[team_key("self-guid", 1)] is primary_team
+    assert snapshot.teams[team_key("self-guid", 2)] is real_second_team
+    # Both the initial (echoed) attempt and the corrective retry go through
+    # the API -- own_path_guids records the former, opponent_path_guids the
+    # fallback retry for the mismatched team_no.
+    assert api.own_path_guids == ["self-guid", "self-guid"]
+    assert api.opponent_path_guids == ["self-guid"]

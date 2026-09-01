@@ -119,15 +119,30 @@ def collect_league(
         # through the dedicated opponent endpoint instead.
         if member.guid == api.guid:
             found = api.try_teams(race_id, guid=member.guid)
+            team = _pick_team(found, member) if found else None
+            if team is not None and team.team_no != member.team_no:
+                # getteam also echoes the caller's own *primary* team for a
+                # second team_no under the same guid (confirmed live: an
+                # account running two teams in one league) -- it never
+                # actually serves anything but that one team, no matter which
+                # team_no was requested. The opponent endpoint takes team_no
+                # as an explicit URL segment and does discriminate correctly
+                # by it (confirmed live for other members' teams already),
+                # so it also recovers this account's own non-primary teams.
+                log.debug(
+                    "getteam returned team_no %s for %s's team_no %s -- retrying via the opponent endpoint",
+                    team.team_no, member.user_name, member.team_no,
+                )
+                found = api.try_opponent_teams(member.guid, race_id, member.team_no)
+                team = _pick_team(found, member) if found else None
         else:
             found = api.try_opponent_teams(member.guid, race_id, member.team_no)
-        if not found:
+            team = _pick_team(found, member) if found else None
+        if team is None:
             log.debug("no team data for %s (%s)", member.user_name, member.guid)
             continue
-        team = _pick_team(found, member)
-        if team is not None:
-            teams[team_key(member.guid, member.team_no)] = team
-            access.readable += 1
+        teams[team_key(member.guid, member.team_no)] = team
+        access.readable += 1
 
     log.info("%s", access)
 
