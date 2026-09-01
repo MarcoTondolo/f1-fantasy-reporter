@@ -822,7 +822,7 @@ def cmd_picks(args: argparse.Namespace) -> int:
     from f1_fantasy.calendar import current_event, fetch_calendar
     from f1_fantasy.predict.optimise import optimise_team
     from f1_fantasy.predict.prices import round_history
-    from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed
+    from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed, to_feed_constructor_name
     from f1_fantasy.predict.simulate import simulate_round
     from f1_fantasy.render import render_card
     from f1_fantasy.report import picks as picks_report
@@ -879,7 +879,11 @@ def cmd_picks(args: argparse.Namespace) -> int:
     for d, s in summaries.items():
         constructor = constructor_of.get(d)
         if constructor:
-            constructor_points[constructor] = constructor_points.get(constructor, 0.0) + s.mean
+            # constructor_of is Jolpica-named; constructor_prices above is
+            # keyed by the feed's FUllName -- translate first, or the four
+            # names that differ get silently valued at 0 by optimise_team.
+            name = to_feed_constructor_name(constructor)
+            constructor_points[name] = constructor_points.get(name, 0.0) + s.mean
 
     team_selection = optimise_team(driver_points, price_before, constructor_points, constructor_prices)
 

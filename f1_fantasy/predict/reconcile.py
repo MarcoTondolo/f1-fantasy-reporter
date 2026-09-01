@@ -33,6 +33,33 @@ DRIVER_FEED = "https://fantasy.formula1.com/feeds/drivers/{race_id}_en.json"
 #: artifact rather than treated as a scoring-rule failure.
 KNOWN_INCONSISTENT_DRIVERS = frozenset({"LAW"})
 
+#: Jolpica's ``Constructor.name`` (what ``fetch_qualifying``/``points.py``'s
+#: ``constructor_of`` return) does not always match the public fantasy
+#: feed's ``FUllName`` (what ``fetch_constructor_feed_rows`` returns) for the
+#: same team. Four of eleven 2026 constructors differ; the rest already
+#: agree. Confirmed live: a naive ``dict`` union of a Jolpica-keyed points
+#: dict against a feed-keyed prices dict silently scores the four mismatched
+#: teams 0 (a plain ``.get(name, 0.0)`` miss) rather than erroring -- exactly
+#: the class of staleness/mismatch bug this module already tracks for other
+#: fields (``KNOWN_INCONSISTENT_DRIVERS``, the ``AdditionalStats`` staleness
+#: noted in ``backtest_points.py``). Any code that builds a per-constructor
+#: points dict from Jolpica-sourced data and then looks it up against a
+#: feed-keyed prices dict (``optimise.py``'s ``backtest_optimiser``,
+#: ``cli.py``'s ``cmd_picks``) must translate through this map first.
+CONSTRUCTOR_NAME_TO_FEED: dict[str, str] = {
+    "Red Bull": "Red Bull Racing",
+    "Alpine F1 Team": "Alpine",
+    "RB F1 Team": "Racing Bulls",
+    "Cadillac F1 Team": "Cadillac",
+}
+
+
+def to_feed_constructor_name(jolpica_name: str) -> str:
+    """Jolpica's ``Constructor.name`` translated to the public feed's
+    ``FUllName`` -- identity for the seven names both sources already
+    agree on."""
+    return CONSTRUCTOR_NAME_TO_FEED.get(jolpica_name, jolpica_name)
+
 
 @dataclass
 class DriverReconciliation:

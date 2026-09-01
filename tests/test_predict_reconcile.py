@@ -18,6 +18,7 @@ from f1_fantasy.predict.reconcile import (
     fetch_constructor_feed_rows,
     fetch_driver_feed,
     summarise,
+    to_feed_constructor_name,
 )
 from f1_fantasy.predict.scoring import qualifying_points, race_points
 from f1_fantasy.results import parse_qualifying, parse_race_results
@@ -157,6 +158,28 @@ def test_fetch_driver_feed_and_fetch_constructor_feed_rows_share_one_cached_payl
     assert set(drivers) == {"VER"}
     assert set(constructors) == {"Red Bull Racing"}
     assert constructors["Red Bull Racing"]["Value"] == 30.0
+
+
+@pytest.mark.parametrize(
+    "jolpica_name, feed_name",
+    [
+        ("Red Bull", "Red Bull Racing"),
+        ("Alpine F1 Team", "Alpine"),
+        ("RB F1 Team", "Racing Bulls"),
+        ("Cadillac F1 Team", "Cadillac"),
+    ],
+)
+def test_to_feed_constructor_name_translates_the_four_mismatched_teams(jolpica_name, feed_name):
+    """Confirmed live, 2026 round 12: Jolpica's Constructor.name and the
+    public feed's FUllName disagree for exactly these four teams -- a bare
+    dict union of a Jolpica-keyed points dict against a feed-keyed prices
+    dict silently scores each of these 0 rather than erroring."""
+    assert to_feed_constructor_name(jolpica_name) == feed_name
+
+
+def test_to_feed_constructor_name_is_identity_for_names_both_sources_agree_on():
+    for name in ("Mercedes", "Ferrari", "McLaren", "Williams", "Haas F1 Team", "Audi", "Aston Martin"):
+        assert to_feed_constructor_name(name) == name
 
 
 def test_reconstruct_points_matches_reconcile_rounds_split(monkeypatch):

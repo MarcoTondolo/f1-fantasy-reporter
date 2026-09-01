@@ -13,12 +13,12 @@ ever grew substantially past F1's current ~20-22 entries.
 **Gate, run against real 2026 rounds 1-12 (11 evaluated) via
 backtest_optimiser: a mixed, honestly-reported result.** Against baseline
 #1 (naive_baseline_team, "most expensive affordable team" -- the plan's own
-spec), the optimiser wins clearly: ~186 vs 141 mean realised points per
-round, ~1.9 vs 0.2 mean realised budget growth. Against baseline #2
+spec), the optimiser wins clearly: ~171 vs 141 mean realised points per
+round, ~2.0 vs 0.2 mean realised budget growth. Against baseline #2
 (season_points_baseline_team, "back whoever already has the most
 cumulative points" -- added on top of the plan's spec specifically so a
 pass wouldn't just be beating an easy strawman), the optimiser *loses* on
-both measures: ~186 vs 201 points, ~1.9 vs 2.2 budget growth (exact figures
+both measures: ~171 vs 201 points, ~2.0 vs 2.2 budget growth (exact figures
 vary run to run since points.build_round_distributions samples with an
 unseeded RNG by default -- the qualitative result, beats baseline #1, loses
 to baseline #2, is stable across runs). "Back the points leaders" is a
@@ -27,6 +27,22 @@ suggests the points.py model feeding this optimiser (whose own walk-forward
 accuracy has not yet been separately gated -- that is backtest_points.py's
 job) is not yet informative enough to beat it. Reported plainly rather than
 only citing the baseline it wins against.
+
+**Correction applied to this gate (previously ~186 vs baseline #2's 201):**
+``backtest_optimiser`` built its predicted ``constructor_points`` dict keyed
+by Jolpica's ``Constructor.name`` (from ``points.py``'s ``constructor_of``),
+then looked those keys up against ``constructor_prices``, keyed by the
+public feed's ``FUllName`` -- four of eleven 2026 constructors have
+different names under the two sources (see
+``reconcile.CONSTRUCTOR_NAME_TO_FEED``), so ``optimise_team`` silently
+scored Red Bull Racing, Racing Bulls, Alpine and Cadillac's *predicted*
+points as 0 every round, regardless of how strong the actual projection
+was. Fixed by translating through ``reconcile.to_feed_constructor_name``
+before building the dict. The corrected number is *lower* against baseline
+#2, not higher -- the optimiser now has the full, correct constructor pool
+to choose from, and its predicted-best pick from that pool didn't always
+pan out as well, realised, as the narrower pool's forced picks happened to.
+A real result, not a regression to chase away.
 """
 
 from __future__ import annotations
@@ -232,7 +248,7 @@ def backtest_optimiser(
     project does not model, a known simplification.
     """
     from f1_fantasy.predict import points as points_module
-    from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed
+    from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed, to_feed_constructor_name
 
     per_round = []
     for index, target_round in enumerate(rounds):
@@ -257,7 +273,12 @@ def backtest_optimiser(
         driver_points = {d: dist.mean for d, dist in predicted.items()}
         constructor_points: dict[str, float] = {}
         for d, dist in predicted.items():
-            constructor_points[dist.constructor] = constructor_points.get(dist.constructor, 0.0) + dist.mean
+            # dist.constructor is Jolpica-named; constructor_prices below is
+            # keyed by the feed's FUllName -- four of eleven names differ
+            # (see reconcile.CONSTRUCTOR_NAME_TO_FEED), and a bare dict union
+            # silently scores the mismatched ones 0 rather than erroring.
+            name = to_feed_constructor_name(dist.constructor)
+            constructor_points[name] = constructor_points.get(name, 0.0) + dist.mean
 
         driver_season_points = {code: float(row.get("OverallPpints") or 0) for code, row in driver_feed.items()}
         constructor_season_points = {name: float(row.get("OverallPpints") or 0) for name, row in constructor_feed.items()}

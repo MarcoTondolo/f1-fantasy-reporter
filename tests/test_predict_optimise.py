@@ -146,3 +146,61 @@ def test_backtest_optimiser_compares_against_both_baselines(monkeypatch):
     assert result["summary"]["optimised_mean_points"] is not None
     assert result["summary"]["naive_baseline_mean_points"] is not None
     assert result["summary"]["season_points_baseline_mean_points"] is not None
+
+
+def test_backtest_optimiser_does_not_zero_a_constructor_whose_jolpica_name_differs_from_the_feed(monkeypatch):
+    """Regression test for the Jolpica-name vs feed-FUllName mismatch bug:
+    dist.constructor (Jolpica: "Red Bull") and the constructor feed's key
+    (FUllName: "Red Bull Racing") disagree for four real 2026 teams. Before
+    reconcile.to_feed_constructor_name was applied, a bare dict-key miss
+    silently scored the mismatched constructor's predicted points as 0 --
+    so between a genuinely strong "Red Bull Racing" and a genuinely weak
+    "Team", the optimiser would wrongly pick "Team" (0 < its real, if tiny,
+    predicted value) purely because "Red Bull Racing" could never be found
+    under its own predicted-points key. This sets up exactly that choice
+    and pins the realised outcome the *correct* pick produces.
+    """
+    from f1_fantasy.predict import points as points_module
+    from f1_fantasy.predict import reconcile as reconcile_module
+    from f1_fantasy.predict.points import DriverPointsDistribution
+
+    driver_feed_by_round = {
+        2: {"A": {"OldPlayerValue": 5.0, "Value": 5.0, "GamedayPoints": 20.0, "OverallPpints": 40.0}},
+    }
+    # Feed-side constructors are keyed by FUllName. "Red Bull Racing" is the
+    # real, much stronger pick (both predicted and realised); "Team" is a
+    # weak straw competitor with a name that already matches Jolpica as-is.
+    constructor_feed_by_round = {
+        2: {
+            "Red Bull Racing": {"OldPlayerValue": 10.0, "Value": 10.0, "GamedayPoints": 99.0, "OverallPpints": 1.0},
+            "Team": {"OldPlayerValue": 10.0, "Value": 10.0, "GamedayPoints": 2.0, "OverallPpints": 1.0},
+        }
+    }
+
+    monkeypatch.setattr(reconcile_module, "fetch_driver_feed", lambda r, cache_dir=None: driver_feed_by_round.get(r, {}))
+    monkeypatch.setattr(
+        reconcile_module, "fetch_constructor_feed_rows", lambda r, cache_dir=None: constructor_feed_by_round.get(r, {})
+    )
+    monkeypatch.setattr(
+        points_module,
+        "build_round_distributions",
+        lambda season, train, target, n_samples=500: {
+            # "A" is the only real driver candidate (n_drivers=1 forces it).
+            # "C" isn't a fetchable driver at all -- it exists only so its
+            # Jolpica-named constructor contributes to constructor_points,
+            # exactly like a teammate's points would for a real constructor.
+            "A": DriverPointsDistribution(driver="A", constructor="Red Bull", mean=18.0),
+            "C": DriverPointsDistribution(driver="C", constructor="Team", mean=1.0),
+        },
+    )
+
+    result = backtest_optimiser(2026, [1, 2], n_drivers=1, n_constructors=1)
+
+    # Correct behaviour: constructor_points translates "Red Bull" -> "Red
+    # Bull Racing" (18.0 predicted, beating "Team"'s 1.0), so the optimiser
+    # picks Red Bull Racing -- realised points = A's 20.0 + Red Bull
+    # Racing's 99.0 = 119.0. The pre-fix bug would have silently scored
+    # "Red Bull Racing" as 0 predicted points, losing to "Team" (1.0), and
+    # realised at only 20.0 + 2.0 = 22.0.
+    assert result["rounds_evaluated"] == 1
+    assert result["summary"]["optimised_mean_points"] == pytest.approx(119.0)
