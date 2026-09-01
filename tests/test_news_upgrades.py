@@ -16,6 +16,7 @@ from f1_fantasy.news.upgrades import (
     _matches,
     attribute_round,
     fetch_mentions,
+    fetch_raw_entries,
     group_by_constructor_and_round,
 )
 
@@ -145,4 +146,31 @@ def test_fetch_mentions_skips_an_unreachable_source_without_failing_the_rest(mon
     mentions = fetch_mentions(feed_urls=("https://bad.example/feed", "https://good.example/feed"))
 
     assert len(mentions) == 1
-    assert mentions[0].title == "McLaren brings upgrade to Monza"
+
+
+def test_fetch_raw_entries_returns_every_entry_unfiltered(monkeypatch):
+    feed = (
+        b"<?xml version='1.0'?><rss><channel>"
+        b"<item><title>McLaren brings upgrade to Monza</title><description></description></item>"
+        b"<item><title>Nothing keyword-relevant here</title><description></description></item>"
+        b"</channel></rss>"
+    )
+
+    class FakeResponse:
+        def __init__(self, data):
+            self._data = data
+
+        def read(self):
+            return self._data
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    monkeypatch.setattr("urllib.request.urlopen", lambda request, timeout=20.0: FakeResponse(feed))
+
+    entries = fetch_raw_entries(feed_urls=("https://example/feed",))
+
+    assert [e.title for e in entries] == ["McLaren brings upgrade to Monza", "Nothing keyword-relevant here"]

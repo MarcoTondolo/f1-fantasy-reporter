@@ -115,6 +115,52 @@ def _published_at(entry: Mapping) -> datetime | None:
     return datetime.fromtimestamp(_calendar.timegm(parsed), tz=timezone.utc)
 
 
+class RawEntry(Model):
+    """One feed entry before any keyword filtering -- the shared shape
+    every category-specific scanner (upgrades here, lineup/penalty news in
+    news/digest.py) classifies independently from a single fetch pass, so
+    a multi-category digest doesn't refetch the same feeds once per
+    category."""
+
+    source: str
+    title: str
+    summary: str = ""
+    link: str = ""
+    published_at: datetime | None = None
+
+
+def fetch_raw_entries(
+    feed_urls: tuple[str, ...] = FEED_URLS, *, limit: int = 40, timeout: float = 20.0
+) -> list[RawEntry]:
+    """Every entry across every source, completely unfiltered.
+
+    One dead feed logs a warning and is skipped rather than aborting the
+    whole fetch -- this is multi-source specifically so no single outlet
+    going down (redirect, block, timeout) blanks the result.
+    """
+    out: list[RawEntry] = []
+    for feed_url in feed_urls:
+        request = urllib.request.Request(feed_url, headers={"User-Agent": "f1-fantasy-reporter/1.0"})
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                raw = response.read()
+        except (urllib.error.URLError, TimeoutError) as exc:
+            log.warning("feed unreachable, skipping: %s (%s)", feed_url, exc)
+            continue
+        parsed = feedparser.parse(raw)
+        for entry in parsed.entries[:limit]:
+            out.append(
+                RawEntry(
+                    source=feed_url,
+                    title=entry.get("title", ""),
+                    summary=entry.get("summary", ""),
+                    link=entry.get("link", ""),
+                    published_at=_published_at(entry),
+                )
+            )
+    return out
+
+
 def fetch_mentions(
     feed_urls: tuple[str, ...] = FEED_URLS, *, limit: int = 40, timeout: float = 20.0
 ) -> list[UpgradeMention]:
@@ -123,38 +169,23 @@ def fetch_mentions(
     step so this function alone is testable/mockable per source without a
     calendar dependency, the same split bulletins.py keeps between
     ``fetch_headlines`` and ``headlines``).
-
-    One dead feed logs a warning and is skipped rather than aborting the
-    whole digest -- this is multi-source specifically so no single outlet
-    going down (redirect, block, timeout) blanks the result.
     """
     out: list[UpgradeMention] = []
-    for feed_url in feed_urls:
-        request = urllib.request.Request(feed_url, headers={"User-Agent": "f1-fantasy-reporter/1.0"})
-        try:
-            with urllib.request.urlopen(request, timeout=timeout) as response:
-                raw = response.read()
-        except (urllib.error.URLError, TimeoutError) as exc:
-            log.warning("upgrade feed unreachable, skipping: %s (%s)", feed_url, exc)
+    for entry in fetch_raw_entries(feed_urls, limit=limit, timeout=timeout):
+        matched = _matches(f"{entry.title} {entry.summary}")
+        if not matched:
             continue
-        parsed = feedparser.parse(raw)
-        for entry in parsed.entries[:limit]:
-            title = entry.get("title", "")
-            summary = entry.get("summary", "")
-            matched = _matches(f"{title} {summary}")
-            if not matched:
-                continue
-            out.append(
-                UpgradeMention(
-                    source=feed_url,
-                    title=title,
-                    summary=summary,
-                    link=entry.get("link", ""),
-                    published_at=_published_at(entry),
-                    matched_keywords=matched,
-                    constructors=_attribute_constructors(f"{title} {summary}"),
-                )
+        out.append(
+            UpgradeMention(
+                source=entry.source,
+                title=entry.title,
+                summary=entry.summary,
+                link=entry.link,
+                published_at=entry.published_at,
+                matched_keywords=matched,
+                constructors=_attribute_constructors(f"{entry.title} {entry.summary}"),
             )
+        )
     return out
 
 

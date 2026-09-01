@@ -641,6 +641,93 @@ def cmd_track_upgrades(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_daily_digest(args: argparse.Namespace) -> int:
+    """Fetch, classify and email the daily news digest: confirmed lineup
+    changes (data-driven, via news/lineup_watch.py) alongside rumoured
+    lineup news, upgrade packages, and penalties/reliability stories (all
+    classified from one RSS fetch by news/digest.py). No league
+    credentials needed -- everything here is public; only email sending
+    needs SMTP credentials, and degrades to disk-only when unconfigured,
+    same as every other publisher in this project.
+    """
+    from datetime import datetime, timezone
+
+    from f1_fantasy.calendar import current_event, fetch_calendar
+    from f1_fantasy.config import Credentials
+    from f1_fantasy.news.digest import build_digest
+    from f1_fantasy.news.lineup_watch import (
+        constructor_of_for_round,
+        constructor_of_from_practice,
+        detect_lineup_changes,
+    )
+    from f1_fantasy.pace.sessions import SessionUnavailable
+    from f1_fantasy.publish.base import NullPublisher, Report
+    from f1_fantasy.publish.email import EmailPublisher
+    from f1_fantasy.report import digest as digest_report
+
+    config = Config.load(args.config)
+    events = fetch_calendar(config.season)
+    if not events:
+        print("no calendar data", file=sys.stderr)
+        return 1
+
+    if args.round is not None:
+        by_round = {e.round: e for e in events}
+        target_event = by_round.get(args.round)
+        if target_event is None:
+            print(f"round {args.round} not found in the {config.season} calendar", file=sys.stderr)
+            return 1
+    else:
+        target_event = current_event(events, datetime.now(timezone.utc))
+        if target_event is None:
+            print("no upcoming race found in the calendar", file=sys.stderr)
+            return 1
+
+    target_round = target_event.round
+    previous_round = target_round - 1
+
+    confirmed_changes = []
+    lineup_watch_note = ""
+    if previous_round < 1:
+        lineup_watch_note = "no prior round to diff lineup changes against yet"
+    else:
+        before = constructor_of_for_round(config.season, previous_round)
+        after = constructor_of_for_round(config.season, target_round)
+        if not after:
+            try:
+                after = constructor_of_from_practice(config.season, target_round)
+            except SessionUnavailable as exc:
+                lineup_watch_note = f"no qualifying or practice session data yet for round {target_round} ({exc})"
+        if before and after:
+            confirmed_changes = detect_lineup_changes(target_round, before, after)
+
+    digest = build_digest(
+        config.season, target_round, events,
+        confirmed_changes=confirmed_changes, lineup_watch_note=lineup_watch_note,
+    )
+    context = digest_report.build_digest_report(digest)
+    text = digest_report.caption(context)
+
+    out_dir = Path(config.output_dir) / str(config.season) / "digest"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "digest.txt"
+    out_path.write_text(text + "\n", encoding="utf-8")
+
+    if args.dry_run:
+        publisher = NullPublisher()
+    else:
+        publisher = EmailPublisher(Credentials.from_env(), config.email_to)
+        if not publisher.configured:
+            print("email not configured; digest written to disk only", file=sys.stderr)
+            publisher = NullPublisher()
+
+    publisher.publish(Report(kind="digest", title=context["title"], caption=text))
+
+    print(text)
+    print(f"written {out_path}")
+    return 0
+
+
 def cmd_record_benchmark(args: argparse.Namespace) -> int:
     """Append a manually-captured external benchmark snapshot to this
     season's benchmark store -- e.g. numbers copied by hand off
@@ -1238,6 +1325,14 @@ def build_parser() -> argparse.ArgumentParser:
     track_upgrades.add_argument("--window", type=int, default=3, help="rounds either side of the upgrade round to average (default: 3)")
     track_upgrades.add_argument("--out", help="output JSON path (default: data/pace/upgrades_<season>.json)")
     track_upgrades.set_defaults(func=cmd_track_upgrades)
+
+    daily_digest = sub.add_parser(
+        "daily-digest",
+        help="fetch and email the daily news digest (confirmed lineup changes, rumoured lineup news, upgrades, penalties)",
+    )
+    daily_digest.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")
+    daily_digest.add_argument("--dry-run", action="store_true", help="write to disk only, never send email")
+    daily_digest.set_defaults(func=cmd_daily_digest)
 
     record_benchmark = sub.add_parser(
         "record-benchmark",
