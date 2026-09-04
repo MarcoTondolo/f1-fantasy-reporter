@@ -19,4 +19,4 @@ venv/
 
 # A debugging artifact for tuning the f1fantasytools capture, uploaded by the
 # workflow as a build artifact -- never meant to live in git history.
-data/pace/f1fantasytools_screenshot.png
+data/pace/f1fantasytools_screenshot.jpg

@@ -199,7 +199,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: f1fantasytools-screenshot-${{ github.run_id }}
-          path: data/pace/f1fantasytools_screenshot.png
+          path: data/pace/f1fantasytools_screenshot.jpg
           if-no-files-found: ignore
           retention-days: 14
 

@@ -44,7 +44,12 @@ ANTHROPIC_VERSION = "2023-06-01"
 #: Vision-capable; matches this project's own model at the time this was
 #: written. Override via extract_driver_points's model= if that changes.
 DEFAULT_MODEL = "claude-sonnet-5"
-DEFAULT_SCREENSHOT_PATH = Path("data/pace/f1fantasytools_screenshot.png")
+DEFAULT_SCREENSHOT_PATH = Path("data/pace/f1fantasytools_screenshot.jpg")
+#: The Anthropic API rejects oversized images (confirmed live: a 4.67MB
+#: full-page PNG of the real site produced a 400 Bad Request on the very
+#: first real run). Kept well under the ~5MB documented limit since
+#: base64 encoding inflates the payload by ~1.33x on top of this.
+MAX_IMAGE_BYTES = 3_500_000
 
 EXTRACTION_PROMPT = (
     "This is a screenshot of an F1 fantasy points-projection website. Find any table or list "
@@ -65,10 +70,18 @@ def capture_screenshot(
     settle_ms: int = 4_000,
 ) -> Path | None:
     """Loads *url* in headless Chromium, waits for network idle plus a
-    fixed settle delay for client-side hydration, and saves a full-page
-    PNG. Returns None (logging why) on any failure -- a site outage,
+    fixed settle delay for client-side hydration, and saves a JPEG (not
+    PNG -- real-world pages compress far smaller as JPEG, and staying
+    under the API's image-size limit matters more here than lossless
+    quality). Returns None (logging why) on any failure -- a site outage,
     network block, or layout change must not break the rest of the
-    collection pipeline."""
+    collection pipeline.
+
+    Tries a full-page capture first (best chance of covering wherever the
+    real table sits on the page), and falls back to a viewport-only
+    capture -- bounded by the fixed viewport size, so reliably small --
+    if the full-page shot comes back over MAX_IMAGE_BYTES.
+    """
     from playwright.sync_api import sync_playwright
 
     out_path = Path(out_path)
@@ -80,12 +93,27 @@ def capture_screenshot(
                 page = browser.new_page(viewport={"width": 1600, "height": 2400})
                 page.goto(url, timeout=timeout_ms, wait_until="networkidle")
                 page.wait_for_timeout(settle_ms)
-                page.screenshot(path=str(out_path), full_page=True)
+                page.screenshot(path=str(out_path), full_page=True, type="jpeg", quality=70)
+                if out_path.stat().st_size > MAX_IMAGE_BYTES:
+                    log.info(
+                        "full-page screenshot of %s was %d bytes, over the limit -- retrying viewport-only",
+                        url, out_path.stat().st_size,
+                    )
+                    page.screenshot(path=str(out_path), full_page=False, type="jpeg", quality=70)
             finally:
                 browser.close()
     except Exception as exc:  # noqa: BLE001 -- a screenshot failure must degrade, not raise
         log.warning("could not capture screenshot of %s: %s", url, exc)
         return None
+
+    size = out_path.stat().st_size
+    log.info("captured screenshot of %s: %s (%d bytes)", url, out_path, size)
+    if size > MAX_IMAGE_BYTES:
+        log.warning(
+            "screenshot %s is still %d bytes after the viewport-only fallback -- "
+            "extraction will likely fail on the API's size limit",
+            out_path, size,
+        )
     return out_path
 
 
@@ -132,7 +160,7 @@ def extract_driver_points(
                         "content": [
                             {
                                 "type": "image",
-                                "source": {"type": "base64", "media_type": "image/png", "data": image_b64},
+                                "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64},
                             },
                             {"type": "text", "text": EXTRACTION_PROMPT},
                         ],
@@ -144,6 +172,15 @@ def extract_driver_points(
         response.raise_for_status()
         payload = response.json()
         text = "".join(block.get("text", "") for block in payload.get("content", []) if block.get("type") == "text")
+    except httpx.HTTPStatusError as exc:
+        # The response body carries the actual validation error (e.g. "image
+        # exceeds 5 MB maximum") -- log it, not just the status line, or a
+        # future 400 is as undiagnosable from the logs as this one was.
+        log.warning(
+            "extract_driver_points: Anthropic API call failed: %s -- %s",
+            exc, exc.response.text[:500],
+        )
+        return {}
     except (httpx.HTTPError, ValueError) as exc:
         log.warning("extract_driver_points: Anthropic API call failed: %s", exc)
         return {}

@@ -6,6 +6,7 @@ network or browser, matching this project's offline-fixture convention.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import httpx
 import pytest
@@ -113,6 +114,30 @@ def test_extract_driver_points_returns_empty_when_the_api_call_raises(monkeypatc
     assert extract_driver_points(image, api_key="sk-test") == {}
 
 
+def test_extract_driver_points_logs_the_response_body_on_a_400(monkeypatch, tmp_path, caplog):
+    """Regression test: the real first run hit a 400 Bad Request (an
+    oversized image) and the original code only logged the status line,
+    not the body -- which is where the actual validation error message
+    lives, and is what made this failure hard to diagnose from the logs
+    alone."""
+    image = tmp_path / "shot.jpg"
+    image.write_bytes(b"fake jpeg bytes")
+
+    request = httpx.Request("POST", capture_module.ANTHROPIC_API_URL)
+    response = httpx.Response(400, json={"error": {"message": "image exceeds 5 MB maximum"}}, request=request)
+
+    def fake_post(*args, **kwargs):
+        return response
+
+    monkeypatch.setattr(capture_module.httpx, "post", fake_post)
+
+    with caplog.at_level("WARNING"):
+        result = extract_driver_points(image, api_key="sk-test")
+
+    assert result == {}
+    assert "image exceeds 5 MB maximum" in caplog.text
+
+
 def test_capture_screenshot_returns_none_when_playwright_fails(monkeypatch, tmp_path):
     def raising_sync_playwright():
         raise RuntimeError("no browser available")
@@ -122,6 +147,55 @@ def test_capture_screenshot_returns_none_when_playwright_fails(monkeypatch, tmp_
     monkeypatch.setattr(playwright.sync_api, "sync_playwright", raising_sync_playwright)
 
     assert capture_screenshot("https://example.invalid", tmp_path / "shot.png") is None
+
+
+def test_capture_screenshot_falls_back_to_viewport_only_when_full_page_is_oversized(monkeypatch, tmp_path):
+    """Regression test: the real first run against f1fantasytools.com
+    produced a 4.67MB full-page PNG, which the Anthropic API rejected
+    with a 400 (payload too large). A fake Playwright page whose
+    full-page capture exceeds MAX_IMAGE_BYTES must trigger the
+    viewport-only retry, landing under the limit."""
+    import playwright.sync_api
+
+    out_path = tmp_path / "shot.jpg"
+
+    class FakePage:
+        def goto(self, *a, **k):
+            pass
+
+        def wait_for_timeout(self, *a, **k):
+            pass
+
+        def screenshot(self, *, path, full_page, type, quality):
+            data = b"x" * (capture_module.MAX_IMAGE_BYTES + 1000) if full_page else b"x" * 1000
+            Path(path).write_bytes(data)
+
+    class FakeBrowser:
+        def new_page(self, **kwargs):
+            return FakePage()
+
+        def close(self):
+            pass
+
+    class FakeChromium:
+        def launch(self, **kwargs):
+            return FakeBrowser()
+
+    class FakePlaywrightContext:
+        chromium = FakeChromium()
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    monkeypatch.setattr(playwright.sync_api, "sync_playwright", lambda: FakePlaywrightContext())
+
+    result = capture_screenshot("https://example.invalid", out_path)
+
+    assert result == out_path
+    assert out_path.stat().st_size <= capture_module.MAX_IMAGE_BYTES
 
 
 def test_capture_f1fantasytools_snapshot_is_none_when_the_screenshot_fails(monkeypatch):
