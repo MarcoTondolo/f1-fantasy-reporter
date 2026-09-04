@@ -105,6 +105,147 @@ def test_watch_round_diffs_two_real_looking_rounds(monkeypatch):
     assert by_driver["HAD"].change_type == "new_entrant"
 
 
+def _fake_laps(rows: list[tuple[str, str, int]]):
+    """Builds a real fastf1.core.Laps (not a plain DataFrame) so
+    constructor_of_from_practice's use of .pick_drivers() works unmodified.
+    Each row is (driver_code, team, n_laps); n_laps duplicate rows are
+    emitted per driver to drive the lap-count-based cap under test.
+    """
+    import pandas as pd
+    from fastf1.core import Laps
+
+    records = [
+        {"Driver": driver, "Team": team, "DriverNumber": str(i)}
+        for i, (driver, team, n_laps) in enumerate(rows)
+        for _ in range(n_laps)
+    ]
+    return Laps(pd.DataFrame(records))
+
+
+def test_constructor_of_from_practice_caps_a_third_driver_by_lap_count(monkeypatch):
+    """Regression test for the spurious new_entrant noise confirmed live
+    at Monza R13 FP1: HER/Cadillac, IWA/Red Bull, BRO/Williams and
+    ARO/Alpine were all young-driver-rule stand-ins for a single session,
+    each logging far fewer laps than the regular driver they replaced for
+    that session. constructor_of_from_practice should keep only the two
+    highest-lap-count drivers per constructor, dropping the stand-in."""
+    import fastf1
+
+    from f1_fantasy.news import lineup_watch as lineup_watch_module
+
+    laps = _fake_laps(
+        [
+            ("VER", "Red Bull", 20),
+            ("HAD", "Red Bull", 18),
+            ("IWA", "Red Bull", 3),  # young-driver-rule stand-in, one session only
+            ("LEC", "Ferrari", 19),
+            ("HAM", "Ferrari", 21),
+        ]
+    )
+
+    class FakeSession:
+        def load(self, **kwargs):
+            return None
+
+        @property
+        def laps(self):
+            return laps
+
+    monkeypatch.setattr(lineup_watch_module, "_ensure_cache", lambda: None)
+    monkeypatch.setattr(fastf1, "get_session", lambda season, rnd, session: FakeSession())
+
+    mapping = lineup_watch_module.constructor_of_from_practice(2026, 13, "FP1")
+
+    assert mapping == {"VER": "Red Bull", "HAD": "Red Bull", "LEC": "Ferrari", "HAM": "Ferrari"}
+    assert "IWA" not in mapping
+
+
+def test_constructor_of_from_practice_capped_mapping_does_not_produce_spurious_new_entrant(monkeypatch):
+    """End-to-end version of the regression above: diffing the capped
+    practice mapping against the prior round's real two-driver-per-team
+    qualifying roster must not flag the low-lap-count third driver
+    (IWA) as a new_entrant, while still surfacing genuine changes."""
+    import fastf1
+
+    from f1_fantasy.news import lineup_watch as lineup_watch_module
+
+    laps = _fake_laps(
+        [
+            ("VER", "Red Bull", 20),
+            ("HAD", "Red Bull", 18),
+            ("IWA", "Red Bull", 3),
+        ]
+    )
+
+    class FakeSession:
+        def load(self, **kwargs):
+            return None
+
+        @property
+        def laps(self):
+            return laps
+
+    monkeypatch.setattr(lineup_watch_module, "_ensure_cache", lambda: None)
+    monkeypatch.setattr(fastf1, "get_session", lambda season, rnd, session: FakeSession())
+
+    before = {"VER": "Red Bull", "HAD": "Red Bull"}
+    after = lineup_watch_module.constructor_of_from_practice(2026, 13, "FP1")
+
+    changes = detect_lineup_changes(13, before, after)
+
+    assert changes == []
+
+
+def test_detect_lineup_changes_still_flags_real_swaps_against_a_capped_practice_mapping(monkeypatch):
+    """The feature this whole module exists for must survive the cap:
+    genuine team_change and absence pairs (e.g. LAW/TSU/LIN moving
+    between Red Bull and Racing Bulls, HAD sitting out) still come
+    through once a constructor's practice mapping is capped to two."""
+    import fastf1
+
+    from f1_fantasy.news import lineup_watch as lineup_watch_module
+
+    laps = _fake_laps(
+        [
+            ("VER", "Red Bull", 20),
+            ("LAW", "Red Bull", 19),  # moved from Racing Bulls
+            ("TSU", "Racing Bulls", 18),  # moved from Red Bull
+            ("LIN", "Racing Bulls", 17),
+            ("IWA", "Red Bull", 3),  # young-driver-rule stand-in, ignored
+            # HAD is simply absent from this round's practice entry list
+        ]
+    )
+
+    class FakeSession:
+        def load(self, **kwargs):
+            return None
+
+        @property
+        def laps(self):
+            return laps
+
+    monkeypatch.setattr(lineup_watch_module, "_ensure_cache", lambda: None)
+    monkeypatch.setattr(fastf1, "get_session", lambda season, rnd, session: FakeSession())
+
+    before = {
+        "VER": "Red Bull",
+        "HAD": "Red Bull",
+        "TSU": "Red Bull",
+        "LIN": "Racing Bulls",
+    }
+    after = lineup_watch_module.constructor_of_from_practice(2026, 13, "FP1")
+
+    changes = detect_lineup_changes(13, before, after)
+
+    by_driver = {c.driver: c for c in changes}
+    assert by_driver["HAD"].change_type == "absence"
+    assert by_driver["TSU"].change_type == "team_change"
+    assert by_driver["TSU"].new_constructor == "Racing Bulls"
+    assert by_driver["LAW"].change_type == "new_entrant"
+    assert by_driver["LAW"].new_constructor == "Red Bull"
+    assert "IWA" not in by_driver
+
+
 def test_constructor_of_from_practice_converts_a_post_load_failure_to_session_unavailable(monkeypatch):
     """Regression test for a real failure hit live in GitHub Actions
     (round 13 FP1, requested before FastF1's live-timing mirror had the

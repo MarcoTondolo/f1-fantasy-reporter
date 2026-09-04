@@ -89,13 +89,29 @@ def constructor_of_from_practice(season: int, round_number: int, session: str = 
     if laps is None or laps.empty:
         raise SessionUnavailable(f"{session} R{round_number} {season}: no lap data")
 
-    mapping: dict[str, str] = {}
+    driver_laps_by_team: dict[str, list[tuple[str, int]]] = {}
     for driver in laps["Driver"].unique():
         driver_laps = laps.pick_drivers(driver)
         if driver_laps.empty:
             continue
         team = driver_laps.iloc[0]["Team"]
         if team:
+            driver_laps_by_team.setdefault(team, []).append((driver, len(driver_laps)))
+
+    # A constructor's regular lineup is two drivers. A third driver showing
+    # up in one practice session is the "young driver" rule in action --
+    # confirmed live at Monza R13 FP1, where HER/Cadillac, IWA/Red Bull,
+    # BRO/Williams and ARO/Alpine all stood in for a single session while
+    # the regular driver ran the full session. That stand-in reliably logs
+    # far fewer laps, so keeping only the two highest-lap-count drivers per
+    # team excludes it, leaving the mapping as the two drivers who actually
+    # raced the session -- exactly what qualifying's two-per-team mapping
+    # looks like, so a stand-in outing doesn't diff as a spurious
+    # new_entrant/absence pair against a real lineup change.
+    mapping: dict[str, str] = {}
+    for team, drivers in driver_laps_by_team.items():
+        drivers.sort(key=lambda item: item[1], reverse=True)
+        for driver, _n_laps in drivers[:2]:
             mapping[driver] = team
     return mapping
 
