@@ -1,5 +1,5 @@
 F1 Fantasy daily digest -- 2026 round 13
-Generated 2026-09-04 18:16 UTC
+Generated 2026-09-04 18:25 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 13 (FP1 R13 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
@@ -21,11 +21,11 @@ UPGRADE PACKAGES:
   - McLaren rejects Mercedes claim it cannot afford aggressive upgrades in F1 2026 [McLaren, Ferrari, Mercedes] (26 Aug) -- https://www.autosport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
+  - What the teams said – Friday in Italy -- https://www.formula1.com/en/latest/all.xml
   - Racing Bulls set out goal after solid first day in Monza [Racing Bulls] -- https://www.formula1.com/en/latest/all.xml
   - Norris claims McLaren ‘not in the fight for pole at all’ [McLaren] -- https://www.formula1.com/en/latest/all.xml
   - Antonelli assesses ‘weird’ first day on track in Monza [Mercedes] -- https://www.formula1.com/en/latest/all.xml
   - Albon joins Antonelli with heavy grid drop for Italian GP [Williams] -- https://www.formula1.com/en/latest/all.xml
   - Russell beats Leclerc and Antonelli to FP2 fastest time [Mercedes] -- https://www.formula1.com/en/latest/all.xml
-  - AS IT HAPPENED: FP2 for the Italian GP -- https://www.formula1.com/en/latest/all.xml
   - F1 Italian GP: Russell beats Leclerc to top second practice [Ferrari, Mercedes] (04 Sep) -- https://www.autosport.com/rss/f1/news/
   - Briatore questions Monaco GP appeal integrity in explosive Italian GP press conference [McLaren, Alpine] (04 Sep) -- https://www.autosport.com/rss/f1/news/
