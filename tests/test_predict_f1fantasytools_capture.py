@@ -149,30 +149,13 @@ def test_capture_screenshot_returns_none_when_playwright_fails(monkeypatch, tmp_
     assert capture_screenshot("https://example.invalid", tmp_path / "shot.png") is None
 
 
-def test_capture_screenshot_falls_back_to_viewport_only_when_full_page_is_oversized(monkeypatch, tmp_path):
-    """Regression test: the real first run against f1fantasytools.com
-    produced a 4.67MB full-page PNG, which the Anthropic API rejected
-    with a 400 (payload too large). A fake Playwright page whose
-    full-page capture exceeds MAX_IMAGE_BYTES must trigger the
-    viewport-only retry, landing under the limit."""
-    import playwright.sync_api
-
-    out_path = tmp_path / "shot.jpg"
-
-    class FakePage:
-        def goto(self, *a, **k):
-            pass
-
-        def wait_for_timeout(self, *a, **k):
-            pass
-
-        def screenshot(self, *, path, full_page, type, quality):
-            data = b"x" * (capture_module.MAX_IMAGE_BYTES + 1000) if full_page else b"x" * 1000
-            Path(path).write_bytes(data)
+def _fake_playwright_context(page):
+    """Builds the sync_playwright()-shaped fake object chain capture_screenshot
+    walks: sync_playwright() -> __enter__() -> .chromium.launch() -> .new_page()."""
 
     class FakeBrowser:
         def new_page(self, **kwargs):
-            return FakePage()
+            return page
 
         def close(self):
             pass
@@ -190,12 +173,74 @@ def test_capture_screenshot_falls_back_to_viewport_only_when_full_page_is_oversi
         def __exit__(self, *a):
             return False
 
-    monkeypatch.setattr(playwright.sync_api, "sync_playwright", lambda: FakePlaywrightContext())
+    return FakePlaywrightContext()
+
+
+def test_capture_screenshot_falls_back_to_viewport_only_when_full_page_is_oversized(monkeypatch, tmp_path):
+    """Regression test: the real first run against f1fantasytools.com
+    produced a 4.67MB full-page PNG, which the Anthropic API rejected
+    with a 400 (payload too large). A fake Playwright page whose
+    full-page capture exceeds MAX_IMAGE_BYTES must trigger the
+    viewport-only retry, landing under the limit."""
+    import playwright.sync_api
+
+    out_path = tmp_path / "shot.jpg"
+
+    class FakePage:
+        def goto(self, *a, **k):
+            pass
+
+        def wait_for_timeout(self, *a, **k):
+            pass
+
+        def evaluate(self, *a, **k):
+            return 2000  # under MAX_IMAGE_DIMENSION_PX -- exercises the full_page path
+
+        def screenshot(self, *, path, type, quality, full_page=None, clip=None):
+            data = b"x" * (capture_module.MAX_IMAGE_BYTES + 1000) if full_page else b"x" * 1000
+            Path(path).write_bytes(data)
+
+    monkeypatch.setattr(playwright.sync_api, "sync_playwright", lambda: _fake_playwright_context(FakePage()))
 
     result = capture_screenshot("https://example.invalid", out_path)
 
     assert result == out_path
     assert out_path.stat().st_size <= capture_module.MAX_IMAGE_BYTES
+
+
+def test_capture_screenshot_clips_instead_of_full_page_when_the_real_page_is_very_tall(monkeypatch, tmp_path):
+    """Regression test for the second real failure: a 1.46MB JPEG -- well
+    under MAX_IMAGE_BYTES -- still drew a 400 because the real page's
+    full-page height exceeded the API's 8000px per-dimension cap. A fake
+    page reporting a tall scrollHeight must produce a *clipped* capture
+    (height capped at MAX_IMAGE_DIMENSION_PX), never full_page=True."""
+    import playwright.sync_api
+
+    out_path = tmp_path / "shot.jpg"
+    calls: list[dict] = []
+
+    class FakePage:
+        def goto(self, *a, **k):
+            pass
+
+        def wait_for_timeout(self, *a, **k):
+            pass
+
+        def evaluate(self, *a, **k):
+            return 20_000  # far past MAX_IMAGE_DIMENSION_PX
+
+        def screenshot(self, *, path, type, quality, full_page=None, clip=None):
+            calls.append({"full_page": full_page, "clip": clip})
+            Path(path).write_bytes(b"x" * 1000)
+
+    monkeypatch.setattr(playwright.sync_api, "sync_playwright", lambda: _fake_playwright_context(FakePage()))
+
+    result = capture_screenshot("https://example.invalid", out_path)
+
+    assert result == out_path
+    first_call = calls[0]
+    assert not first_call["full_page"]
+    assert first_call["clip"]["height"] == capture_module.MAX_IMAGE_DIMENSION_PX
 
 
 def test_capture_f1fantasytools_snapshot_is_none_when_the_screenshot_fails(monkeypatch):

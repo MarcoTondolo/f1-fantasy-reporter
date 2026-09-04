@@ -62,6 +62,18 @@ EXTRACTION_PROMPT = (
 )
 
 
+#: The Anthropic API's own documented hard cap on any single image
+#: dimension (confirmed live: a 1.46MB JPEG -- comfortably under
+#: MAX_IMAGE_BYTES -- still drew a 400 because ``full_page=True`` on a
+#: very long real page produced a height past this). A byte-size guard
+#: alone cannot catch this: a tall, sparse page compresses small in bytes
+#: while still being far too many pixels tall. Kept with a safety margin
+#: below the documented 8000, not exactly at it.
+MAX_IMAGE_DIMENSION_PX = 7900
+VIEWPORT_WIDTH = 1600
+VIEWPORT_HEIGHT = 2400
+
+
 def capture_screenshot(
     url: str = DEFAULT_URL,
     out_path: Path | str = DEFAULT_SCREENSHOT_PATH,
@@ -72,15 +84,23 @@ def capture_screenshot(
     """Loads *url* in headless Chromium, waits for network idle plus a
     fixed settle delay for client-side hydration, and saves a JPEG (not
     PNG -- real-world pages compress far smaller as JPEG, and staying
-    under the API's image-size limit matters more here than lossless
+    under the API's size/dimension limits matters more here than lossless
     quality). Returns None (logging why) on any failure -- a site outage,
     network block, or layout change must not break the rest of the
     collection pipeline.
 
-    Tries a full-page capture first (best chance of covering wherever the
-    real table sits on the page), and falls back to a viewport-only
-    capture -- bounded by the fixed viewport size, so reliably small --
-    if the full-page shot comes back over MAX_IMAGE_BYTES.
+    Two independent guards, because they catch different real failures
+    (both hit live on the first two runs against the real site):
+    - **Dimension**: measures the page's actual scroll height before
+      capturing. A full-page shot only happens when it fits under
+      MAX_IMAGE_DIMENSION_PX; otherwise this clips from the top of the
+      page down to that height instead -- still covers far more of the
+      page than a bare single-viewport shot would, while staying under
+      the API's hard per-dimension cap.
+    - **Size**: if the resulting file is still over MAX_IMAGE_BYTES
+      (a tall clip can still be a large file if the content is dense),
+      falls back further to a plain viewport-only capture, which is
+      bounded on both dimension and, in practice, size.
     """
     from playwright.sync_api import sync_playwright
 
@@ -90,13 +110,26 @@ def capture_screenshot(
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             try:
-                page = browser.new_page(viewport={"width": 1600, "height": 2400})
+                page = browser.new_page(viewport={"width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT})
                 page.goto(url, timeout=timeout_ms, wait_until="networkidle")
                 page.wait_for_timeout(settle_ms)
-                page.screenshot(path=str(out_path), full_page=True, type="jpeg", quality=70)
+
+                scroll_height = page.evaluate("document.documentElement.scrollHeight")
+                if scroll_height and scroll_height > MAX_IMAGE_DIMENSION_PX:
+                    log.info(
+                        "%s is %dpx tall, over the %dpx cap -- clipping instead of a full-page capture",
+                        url, scroll_height, MAX_IMAGE_DIMENSION_PX,
+                    )
+                    page.screenshot(
+                        path=str(out_path), type="jpeg", quality=70,
+                        clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": MAX_IMAGE_DIMENSION_PX},
+                    )
+                else:
+                    page.screenshot(path=str(out_path), full_page=True, type="jpeg", quality=70)
+
                 if out_path.stat().st_size > MAX_IMAGE_BYTES:
                     log.info(
-                        "full-page screenshot of %s was %d bytes, over the limit -- retrying viewport-only",
+                        "screenshot of %s was %d bytes, over the limit -- retrying viewport-only",
                         url, out_path.stat().st_size,
                     )
                     page.screenshot(path=str(out_path), full_page=False, type="jpeg", quality=70)
