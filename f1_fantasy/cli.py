@@ -601,7 +601,9 @@ def cmd_track_upgrades(args: argparse.Namespace) -> int:
     """
     import dataclasses
     import json
+    from datetime import datetime, timezone
 
+    from f1_fantasy.calendar import current_event, fetch_calendar
     from f1_fantasy.news.upgrades import track_upgrades
     from f1_fantasy.predict.upgrades import evaluate_attributed_upgrades
     from f1_fantasy.render import render_card
@@ -611,7 +613,18 @@ def cmd_track_upgrades(args: argparse.Namespace) -> int:
     print(f"fetching upgrade mentions for {config.season}...")
     tracked = track_upgrades(config.season)
 
-    available_rounds = list(range(args.start, args.end + 1))
+    end = args.end
+    if end is None:
+        # Recurring automation (the daily GitHub Actions run) never passes
+        # --end, so a hardcoded default would silently stop growing once
+        # the season passes it -- resolve to the latest round with real
+        # results instead, the same "current/next event" calendar lookup
+        # cmd_picks/cmd_daily_digest already use.
+        events = fetch_calendar(config.season)
+        next_event = current_event(events, datetime.now(timezone.utc)) if events else None
+        end = (next_event.round - 1) if next_event else max((e.round for e in events), default=args.start)
+        end = max(end, args.start)
+    available_rounds = list(range(args.start, end + 1))
     effects = evaluate_attributed_upgrades(config.season, tracked["groups"], available_rounds, window=args.window)
 
     result = {
@@ -1320,7 +1333,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     track_upgrades.add_argument("--start", type=int, default=1, help="first round considered available (default: 1)")
     track_upgrades.add_argument(
-        "--end", type=int, default=12, help="last round considered available, inclusive (default: 12)"
+        "--end", type=int, help="last round considered available, inclusive (default: latest completed round)"
     )
     track_upgrades.add_argument("--window", type=int, default=3, help="rounds either side of the upgrade round to average (default: 3)")
     track_upgrades.add_argument("--out", help="output JSON path (default: data/pace/upgrades_<season>.json)")

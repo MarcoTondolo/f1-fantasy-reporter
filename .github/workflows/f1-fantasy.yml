@@ -1,21 +1,25 @@
 name: F1 Fantasy reports
 
-# Hourly, self-gating. The tick decides from the race calendar whether anything
-# is actually due, so most runs exit in seconds without installing a browser.
-# Cron on a private repo bills against the free tier, hence the early exit.
+# Two schedules, two jobs. `tick` (hourly) decides from the race calendar
+# whether anything is actually due, so most runs exit in seconds without
+# installing a browser. `news` (daily) always runs: upgrade tracking and the
+# news digest are meant to build up through the week, not gate on a race
+# being imminent. Cron on a private repo bills against the free tier, hence
+# tick's early exit.
 #
 # GitHub disables schedules on repos with no activity for 60 days, which will
 # happen over the winter break -- a manual run re-arms it.
 on:
   schedule:
     - cron: "7 * * * *"
+    - cron: "13 7 * * *"
   workflow_dispatch:
     inputs:
       action:
-        description: "Force a specific report instead of asking the calendar"
+        description: "Force a specific report instead of asking the calendar (or 'news' for the upgrade tracker + daily digest)"
         required: false
         type: choice
-        options: ["", "pace", "preview", "lockout", "recap"]
+        options: ["", "pace", "preview", "lockout", "recap", "news"]
       dry_run:
         description: "Render but do not send"
         required: false
@@ -33,6 +37,8 @@ permissions:
 jobs:
   tick:
     runs-on: ubuntu-latest
+    # The hourly cron, or a manual dispatch not asking for the daily news job.
+    if: github.event.schedule == '7 * * * *' || (github.event_name == 'workflow_dispatch' && inputs.action != 'news')
     steps:
       - uses: actions/checkout@v4
 
@@ -136,3 +142,50 @@ jobs:
                 labels: ["auth"],
               });
             }
+
+  # Upgrade-package tracking and the daily news digest: both fetch only
+  # public RSS/Jolpica/FastF1 data (no F1_FANTASY_TOKEN/GUID needed), and
+  # run here specifically because this runner has ordinary outbound
+  # internet access -- unlike the sandboxed dev environment this project
+  # is built in, which blocks several of the sites these draw from.
+  news:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '13 7 * * *' || (github.event_name == 'workflow_dispatch' && inputs.action == 'news')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install -e .
+
+      # Only track-upgrades renders a card image; daily-digest is text-only.
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+
+      - name: Track upgrade-package news
+        run: python -m f1_fantasy track-upgrades
+
+      - name: Send daily digest
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: |
+          python -m f1_fantasy daily-digest \
+            ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Commit news data
+        run: |
+          git config user.name "f1-fantasy-bot"
+          git config user.email "actions@github.com"
+          git add data out 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "Daily upgrade tracking and news digest"
+            git push
+          fi
