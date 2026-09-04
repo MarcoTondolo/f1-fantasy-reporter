@@ -1,0 +1,31 @@
+F1 Fantasy daily digest -- 2026 round 13
+Generated 2026-09-04 18:16 UTC
+
+Confirmed lineup changes: no qualifying or practice session data yet for round 13 (FP1 R13 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
+
+LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
+  - Red Bull to keep Dutch GP driver line-up for Monza with Hadjar still injured [Red Bull, Racing Bulls] (02 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Marquez explains why he told injured Hadjar to miss Dutch GP [Red Bull] (27 Aug) -- https://www.autosport.com/rss/f1/news/
+  - Red Bull gives update on Isack Hadjar’s recovery timeline [Red Bull] (04 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Jack Doohan opens up on Michael Schumacher bond and gift that influenced his career [Alpine, Haas F1 Team] (03 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Hadjar to miss Italian Grand Prix, Lawson and Tsunoda continue as substitutes | Formula 1 [Red Bull] (02 Sep) -- https://www.racefans.net/feed/
+
+UPGRADE PACKAGES:
+  - Bearman praises 'night and day' Haas upgrades [Haas F1 Team] -- https://www.formula1.com/en/latest/all.xml
+  - Ferrari to bring upgraded engine to Italian GP under ADUO [Ferrari] (02 Sep) -- https://www.autosport.com/rss/f1/news/
+  - How Ferrari can "push until the end" with F1 2026 upgrades, and why it will [Ferrari] (01 Sep) -- https://www.autosport.com/rss/f1/news/
+  - The underlying upgrade that boosted McLaren's performance jump [McLaren] (31 Aug) -- https://www.autosport.com/rss/f1/news/
+  - Ferrari to deliver upgraded F1 engine at Italian GP [Ferrari] (28 Aug) -- https://www.autosport.com/rss/f1/news/
+  - Why Red Bull has F1's top-ranked engine, and what it reveals about ADUO [Red Bull] (27 Aug) -- https://www.autosport.com/rss/f1/news/
+  - Red Bull officially named F1's best engine as FIA makes ADUO results public [Red Bull] (26 Aug) -- https://www.autosport.com/rss/f1/news/
+  - McLaren rejects Mercedes claim it cannot afford aggressive upgrades in F1 2026 [McLaren, Ferrari, Mercedes] (26 Aug) -- https://www.autosport.com/rss/f1/news/
+
+PENALTIES / RELIABILITY:
+  - Racing Bulls set out goal after solid first day in Monza [Racing Bulls] -- https://www.formula1.com/en/latest/all.xml
+  - Norris claims McLaren ‘not in the fight for pole at all’ [McLaren] -- https://www.formula1.com/en/latest/all.xml
+  - Antonelli assesses ‘weird’ first day on track in Monza [Mercedes] -- https://www.formula1.com/en/latest/all.xml
+  - Albon joins Antonelli with heavy grid drop for Italian GP [Williams] -- https://www.formula1.com/en/latest/all.xml
+  - Russell beats Leclerc and Antonelli to FP2 fastest time [Mercedes] -- https://www.formula1.com/en/latest/all.xml
+  - AS IT HAPPENED: FP2 for the Italian GP -- https://www.formula1.com/en/latest/all.xml
+  - F1 Italian GP: Russell beats Leclerc to top second practice [Ferrari, Mercedes] (04 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Briatore questions Monaco GP appeal integrity in explosive Italian GP press conference [McLaren, Alpine] (04 Sep) -- https://www.autosport.com/rss/f1/news/
