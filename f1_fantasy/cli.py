@@ -778,25 +778,37 @@ def cmd_record_benchmark(args: argparse.Namespace) -> int:
 def cmd_collect_benchmark_snapshot(args: argparse.Namespace) -> int:
     """Capture the automatable benchmark signals for one round -- the
     official feed's own ProjectedGamedayPoints, crowd-consensus ownership
-    %, and our own current expected-points mean -- and append each as a
-    dated snapshot. Safe to run repeatedly through a race weekend; never
-    hard-fails on one bad source, matching predict/odds.py's
-    never-raises standard.
+    %, our own current expected-points mean, and (when ANTHROPIC_API_KEY is
+    set) an f1fantasytools.com screenshot read via the Claude API's vision
+    input -- and append each as a dated snapshot. Safe to run repeatedly
+    through a race weekend; never hard-fails on one bad source, matching
+    predict/odds.py's never-raises standard.
     """
     from datetime import datetime, timezone
 
+    from f1_fantasy.calendar import current_event, fetch_calendar
+    from f1_fantasy.config import Credentials
     from f1_fantasy.predict.benchmarks import (
         ExternalBenchmarkSnapshot,
         append_snapshot,
         crowd_consensus_snapshot,
         official_projected_snapshot,
     )
+    from f1_fantasy.predict.f1fantasytools_capture import capture_f1fantasytools_snapshot
     from f1_fantasy.predict.points import build_round_distributions
 
     config = Config.load(args.config)
     season = config.season
-    round_number = args.round
     session_label = args.session or ""
+
+    round_number = args.round
+    if round_number is None:
+        events = fetch_calendar(season)
+        next_event = current_event(events, datetime.now(timezone.utc)) if events else None
+        if next_event is None:
+            print("no upcoming race found in the calendar", file=sys.stderr)
+            return 1
+        round_number = next_event.round
 
     captured: list[str] = []
 
@@ -833,6 +845,22 @@ def cmd_collect_benchmark_snapshot(args: argparse.Namespace) -> int:
                 captured.append("ours")
         except Exception as exc:  # noqa: BLE001
             print(f"could not capture our own distribution snapshot: {exc}", file=sys.stderr)
+
+    api_key = Credentials.from_env().anthropic_api_key
+    if not api_key:
+        print("ANTHROPIC_API_KEY not set; skipping f1fantasytools screenshot capture", file=sys.stderr)
+    else:
+        try:
+            snapshot = capture_f1fantasytools_snapshot(
+                season, round_number, api_key=api_key, session_label=session_label
+            )
+            if snapshot is not None:
+                append_snapshot(snapshot)
+                captured.append("f1fantasytools")
+            else:
+                print("f1fantasytools screenshot capture returned nothing (see warnings above)", file=sys.stderr)
+        except Exception as exc:  # noqa: BLE001
+            print(f"could not capture f1fantasytools snapshot: {exc}", file=sys.stderr)
 
     if not captured:
         print("no benchmark snapshots captured", file=sys.stderr)
@@ -1364,9 +1392,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     collect_benchmark_snapshot = sub.add_parser(
         "collect-benchmark-snapshot",
-        help="capture the official feed's ProjectedGamedayPoints, crowd-consensus ownership, and our own current estimate for one round",
+        help="capture the official feed's ProjectedGamedayPoints, crowd-consensus ownership, our own current estimate, and (with ANTHROPIC_API_KEY set) an f1fantasytools.com screenshot capture, for one round",
     )
-    collect_benchmark_snapshot.add_argument("--round", type=int, required=True, help="round number to capture")
+    collect_benchmark_snapshot.add_argument(
+        "--round", type=int, help="round number to capture (default: current/next in the calendar)"
+    )
     collect_benchmark_snapshot.add_argument("--session", help="session label, e.g. FP1/FP2/FP3/pre_quali")
     collect_benchmark_snapshot.add_argument("--cache-dir", help="directory to cache driver feeds in")
     collect_benchmark_snapshot.set_defaults(func=cmd_collect_benchmark_snapshot)

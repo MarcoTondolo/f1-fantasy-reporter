@@ -16,3 +16,7 @@ venv/
 
 # FastF1's raw cache is tens of MB per session -- Actions caches it instead.
 .fastf1-cache/
+
+# A debugging artifact for tuning the f1fantasytools capture, uploaded by the
+# workflow as a build artifact -- never meant to live in git history.
+data/pace/f1fantasytools_screenshot.png

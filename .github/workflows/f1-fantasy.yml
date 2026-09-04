@@ -178,6 +178,31 @@ jobs:
           python -m f1_fantasy daily-digest \
             ${{ inputs.dry_run && '--dry-run' || '' }}
 
+      # f1fantasytools.com is unreachable from this project's dev sandbox
+      # (network egress block, confirmed live), so this step -- a
+      # screenshot read via the Claude API's vision input, see
+      # predict/f1fantasytools_capture.py -- has never run against the
+      # real page. It degrades to a skipped/empty capture on any failure
+      # (missing key, blocked page, unparseable response) rather than
+      # failing the job; the uploaded screenshot below is what lets a
+      # human check and tune it after the first few real runs.
+      - name: Capture f1fantasytools.com benchmark snapshot
+        if: env.ANTHROPIC_API_KEY != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m f1_fantasy collect-benchmark-snapshot
+
+      - name: Upload f1fantasytools screenshot for inspection
+        if: always() && env.ANTHROPIC_API_KEY != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: f1fantasytools-screenshot-${{ github.run_id }}
+          path: data/pace/f1fantasytools_screenshot.png
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Commit news data
         run: |
           git config user.name "f1-fantasy-bot"

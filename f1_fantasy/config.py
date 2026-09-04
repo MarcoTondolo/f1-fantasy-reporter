@@ -26,6 +26,9 @@ class Credentials(Model):
     smtp_port: int = 587
     smtp_user: str = ""
     smtp_password: str = ""
+    #: For predict/f1fantasytools_capture.py's screenshot-to-vision benchmark
+    #: capture -- unset means that source is skipped, never a hard failure.
+    anthropic_api_key: str = ""
 
     @property
     def can_send_email(self) -> bool:
@@ -40,6 +43,7 @@ class Credentials(Model):
             smtp_port=int(os.environ.get("SMTP_PORT", "587")),
             smtp_user=os.environ.get("SMTP_USER", "").strip(),
             smtp_password=os.environ.get("SMTP_PASS", "").strip(),
+            anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip(),
         )
 
 
