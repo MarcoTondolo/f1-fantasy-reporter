@@ -157,10 +157,11 @@ def capture_screenshot(
     out_path: Path | str,
     *,
     timeout_ms: int = 30_000,
-    settle_ms: int = 4_000,
+    settle_ms: int = 6_000,
 ) -> Path | None:
-    """Loads *url* in headless Chromium, waits for network idle plus a
-    fixed settle delay for client-side hydration, and saves a JPEG (not
+    """Loads *url* in headless Chromium, waits for the DOM to parse plus a
+    fixed settle delay for client-side hydration (see the inline comment
+    on the goto() call for why not "networkidle"), and saves a JPEG (not
     PNG -- real-world pages compress far smaller as JPEG, and staying
     under the API's size/dimension limits matters more here than lossless
     quality). Returns None (logging why) on any failure -- a site outage,
@@ -189,7 +190,16 @@ def capture_screenshot(
             browser = p.chromium.launch(headless=True)
             try:
                 page = browser.new_page(viewport={"width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT})
-                page.goto(url, timeout=timeout_ms, wait_until="networkidle")
+                # "networkidle" (no connections for 500ms) is too strict for
+                # these pages -- confirmed live: 3 of the 4 real F1FT_PAGES
+                # timed out waiting for it on the very first multi-page run,
+                # apparently never going quiet (live-updating dashboards --
+                # a price ticker, analytics beacon, or similar short-interval
+                # background request). "domcontentloaded" fires as soon as
+                # the DOM is parsed and doesn't wait on ongoing network
+                # activity; the fixed settle_ms delay below is what actually
+                # covers client-side hydration instead.
+                page.goto(url, timeout=timeout_ms, wait_until="domcontentloaded")
                 page.wait_for_timeout(settle_ms)
 
                 scroll_height = page.evaluate("document.documentElement.scrollHeight")
