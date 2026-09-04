@@ -126,10 +126,15 @@ F1FT_PAGES: dict[str, F1FTPage] = {
         key="budget_builder",
         url="https://f1fantasytools.com/budget-builder",
         extraction_prompt=(
-            "This is a screenshot of the F1 Fantasy Tools 'Budget Builder' page, showing each "
-            "driver's projected price/budget change based on points. Find the table showing each "
-            "driver alongside a price or budget delta (e.g. in $ millions -- can be negative). "
-            + _CODE_HINT
+            "This is a screenshot of the F1 Fantasy Tools 'Budget Builder' page. It shows, for "
+            "each driver, a table of columns headed with price-change thresholds (e.g. '-0.3', "
+            "'-0.1', '+0.1', '+0.3'), where each cell is the number of points that driver needs to "
+            "score to trigger that price change. Find the column headed with the smallest positive "
+            "threshold (e.g. '+0.1', not '+0.3') -- this is the points needed for the next price "
+            "rise. Respond with ONLY a JSON object mapping each driver's 3-letter code to that "
+            "column's value for them as a plain number (it can be negative, meaning they've "
+            "already cleared it). Respond with {} if no such table/column is visible. Do not "
+            "include any text before or after the JSON object."
         ),
         source="f1fantasytools_budget_builder",
     ),
