@@ -179,27 +179,27 @@ jobs:
             ${{ inputs.dry_run && '--dry-run' || '' }}
 
       # f1fantasytools.com is unreachable from this project's dev sandbox
-      # (network egress block, confirmed live), so this step -- a
-      # screenshot read via the Claude API's vision input, see
-      # predict/f1fantasytools_capture.py -- has never run against the
-      # real page. It degrades to a skipped/empty capture on any failure
-      # (missing key, blocked page, unparseable response) rather than
-      # failing the job; the uploaded screenshot below is what lets a
-      # human check and tune it after the first few real runs.
+      # (network egress block, confirmed live), so this step -- one
+      # screenshot + vision-extraction pass per page in F1FT_PAGES, see
+      # predict/f1fantasytools_capture.py -- can only be tuned from real
+      # runs here. It degrades to a skipped/empty capture per page on any
+      # failure (missing key, blocked page, unparseable response) rather
+      # than failing the job; the uploaded screenshots below are what let
+      # a human check the actual page content against what got extracted.
       - name: Capture f1fantasytools.com benchmark snapshot
         if: env.ANTHROPIC_API_KEY != ''
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python -m f1_fantasy collect-benchmark-snapshot
 
-      - name: Upload f1fantasytools screenshot for inspection
+      - name: Upload f1fantasytools screenshots for inspection
         if: always() && env.ANTHROPIC_API_KEY != ''
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         uses: actions/upload-artifact@v4
         with:
-          name: f1fantasytools-screenshot-${{ github.run_id }}
-          path: data/pace/f1fantasytools_screenshot.jpg
+          name: f1fantasytools-screenshots-${{ github.run_id }}
+          path: data/pace/f1fantasytools_*_screenshot.jpg
           if-no-files-found: ignore
           retention-days: 14
 

@@ -11,16 +11,36 @@ input reads that screenshot the same way a person would.
 **Built without ever seeing the real page.** The dev sandbox this project
 is built in blocks f1fantasytools.com outright at the network level
 (confirmed live: an explicit ``EGRESS_BLOCKED`` error naming the proxy) --
-so the wait/selector logic below is a best-effort guess about the page's
-layout, not something verified end-to-end from here. This runs from
-GitHub Actions instead (see ``.github/workflows/f1-fantasy.yml``'s
-``news`` job), which has ordinary outbound access and can actually reach
-the site. Every failure mode -- a blocked/changed page, a missing API key,
-a malformed model response -- degrades to ``None``/an empty dict with a
-logged reason, never raises, matching ``predict/odds.py``'s standard for a
-collector nothing downstream may depend on succeeding. Re-tune the wait
-delay/prompt once real screenshots from an actual run can be inspected
-(the workflow uploads the screenshot as a build artifact for exactly this).
+so this runs from GitHub Actions instead (see
+``.github/workflows/f1-fantasy.yml``'s ``news`` job), which has ordinary
+outbound access and can actually reach the site. Every failure mode -- a
+blocked/changed page, a missing API key, a malformed model response --
+degrades to ``None``/an empty dict with a logged reason, never raises,
+matching ``predict/odds.py``'s standard for a collector nothing downstream
+may depend on succeeding.
+
+**The four real pages, confirmed by the user** (not guessed -- an earlier
+version of this module pointed at the bare homepage and, on the first live
+run, silently captured a *marketing screenshot embedded in the homepage's
+own hero section* -- a promotional image labelled "R24 ... See you in
+2025!" from the prior season, not live data. Real driver codes, wrong
+table entirely, which is exactly the kind of wrong-but-plausible failure a
+human has to catch by actually looking at the screenshot, not just
+checking whether extraction returned *something*):
+
+- ``/statistics`` -- actual points scored history
+- ``/team-calculator`` -- this site's own modelled/projected fantasy
+  points per player and team (the real analogue to what this project's
+  own ``predict/points.py`` produces -- the most direct benchmark)
+- ``/budget-builder`` -- budget/price impact based on points
+- ``/elite-data`` -- global top-500 ranked team composition/ownership
+
+Each gets its own tailored extraction prompt (a generic "find a
+points table" prompt is exactly what mistook the marketing screenshot for
+real data) and its own distinct ``source`` label, so the benchmark card
+(``report/benchmarks.py``, which already groups purely by ``source``
+string -- no code there needed to change) shows all four side by side
+rather than one overwriting another.
 """
 
 from __future__ import annotations
@@ -29,6 +49,7 @@ import base64
 import json
 import logging
 import re
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -38,30 +59,17 @@ from f1_fantasy.predict.benchmarks import ExternalBenchmarkSnapshot
 
 log = logging.getLogger(__name__)
 
-DEFAULT_URL = "https://www.f1fantasytools.com/"
 ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
 #: Vision-capable; matches this project's own model at the time this was
 #: written. Override via extract_driver_points's model= if that changes.
 DEFAULT_MODEL = "claude-sonnet-5"
-DEFAULT_SCREENSHOT_PATH = Path("data/pace/f1fantasytools_screenshot.jpg")
+
 #: The Anthropic API rejects oversized images (confirmed live: a 4.67MB
 #: full-page PNG of the real site produced a 400 Bad Request on the very
 #: first real run). Kept well under the ~5MB documented limit since
 #: base64 encoding inflates the payload by ~1.33x on top of this.
 MAX_IMAGE_BYTES = 3_500_000
-
-EXTRACTION_PROMPT = (
-    "This is a screenshot of an F1 fantasy points-projection website. Find any table or list "
-    "that shows driver names alongside projected fantasy points (labels may vary: "
-    "'projection', 'proj pts', 'points', 'elite data', or similar). Respond with ONLY a JSON "
-    "object mapping each driver's 3-letter code (e.g. VER, NOR, HAM -- infer the code from the "
-    "full name if only the full name is shown) to their projected points as a plain number. "
-    "Respond with {} if no such driver/points table is visible anywhere in the image. Do not "
-    "include any text before or after the JSON object."
-)
-
-
 #: The Anthropic API's own documented hard cap on any single image
 #: dimension (confirmed live: a 1.46MB JPEG -- comfortably under
 #: MAX_IMAGE_BYTES -- still drew a 400 because ``full_page=True`` on a
@@ -74,9 +82,79 @@ VIEWPORT_WIDTH = 1600
 VIEWPORT_HEIGHT = 2400
 
 
+@dataclass(frozen=True)
+class F1FTPage:
+    key: str
+    url: str
+    extraction_prompt: str
+    source: str
+
+
+_CODE_HINT = (
+    "Respond with ONLY a JSON object mapping each driver's 3-letter code (e.g. VER, NOR, HAM -- "
+    "infer the code from the full name if only the full name is shown) to the number described "
+    "above. Respond with {} if no such table is visible anywhere in the image. Do not include "
+    "any text before or after the JSON object."
+)
+
+F1FT_PAGES: dict[str, F1FTPage] = {
+    "team_calculator": F1FTPage(
+        key="team_calculator",
+        url="https://f1fantasytools.com/team-calculator",
+        extraction_prompt=(
+            "This is a screenshot of the F1 Fantasy Tools 'Team Calculator' page, which shows "
+            "this site's own modelled/projected fantasy points for each driver for an upcoming "
+            "or recent race. Find the table or list of drivers with their modelled/projected "
+            "points (not a price, not an ownership percentage -- the points projection itself). "
+            + _CODE_HINT
+        ),
+        source="f1fantasytools_team_calculator",
+    ),
+    "statistics": F1FTPage(
+        key="statistics",
+        url="https://f1fantasytools.com/statistics",
+        extraction_prompt=(
+            "This is a screenshot of the F1 Fantasy Tools 'Statistics' page, showing actual "
+            "fantasy points scored by each driver across real past races this season. Find the "
+            "table showing each driver's actual scored points -- use whichever single number is "
+            "most prominently their overall/total actual points (not a projection, not a price). "
+            + _CODE_HINT
+        ),
+        source="f1fantasytools_statistics",
+    ),
+    "budget_builder": F1FTPage(
+        key="budget_builder",
+        url="https://f1fantasytools.com/budget-builder",
+        extraction_prompt=(
+            "This is a screenshot of the F1 Fantasy Tools 'Budget Builder' page, showing each "
+            "driver's projected price/budget change based on points. Find the table showing each "
+            "driver alongside a price or budget delta (e.g. in $ millions -- can be negative). "
+            + _CODE_HINT
+        ),
+        source="f1fantasytools_budget_builder",
+    ),
+    "elite_data": F1FTPage(
+        key="elite_data",
+        url="https://f1fantasytools.com/elite-data",
+        extraction_prompt=(
+            "This is a screenshot of the F1 Fantasy Tools 'Elite Data' page, showing ownership/"
+            "selection statistics for the globally top-ranked (top 500) fantasy teams. Find the "
+            "table showing each driver alongside how many or what percentage of these top teams "
+            "own or have selected them. "
+            + _CODE_HINT
+        ),
+        source="f1fantasytools_elite_data",
+    ),
+}
+
+
+def _screenshot_path(page_key: str) -> Path:
+    return Path(f"data/pace/f1fantasytools_{page_key}_screenshot.jpg")
+
+
 def capture_screenshot(
-    url: str = DEFAULT_URL,
-    out_path: Path | str = DEFAULT_SCREENSHOT_PATH,
+    url: str,
+    out_path: Path | str,
     *,
     timeout_ms: int = 30_000,
     settle_ms: int = 4_000,
@@ -90,7 +168,7 @@ def capture_screenshot(
     collection pipeline.
 
     Two independent guards, because they catch different real failures
-    (both hit live on the first two runs against the real site):
+    (both hit live against the real site):
     - **Dimension**: measures the page's actual scroll height before
       capturing. A full-page shot only happens when it fits under
       MAX_IMAGE_DIMENSION_PX; otherwise this clips from the top of the
@@ -157,14 +235,15 @@ def extract_driver_points(
     image_path: Path | str,
     *,
     api_key: str,
+    prompt: str,
     model: str = DEFAULT_MODEL,
     timeout: float = 60.0,
 ) -> dict[str, float]:
-    """Sends the screenshot to the Claude API and parses a driver-code ->
-    points JSON object out of the response. Never raises: a missing key,
-    an HTTP error, or an unparseable response all return {} with a logged
-    reason -- this is a collector, not something anything downstream may
-    depend on succeeding."""
+    """Sends the screenshot to the Claude API with *prompt* and parses a
+    driver-code -> value JSON object out of the response. Never raises: a
+    missing key, an HTTP error, or an unparseable response all return {}
+    with a logged reason -- this is a collector, not something anything
+    downstream may depend on succeeding."""
     if not api_key:
         log.warning("extract_driver_points: no Anthropic API key configured, skipping")
         return {}
@@ -195,7 +274,7 @@ def extract_driver_points(
                                 "type": "image",
                                 "source": {"type": "base64", "media_type": "image/jpeg", "data": image_b64},
                             },
-                            {"type": "text", "text": EXTRACTION_PROMPT},
+                            {"type": "text", "text": prompt},
                         ],
                     }
                 ],
@@ -208,7 +287,7 @@ def extract_driver_points(
     except httpx.HTTPStatusError as exc:
         # The response body carries the actual validation error (e.g. "image
         # exceeds 5 MB maximum") -- log it, not just the status line, or a
-        # future 400 is as undiagnosable from the logs as this one was.
+        # future 400 is as undiagnosable from the logs as earlier ones were.
         log.warning(
             "extract_driver_points: Anthropic API call failed: %s -- %s",
             exc, exc.response.text[:500],
@@ -243,30 +322,63 @@ def capture_f1fantasytools_snapshot(
     round_number: int,
     *,
     api_key: str,
+    page: str,
     session_label: str = "",
-    url: str = DEFAULT_URL,
-    screenshot_path: Path | str = DEFAULT_SCREENSHOT_PATH,
+    screenshot_path: Path | str | None = None,
 ) -> ExternalBenchmarkSnapshot | None:
-    """The one-call entry point: screenshot, extract, build a snapshot.
-    Returns None (logging why) if the screenshot fails or nothing gets
-    extracted -- an empty snapshot would be indistinguishable from "the
-    site genuinely has nothing to show," which is worth not pretending to
-    know."""
-    screenshot = capture_screenshot(url, screenshot_path)
+    """The one-call entry point for a single page: screenshot, extract,
+    build a snapshot. *page* must be a key in F1FT_PAGES. Returns None
+    (logging why) if the page key is unknown, the screenshot fails, or
+    nothing gets extracted -- an empty snapshot would be indistinguishable
+    from "the site genuinely has nothing to show," which is worth not
+    pretending to know."""
+    spec = F1FT_PAGES.get(page)
+    if spec is None:
+        log.warning("capture_f1fantasytools_snapshot: unknown page %r (known: %s)", page, sorted(F1FT_PAGES))
+        return None
+
+    path = Path(screenshot_path) if screenshot_path is not None else _screenshot_path(page)
+    screenshot = capture_screenshot(spec.url, path)
     if screenshot is None:
         return None
 
-    entries = extract_driver_points(screenshot, api_key=api_key)
+    entries = extract_driver_points(screenshot, api_key=api_key, prompt=spec.extraction_prompt)
     if not entries:
-        log.warning("capture_f1fantasytools_snapshot: no driver/points table extracted from %s", screenshot)
+        log.warning("capture_f1fantasytools_snapshot: no data extracted from %s (%s)", spec.url, screenshot)
         return None
 
     return ExternalBenchmarkSnapshot(
-        source="f1fantasytools",
+        source=spec.source,
         season=season,
         round_number=round_number,
         session_label=session_label,
         captured_at=datetime.now(timezone.utc),
         entries=entries,
-        note=f"auto-captured via screenshot + vision extraction from {url}",
+        note=f"auto-captured via screenshot + vision extraction from {spec.url}",
     )
+
+
+def capture_all_f1fantasytools_snapshots(
+    season: int,
+    round_number: int,
+    *,
+    api_key: str,
+    session_label: str = "",
+) -> list[ExternalBenchmarkSnapshot]:
+    """Captures every page in F1FT_PAGES independently -- one page failing
+    (a layout change, a transient block) never stops the others, matching
+    every other multi-source collector in this project (news/upgrades.py's
+    per-feed try/except, cmd_collect_benchmark_snapshot's per-source
+    try/except)."""
+    results = []
+    for key in F1FT_PAGES:
+        try:
+            snapshot = capture_f1fantasytools_snapshot(
+                season, round_number, api_key=api_key, page=key, session_label=session_label
+            )
+        except Exception as exc:  # noqa: BLE001 -- one page's failure must not abort the rest
+            log.warning("capture_all_f1fantasytools_snapshots: page %r raised: %s", key, exc)
+            continue
+        if snapshot is not None:
+            results.append(snapshot)
+    return results

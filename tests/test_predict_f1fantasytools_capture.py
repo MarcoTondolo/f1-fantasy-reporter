@@ -6,6 +6,7 @@ network or browser, matching this project's offline-fixture convention.
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
@@ -13,10 +14,14 @@ import pytest
 
 from f1_fantasy.predict import f1fantasytools_capture as capture_module
 from f1_fantasy.predict.f1fantasytools_capture import (
+    F1FT_PAGES,
+    capture_all_f1fantasytools_snapshots,
     capture_f1fantasytools_snapshot,
     capture_screenshot,
     extract_driver_points,
 )
+
+TEST_PROMPT = "find the driver points table"
 
 
 class FakeResponse:
@@ -48,7 +53,7 @@ def test_extract_driver_points_skips_the_api_call_with_no_key(monkeypatch, tmp_p
 
     monkeypatch.setattr(capture_module.httpx, "post", fake_post)
 
-    assert extract_driver_points(image, api_key="") == {}
+    assert extract_driver_points(image, api_key="", prompt=TEST_PROMPT) == {}
     assert not called
 
 
@@ -58,7 +63,7 @@ def test_extract_driver_points_returns_empty_for_a_missing_image(monkeypatch):
 
     monkeypatch.setattr(capture_module.httpx, "post", fake_post)
 
-    assert extract_driver_points("/no/such/file.png", api_key="sk-test") == {}
+    assert extract_driver_points("/no/such/file.png", api_key="sk-test", prompt=TEST_PROMPT) == {}
 
 
 def test_extract_driver_points_parses_a_clean_json_response(monkeypatch, tmp_path):
@@ -68,7 +73,7 @@ def test_extract_driver_points_parses_a_clean_json_response(monkeypatch, tmp_pat
         capture_module.httpx, "post", lambda *a, **k: _text_response('{"VER": 185, "NOR": 172.5}')
     )
 
-    entries = extract_driver_points(image, api_key="sk-test")
+    entries = extract_driver_points(image, api_key="sk-test", prompt=TEST_PROMPT)
 
     assert entries == {"VER": 185.0, "NOR": 172.5}
 
@@ -79,7 +84,7 @@ def test_extract_driver_points_strips_markdown_code_fences(monkeypatch, tmp_path
     fenced = '```json\n{"HAM": 150}\n```'
     monkeypatch.setattr(capture_module.httpx, "post", lambda *a, **k: _text_response(fenced))
 
-    assert extract_driver_points(image, api_key="sk-test") == {"HAM": 150.0}
+    assert extract_driver_points(image, api_key="sk-test", prompt=TEST_PROMPT) == {"HAM": 150.0}
 
 
 def test_extract_driver_points_returns_empty_on_malformed_json(monkeypatch, tmp_path):
@@ -87,7 +92,7 @@ def test_extract_driver_points_returns_empty_on_malformed_json(monkeypatch, tmp_
     image.write_bytes(b"fake png bytes")
     monkeypatch.setattr(capture_module.httpx, "post", lambda *a, **k: _text_response("not json at all"))
 
-    assert extract_driver_points(image, api_key="sk-test") == {}
+    assert extract_driver_points(image, api_key="sk-test", prompt=TEST_PROMPT) == {}
 
 
 def test_extract_driver_points_ignores_non_numeric_entries_but_keeps_the_rest(monkeypatch, tmp_path):
@@ -99,7 +104,7 @@ def test_extract_driver_points_ignores_non_numeric_entries_but_keeps_the_rest(mo
         lambda *a, **k: _text_response(json.dumps({"VER": 185, "NOR": "n/a"})),
     )
 
-    assert extract_driver_points(image, api_key="sk-test") == {"VER": 185.0}
+    assert extract_driver_points(image, api_key="sk-test", prompt=TEST_PROMPT) == {"VER": 185.0}
 
 
 def test_extract_driver_points_returns_empty_when_the_api_call_raises(monkeypatch, tmp_path):
@@ -111,7 +116,7 @@ def test_extract_driver_points_returns_empty_when_the_api_call_raises(monkeypatc
 
     monkeypatch.setattr(capture_module.httpx, "post", raising_post)
 
-    assert extract_driver_points(image, api_key="sk-test") == {}
+    assert extract_driver_points(image, api_key="sk-test", prompt=TEST_PROMPT) == {}
 
 
 def test_extract_driver_points_logs_the_response_body_on_a_400(monkeypatch, tmp_path, caplog):
@@ -132,7 +137,7 @@ def test_extract_driver_points_logs_the_response_body_on_a_400(monkeypatch, tmp_
     monkeypatch.setattr(capture_module.httpx, "post", fake_post)
 
     with caplog.at_level("WARNING"):
-        result = extract_driver_points(image, api_key="sk-test")
+        result = extract_driver_points(image, api_key="sk-test", prompt=TEST_PROMPT)
 
     assert result == {}
     assert "image exceeds 5 MB maximum" in caplog.text
@@ -243,6 +248,15 @@ def test_capture_screenshot_clips_instead_of_full_page_when_the_real_page_is_ver
     assert first_call["clip"]["height"] == capture_module.MAX_IMAGE_DIMENSION_PX
 
 
+def test_capture_f1fantasytools_snapshot_is_none_for_an_unknown_page(monkeypatch):
+    def fail(*args, **kwargs):
+        raise AssertionError("should not attempt a screenshot for an unknown page")
+
+    monkeypatch.setattr(capture_module, "capture_screenshot", fail)
+
+    assert capture_f1fantasytools_snapshot(2026, 13, api_key="sk-test", page="not_a_real_page") is None
+
+
 def test_capture_f1fantasytools_snapshot_is_none_when_the_screenshot_fails(monkeypatch):
     monkeypatch.setattr(capture_module, "capture_screenshot", lambda *a, **k: None)
 
@@ -251,7 +265,7 @@ def test_capture_f1fantasytools_snapshot_is_none_when_the_screenshot_fails(monke
 
     monkeypatch.setattr(capture_module, "extract_driver_points", fail_extract)
 
-    assert capture_f1fantasytools_snapshot(2026, 13, api_key="sk-test") is None
+    assert capture_f1fantasytools_snapshot(2026, 13, api_key="sk-test", page="team_calculator") is None
 
 
 def test_capture_f1fantasytools_snapshot_is_none_when_nothing_is_extracted(monkeypatch, tmp_path):
@@ -260,7 +274,7 @@ def test_capture_f1fantasytools_snapshot_is_none_when_nothing_is_extracted(monke
     monkeypatch.setattr(capture_module, "capture_screenshot", lambda *a, **k: shot)
     monkeypatch.setattr(capture_module, "extract_driver_points", lambda *a, **k: {})
 
-    assert capture_f1fantasytools_snapshot(2026, 13, api_key="sk-test") is None
+    assert capture_f1fantasytools_snapshot(2026, 13, api_key="sk-test", page="team_calculator") is None
 
 
 def test_capture_f1fantasytools_snapshot_builds_a_real_snapshot_on_success(monkeypatch, tmp_path):
@@ -269,11 +283,59 @@ def test_capture_f1fantasytools_snapshot_builds_a_real_snapshot_on_success(monke
     monkeypatch.setattr(capture_module, "capture_screenshot", lambda *a, **k: shot)
     monkeypatch.setattr(capture_module, "extract_driver_points", lambda *a, **k: {"VER": 185.0, "NOR": 172.5})
 
-    snapshot = capture_f1fantasytools_snapshot(2026, 13, api_key="sk-test", session_label="FP2")
+    snapshot = capture_f1fantasytools_snapshot(
+        2026, 13, api_key="sk-test", page="team_calculator", session_label="FP2"
+    )
 
     assert snapshot is not None
-    assert snapshot.source == "f1fantasytools"
+    assert snapshot.source == "f1fantasytools_team_calculator"
     assert snapshot.season == 2026
     assert snapshot.round_number == 13
     assert snapshot.session_label == "FP2"
     assert snapshot.entries == {"VER": 185.0, "NOR": 172.5}
+
+
+def test_f1ft_pages_each_have_a_distinct_source_and_url():
+    assert len(F1FT_PAGES) == 4
+    sources = {spec.source for spec in F1FT_PAGES.values()}
+    urls = {spec.url for spec in F1FT_PAGES.values()}
+    assert len(sources) == len(F1FT_PAGES)
+    assert len(urls) == len(F1FT_PAGES)
+    assert all(url.startswith("https://f1fantasytools.com/") for url in urls)
+
+
+def test_capture_all_f1fantasytools_snapshots_collects_every_page(monkeypatch):
+    def fake_capture(season, round_number, *, api_key, page, session_label=""):
+        return capture_module.ExternalBenchmarkSnapshot(
+            source=F1FT_PAGES[page].source,
+            season=season,
+            round_number=round_number,
+            entries={"VER": 1.0},
+            captured_at=datetime.now(timezone.utc),
+        )
+
+    monkeypatch.setattr(capture_module, "capture_f1fantasytools_snapshot", fake_capture)
+
+    results = capture_all_f1fantasytools_snapshots(2026, 13, api_key="sk-test")
+
+    assert {s.source for s in results} == {spec.source for spec in F1FT_PAGES.values()}
+
+
+def test_capture_all_f1fantasytools_snapshots_skips_a_page_that_raises(monkeypatch):
+    def flaky_capture(season, round_number, *, api_key, page, session_label=""):
+        if page == "elite_data":
+            raise RuntimeError("boom")
+        return capture_module.ExternalBenchmarkSnapshot(
+            source=F1FT_PAGES[page].source,
+            season=season,
+            round_number=round_number,
+            entries={"VER": 1.0},
+            captured_at=datetime.now(timezone.utc),
+        )
+
+    monkeypatch.setattr(capture_module, "capture_f1fantasytools_snapshot", flaky_capture)
+
+    results = capture_all_f1fantasytools_snapshots(2026, 13, api_key="sk-test")
+
+    assert len(results) == len(F1FT_PAGES) - 1
+    assert "f1fantasytools_elite_data" not in {s.source for s in results}

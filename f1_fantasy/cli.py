@@ -779,10 +779,12 @@ def cmd_collect_benchmark_snapshot(args: argparse.Namespace) -> int:
     """Capture the automatable benchmark signals for one round -- the
     official feed's own ProjectedGamedayPoints, crowd-consensus ownership
     %, our own current expected-points mean, and (when ANTHROPIC_API_KEY is
-    set) an f1fantasytools.com screenshot read via the Claude API's vision
-    input -- and append each as a dated snapshot. Safe to run repeatedly
-    through a race weekend; never hard-fails on one bad source, matching
-    predict/odds.py's never-raises standard.
+    set) all four f1fantasytools.com pages (team-calculator, statistics,
+    budget-builder, elite-data -- see predict/f1fantasytools_capture.py's
+    F1FT_PAGES) read via the Claude API's vision input -- and append each
+    as a dated snapshot. Safe to run repeatedly through a race weekend;
+    never hard-fails on one bad source, matching predict/odds.py's
+    never-raises standard.
     """
     from datetime import datetime, timezone
 
@@ -794,7 +796,7 @@ def cmd_collect_benchmark_snapshot(args: argparse.Namespace) -> int:
         crowd_consensus_snapshot,
         official_projected_snapshot,
     )
-    from f1_fantasy.predict.f1fantasytools_capture import capture_f1fantasytools_snapshot
+    from f1_fantasy.predict.f1fantasytools_capture import F1FT_PAGES, capture_all_f1fantasytools_snapshots
     from f1_fantasy.predict.points import build_round_distributions
 
     config = Config.load(args.config)
@@ -848,19 +850,17 @@ def cmd_collect_benchmark_snapshot(args: argparse.Namespace) -> int:
 
     api_key = Credentials.from_env().anthropic_api_key
     if not api_key:
-        print("ANTHROPIC_API_KEY not set; skipping f1fantasytools screenshot capture", file=sys.stderr)
+        print("ANTHROPIC_API_KEY not set; skipping f1fantasytools screenshot captures", file=sys.stderr)
     else:
-        try:
-            snapshot = capture_f1fantasytools_snapshot(
-                season, round_number, api_key=api_key, session_label=session_label
-            )
-            if snapshot is not None:
-                append_snapshot(snapshot)
-                captured.append("f1fantasytools")
-            else:
-                print("f1fantasytools screenshot capture returned nothing (see warnings above)", file=sys.stderr)
-        except Exception as exc:  # noqa: BLE001
-            print(f"could not capture f1fantasytools snapshot: {exc}", file=sys.stderr)
+        f1ft_snapshots = capture_all_f1fantasytools_snapshots(
+            season, round_number, api_key=api_key, session_label=session_label
+        )
+        for snapshot in f1ft_snapshots:
+            append_snapshot(snapshot)
+            captured.append(snapshot.source)
+        missing = len(F1FT_PAGES) - len(f1ft_snapshots)
+        if missing:
+            print(f"{missing} f1fantasytools page(s) returned nothing (see warnings above)", file=sys.stderr)
 
     if not captured:
         print("no benchmark snapshots captured", file=sys.stderr)
@@ -1392,7 +1392,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     collect_benchmark_snapshot = sub.add_parser(
         "collect-benchmark-snapshot",
-        help="capture the official feed's ProjectedGamedayPoints, crowd-consensus ownership, our own current estimate, and (with ANTHROPIC_API_KEY set) an f1fantasytools.com screenshot capture, for one round",
+        help="capture the official feed's ProjectedGamedayPoints, crowd-consensus ownership, our own current estimate, and (with ANTHROPIC_API_KEY set) f1fantasytools.com's four pages, for one round",
     )
     collect_benchmark_snapshot.add_argument(
         "--round", type=int, help="round number to capture (default: current/next in the calendar)"

@@ -21,13 +21,16 @@ TOP_N = 8
 #: is -- this project's established transparency convention (see picks.py's
 #: own MODEL_CAVEAT) extended to cover every benchmark source at once.
 CAVEAT = (
-    "f1fantasytools.com's projection table can't be fetched automatically "
-    "(client-rendered, headless-browser blocked) -- its numbers here are "
-    "manually pasted, not scraped. crowd_consensus is ownership %, not a "
-    "points projection. official_projected is already proven stale "
-    "post-race; its pre-race meaningfulness is still being verified live. "
-    "persistence is a trivial floor, not a real forecast. Read every source "
-    "next to its own captured_at and n_drivers, never as a bare number."
+    "f1fantasytools_* sources are read off real f1fantasytools.com pages via "
+    "screenshot + vision extraction (the table itself can't be scraped -- "
+    "client-rendered, headless-browser blocked -- so a screenshot is read the "
+    "same way a person copying numbers by hand would); f1fantasytools alone "
+    "(no page suffix) is a manually pasted entry instead. crowd_consensus is "
+    "ownership %, not a points projection. official_projected is already "
+    "proven stale post-race; its pre-race meaningfulness is still being "
+    "verified live. persistence is a trivial floor, not a real forecast. "
+    "Read every source next to its own captured_at and n_drivers, never as a "
+    "bare number."
 )
 
 

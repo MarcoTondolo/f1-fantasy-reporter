@@ -59,7 +59,8 @@ DEFAULT_STORE_DIR = Path("data/pace")
 
 
 class ExternalBenchmarkSnapshot(Model):
-    source: str  # "f1fantasytools" | "official_projected" | "crowd_consensus" | "persistence" | "ours"
+    source: str  # "f1fantasytools" (manual) | "f1fantasytools_<page>" (auto -- see
+    # f1fantasytools_capture.F1FT_PAGES) | "official_projected" | "crowd_consensus" | "persistence" | "ours"
     season: int
     round_number: int
     session_label: str = ""  # "FP1" | "FP2" | "FP3" | "pre_quali" | "" -- whatever the caller passes
