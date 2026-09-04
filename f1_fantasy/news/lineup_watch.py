@@ -74,10 +74,18 @@ def constructor_of_from_practice(season: int, round_number: int, session: str = 
     try:
         fastf1_session = fastf1.get_session(season, round_number, session)
         fastf1_session.load(laps=True, telemetry=False, weather=False, messages=False)
+        # ``.load()`` can return without raising even when the session's data
+        # genuinely isn't available yet -- confirmed live (round 13 FP1,
+        # requested before FastF1's live-timing mirror had it): FastF1
+        # swallows its own per-category SessionNotAvailableError internally
+        # and just logs a warning, leaving ``_laps`` unset. Accessing
+        # ``.laps`` is what actually raises in that case (DataNotLoadedError)
+        # -- kept inside this same try so it converts to SessionUnavailable
+        # too, instead of crashing the caller uncaught.
+        laps = fastf1_session.laps
     except Exception as exc:  # FastF1 raises several distinct types for "no such session yet"
         raise SessionUnavailable(f"{session} R{round_number} {season}: {exc}") from exc
 
-    laps = fastf1_session.laps
     if laps is None or laps.empty:
         raise SessionUnavailable(f"{session} R{round_number} {season}: no lap data")
 
