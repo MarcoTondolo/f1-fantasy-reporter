@@ -234,6 +234,39 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------
+# refresh-token
+# --------------------------------------------------------------------------
+
+
+def cmd_refresh_token(args: argparse.Namespace) -> int:
+    """Open a real, visible browser, let the user log in, and capture the
+    resulting session token -- see refresh_token.py's module docstring for
+    why this drives a real login instead of scripting one."""
+    from f1_fantasy.refresh_token import capture_session, push_github_secrets, write_env_file
+
+    try:
+        captured = capture_session(timeout_s=args.timeout)
+    except TimeoutError as exc:
+        print(f"\n{exc}", file=sys.stderr)
+        return 1
+
+    env_path = Path(args.env_file)
+    write_env_file(captured, env_path=env_path)
+    print(f"\nCaptured a new session token; wrote F1_FANTASY_TOKEN/F1_USER_GUID to {env_path}")
+
+    if args.github_repo:
+        if push_github_secrets(captured, repo=args.github_repo):
+            print(f"pushed F1_FANTASY_TOKEN/F1_USER_GUID to {args.github_repo} repo secrets")
+        else:
+            print(
+                f"could not push to {args.github_repo} repo secrets (see warning above) -- "
+                f"{env_path} is still updated",
+                file=sys.stderr,
+            )
+    return 0
+
+
+# --------------------------------------------------------------------------
 # showcase
 # --------------------------------------------------------------------------
 
@@ -1366,6 +1399,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     doctor = sub.add_parser("doctor", help="validate credentials and configuration")
     doctor.set_defaults(func=cmd_doctor)
+
+    refresh_token = sub.add_parser(
+        "refresh-token",
+        help="open a real browser window, let you log in, and capture the resulting session "
+        "token (run this locally with a display, not from CI)",
+    )
+    refresh_token.add_argument("--timeout", type=float, default=300.0, help="seconds to wait for login (default: 300)")
+    refresh_token.add_argument("--env-file", default=".env", help="local .env file to write (default: .env)")
+    refresh_token.add_argument(
+        "--github-repo", help="also push the token/guid to this owner/repo's GitHub secrets via `gh secret set`"
+    )
+    refresh_token.set_defaults(func=cmd_refresh_token)
 
     preview = sub.add_parser(
         "preview", help="render the preview card for the next race (no credentials needed)"

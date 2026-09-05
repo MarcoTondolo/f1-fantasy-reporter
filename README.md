@@ -31,7 +31,24 @@ cp config.example.toml config.toml   # then edit
 ### Credentials
 
 F1 accounts sit behind Imperva bot protection, so scripted password login is not
-reliable. Instead, capture a session cookie by hand:
+reliable. Instead, capture a session cookie -- either by hand, or with
+`refresh-token`, which automates everything except the login itself:
+
+```bash
+f1-fantasy refresh-token --github-repo yourname/f1-fantasy-reporter
+```
+
+This opens a real, visible Chromium window. Log in exactly as you always
+have -- any 2FA/challenge is solved by you, in a real browser, so it never
+fights Imperva. Once the login succeeds, it captures `Token`/`GUID` from the
+same `/services/session/login` response a human would otherwise find in
+DevTools, writes them to `.env`, and (with `--github-repo`, and the `gh` CLI
+installed and authenticated) pushes them to that repo's `F1_FANTASY_TOKEN`/
+`F1_USER_GUID` secrets too. Run it locally, on a machine with a display --
+not from CI, which is exactly the headless/datacenter traffic profile
+Imperva is built to block, and has no display for a login form anyway.
+
+To do it fully by hand instead:
 
 1. Open <https://fantasy.formula1.com> and log in.
 2. DevTools (F12) → **Network**.
