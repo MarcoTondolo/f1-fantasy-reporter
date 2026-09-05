@@ -1,17 +1,15 @@
 F1 Fantasy daily digest -- 2026 round 13
-Generated 2026-09-04 19:24 UTC
+Generated 2026-09-05 14:11 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 13 (FP1 R13 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
   - Red Bull to keep Dutch GP driver line-up for Monza with Hadjar still injured [Red Bull, Racing Bulls] (02 Sep) -- https://www.autosport.com/rss/f1/news/
   - Marquez explains why he told injured Hadjar to miss Dutch GP [Red Bull] (27 Aug) -- https://www.autosport.com/rss/f1/news/
+  - Red Bull urged to keep Liam Lawson for Spanish GP as Isack Hadjar recovers from injury [Red Bull] (05 Sep) -- https://www.motorsport.com/rss/f1/news/
   - Red Bull gives update on Isack Hadjar’s recovery timeline [Red Bull] (04 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Jack Doohan opens up on Michael Schumacher bond and gift that influenced his career [Alpine, Haas F1 Team] (03 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Hadjar to miss Italian Grand Prix, Lawson and Tsunoda continue as substitutes | Formula 1 [Red Bull] (02 Sep) -- https://www.racefans.net/feed/
 
 UPGRADE PACKAGES:
-  - Bearman praises 'night and day' Haas upgrades [Haas F1 Team] -- https://www.formula1.com/en/latest/all.xml
   - Ferrari to bring upgraded engine to Italian GP under ADUO [Ferrari] (02 Sep) -- https://www.autosport.com/rss/f1/news/
   - How Ferrari can "push until the end" with F1 2026 upgrades, and why it will [Ferrari] (01 Sep) -- https://www.autosport.com/rss/f1/news/
   - The underlying upgrade that boosted McLaren's performance jump [McLaren] (31 Aug) -- https://www.autosport.com/rss/f1/news/
@@ -19,13 +17,14 @@ UPGRADE PACKAGES:
   - Why Red Bull has F1's top-ranked engine, and what it reveals about ADUO [Red Bull] (27 Aug) -- https://www.autosport.com/rss/f1/news/
   - Red Bull officially named F1's best engine as FIA makes ADUO results public [Red Bull] (26 Aug) -- https://www.autosport.com/rss/f1/news/
   - McLaren rejects Mercedes claim it cannot afford aggressive upgrades in F1 2026 [McLaren, Ferrari, Mercedes] (26 Aug) -- https://www.autosport.com/rss/f1/news/
+  - Mercedes "hasn't got the money" to keep up with rival teams' F1 upgrades [McLaren, Ferrari, Mercedes] (24 Aug) -- https://www.autosport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
+  - Russell goes fastest in busy final practice at Monza [Ferrari, Mercedes] -- https://www.formula1.com/en/latest/all.xml
+  - AS IT HAPPENED: FP3 for the Italian GP -- https://www.formula1.com/en/latest/all.xml
   - Why Alonso still backs Honda '100%' after tough Monza practice [Aston Martin] -- https://www.formula1.com/en/latest/all.xml
-  - Lawson and Red Bull assess 'productive' Friday in Italy [Red Bull] -- https://www.formula1.com/en/latest/all.xml
-  - Is Russell the driver to beat after Friday practice at Monza? [Ferrari, Mercedes] -- https://www.formula1.com/en/latest/all.xml
-  - What the teams said – Friday in Italy -- https://www.formula1.com/en/latest/all.xml
-  - Racing Bulls set out goal after solid first day in Monza [Racing Bulls] -- https://www.formula1.com/en/latest/all.xml
-  - Norris claims McLaren ‘not in the fight for pole at all’ [McLaren] -- https://www.formula1.com/en/latest/all.xml
-  - Antonelli assesses ‘weird’ first day on track in Monza [Mercedes] -- https://www.formula1.com/en/latest/all.xml
-  - Albon joins Antonelli with heavy grid drop for Italian GP [Williams] -- https://www.formula1.com/en/latest/all.xml
+  - F1 Italian GP: Russell fastest from Hamilton and Verstappen in final practice [Ferrari, Mercedes] (05 Sep) -- https://www.autosport.com/rss/f1/news/
+  - F1 Italian GP: Russell beats Leclerc to top second practice [Ferrari, Mercedes] (04 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Briatore questions Monaco GP appeal integrity in explosive Italian GP press conference [McLaren, Alpine] (04 Sep) -- https://www.autosport.com/rss/f1/news/
+  - F1 Italian GP: Leclerc heads Ferrari 1-2 in opening practice [Ferrari] (04 Sep) -- https://www.autosport.com/rss/f1/news/
+  - What drivers expect from F1's low-battery racing at Monza (03 Sep) -- https://www.autosport.com/rss/f1/news/

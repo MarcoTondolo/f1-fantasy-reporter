@@ -1,0 +1,20 @@
+🏁 *Race picks* -- Italian Grand Prix
+Autodromo Nazionale di Monza, Monza
+
+📊 Top expected points:
+  ANT: 24.6 (p10 -6.0 / p90 42.0)
+  RUS: 22.9 (p10 -6.0 / p90 41.0)
+  HAM: 22.5 (p10 3.0 / p90 40.0)
+  LEC: 22.1 (p10 2.0 / p90 39.1)
+  PIA: 16.4 (p10 -11.0 / p90 38.0)
+
+🏗️ Captain suggestion: ANT (EV 49.2)
+
+📈 Likely price risers:
+  LEC: 100% (Δ+0.28M)
+  NOR: 100% (Δ+0.28M)
+  ALO: 100% (Δ+0.48M)
+  ANT: 98% (Δ+0.24M)
+  HAD: 83% (Δ+0.39M)
+
+🧩 Optimal team: COL, BOR, HUL, TSU, LIN + Mercedes, Ferrari (133.6 pts, $99.5M)
