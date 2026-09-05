@@ -178,6 +178,18 @@ jobs:
           python -m f1_fantasy daily-digest \
             ${{ inputs.dry_run && '--dry-run' || '' }}
 
+      # Unlike tick/preview/lockout/recap, picks needs no F1_FANTASY_TOKEN/
+      # GUID -- calendar and the public driver feed are both public -- so
+      # it still runs when the league session cookie has expired.
+      - name: Send race picks
+        if: ${{ !inputs.dry_run }}
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: python -m f1_fantasy picks --email
+
       # f1fantasytools.com is unreachable from this project's dev sandbox
       # (network egress block, confirmed live), so this step -- one
       # screenshot + vision-extraction pass per page in F1FT_PAGES, see

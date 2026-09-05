@@ -944,6 +944,10 @@ def cmd_picks(args: argparse.Namespace) -> int:
     both public. Needs at least one round of real results to train form
     from, and the public driver feed for the most recent completed round to
     get real current prices -- see predict/simulate.py and predict/prices.py.
+    With --email, also sends the rendered card via EmailPublisher (same
+    mechanism as daily-digest) -- unlike the tick/preview/lockout/recap
+    pipeline, this never needs F1_FANTASY_TOKEN/GUID, so it still works
+    when the league session cookie has expired.
     """
     from datetime import datetime, timezone
 
@@ -1018,8 +1022,22 @@ def cmd_picks(args: argparse.Namespace) -> int:
     context = picks_report.build_picks(next_event, summaries, team_selection, league_name=args.league_name or "")
     out_dir = Path(config.output_dir) / str(config.season) / str(target_round)
     path = render_card("picks.html.j2", context, out_dir / "picks.png")
-    (out_dir / "picks.txt").write_text(picks_report.caption(context) + "\n", encoding="utf-8")
+    caption_text = picks_report.caption(context)
+    (out_dir / "picks.txt").write_text(caption_text + "\n", encoding="utf-8")
     print(f"written {path}")
+
+    if args.email:
+        from f1_fantasy.config import Credentials
+        from f1_fantasy.publish.base import Report
+        from f1_fantasy.publish.email import EmailPublisher
+
+        publisher = EmailPublisher(Credentials.from_env(), config.email_to)
+        if not publisher.configured:
+            print("email not configured (SMTP secrets/email_to); picks card written to disk only", file=sys.stderr)
+        else:
+            publisher.publish(Report(kind="picks", title=context["title"], caption=caption_text, images=[path]))
+            print(f"emailed to {config.email_to}")
+
     return 0
 
 
@@ -1415,6 +1433,7 @@ def build_parser() -> argparse.ArgumentParser:
     picks.add_argument("--cache-dir", help="directory to cache driver feeds in")
     picks.add_argument("--n-samples", type=int, default=2000, help="Monte Carlo samples per driver (default: 2000)")
     picks.add_argument("--league-name", help="league name to show on the card")
+    picks.add_argument("--email", action="store_true", help="also email the rendered card (uses config.email_to and SMTP secrets)")
     picks.set_defaults(func=cmd_picks)
 
     pace_backtest = sub.add_parser(
