@@ -1,7 +1,5 @@
 F1 Fantasy daily digest -- 2026 round 13
-Generated 2026-09-05 14:11 UTC
-
-Confirmed lineup changes: no qualifying or practice session data yet for round 13 (FP1 R13 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
+Generated 2026-09-06 11:39 UTC
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
   - Red Bull to keep Dutch GP driver line-up for Monza with Hadjar still injured [Red Bull, Racing Bulls] (02 Sep) -- https://www.autosport.com/rss/f1/news/
@@ -15,16 +13,14 @@ UPGRADE PACKAGES:
   - The underlying upgrade that boosted McLaren's performance jump [McLaren] (31 Aug) -- https://www.autosport.com/rss/f1/news/
   - Ferrari to deliver upgraded F1 engine at Italian GP [Ferrari] (28 Aug) -- https://www.autosport.com/rss/f1/news/
   - Why Red Bull has F1's top-ranked engine, and what it reveals about ADUO [Red Bull] (27 Aug) -- https://www.autosport.com/rss/f1/news/
-  - Red Bull officially named F1's best engine as FIA makes ADUO results public [Red Bull] (26 Aug) -- https://www.autosport.com/rss/f1/news/
-  - McLaren rejects Mercedes claim it cannot afford aggressive upgrades in F1 2026 [McLaren, Ferrari, Mercedes] (26 Aug) -- https://www.autosport.com/rss/f1/news/
-  - Mercedes "hasn't got the money" to keep up with rival teams' F1 upgrades [McLaren, Ferrari, Mercedes] (24 Aug) -- https://www.autosport.com/rss/f1/news/
+  - Lewis Hamilton worried about Mercedes top speed after Italian GP practice [Ferrari, Mercedes] (04 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
-  - Russell goes fastest in busy final practice at Monza [Ferrari, Mercedes] -- https://www.formula1.com/en/latest/all.xml
-  - AS IT HAPPENED: FP3 for the Italian GP -- https://www.formula1.com/en/latest/all.xml
-  - Why Alonso still backs Honda '100%' after tough Monza practice [Aston Martin] -- https://www.formula1.com/en/latest/all.xml
+  - Verstappen's "Red Bull car made out of paper" comment explained [Red Bull] (05 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Piastri hit with three-place Italian GP grid penalty for impeding Lawson [McLaren] (05 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Italian GP: Russell fastest from Hamilton and Verstappen in final practice [Ferrari, Mercedes] (05 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Italian GP: Russell beats Leclerc to top second practice [Ferrari, Mercedes] (04 Sep) -- https://www.autosport.com/rss/f1/news/
   - Briatore questions Monaco GP appeal integrity in explosive Italian GP press conference [McLaren, Alpine] (04 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Italian GP: Leclerc heads Ferrari 1-2 in opening practice [Ferrari] (04 Sep) -- https://www.autosport.com/rss/f1/news/
   - What drivers expect from F1's low-battery racing at Monza (03 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Ferrari to bring upgraded engine to Italian GP under ADUO [Ferrari] (02 Sep) -- https://www.autosport.com/rss/f1/news/

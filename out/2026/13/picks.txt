@@ -2,19 +2,19 @@
 Autodromo Nazionale di Monza, Monza
 
 📊 Top expected points:
-  ANT: 24.6 (p10 -6.0 / p90 42.0)
-  RUS: 22.9 (p10 -6.0 / p90 41.0)
-  HAM: 22.5 (p10 3.0 / p90 40.0)
-  LEC: 22.1 (p10 2.0 / p90 39.1)
-  PIA: 16.4 (p10 -11.0 / p90 38.0)
+  ANT: 24.1 (p10 -7.0 / p90 42.0)
+  RUS: 23.3 (p10 -5.0 / p90 42.0)
+  HAM: 22.7 (p10 2.0 / p90 40.0)
+  LEC: 21.8 (p10 -1.0 / p90 39.0)
+  NOR: 16.5 (p10 -10.0 / p90 38.0)
 
-🏗️ Captain suggestion: ANT (EV 49.2)
+🏗️ Captain suggestion: ANT (EV 48.3)
 
 📈 Likely price risers:
   LEC: 100% (Δ+0.28M)
   NOR: 100% (Δ+0.28M)
-  ALO: 100% (Δ+0.48M)
-  ANT: 98% (Δ+0.24M)
-  HAD: 83% (Δ+0.39M)
+  ALO: 100% (Δ+0.49M)
+  ANT: 97% (Δ+0.23M)
+  HAD: 84% (Δ+0.40M)
 
-🧩 Optimal team: COL, BOR, HUL, TSU, LIN + Mercedes, Ferrari (133.6 pts, $99.5M)
+🧩 Optimal team: COL, BOR, HUL, TSU, LIN + Mercedes, Ferrari (132.5 pts, $99.5M)
