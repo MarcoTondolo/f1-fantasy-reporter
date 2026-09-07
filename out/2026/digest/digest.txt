@@ -1,26 +1,24 @@
-F1 Fantasy daily digest -- 2026 round 13
-Generated 2026-09-06 11:39 UTC
+F1 Fantasy daily digest -- 2026 round 14
+Generated 2026-09-07 13:31 UTC
+
+Confirmed lineup changes: no qualifying or practice session data yet for round 14 (FP1 R14 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
+  - Lindblad pleased with ‘damage limitation’ for Racing Bulls [Alpine, Racing Bulls] -- https://www.formula1.com/en/latest/all.xml
   - Red Bull to keep Dutch GP driver line-up for Monza with Hadjar still injured [Red Bull, Racing Bulls] (02 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Marquez explains why he told injured Hadjar to miss Dutch GP [Red Bull] (27 Aug) -- https://www.autosport.com/rss/f1/news/
-  - Red Bull urged to keep Liam Lawson for Spanish GP as Isack Hadjar recovers from injury [Red Bull] (05 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Red Bull gives update on Isack Hadjar’s recovery timeline [Red Bull] (04 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 UPGRADE PACKAGES:
   - Ferrari to bring upgraded engine to Italian GP under ADUO [Ferrari] (02 Sep) -- https://www.autosport.com/rss/f1/news/
   - How Ferrari can "push until the end" with F1 2026 upgrades, and why it will [Ferrari] (01 Sep) -- https://www.autosport.com/rss/f1/news/
   - The underlying upgrade that boosted McLaren's performance jump [McLaren] (31 Aug) -- https://www.autosport.com/rss/f1/news/
-  - Ferrari to deliver upgraded F1 engine at Italian GP [Ferrari] (28 Aug) -- https://www.autosport.com/rss/f1/news/
-  - Why Red Bull has F1's top-ranked engine, and what it reveals about ADUO [Red Bull] (27 Aug) -- https://www.autosport.com/rss/f1/news/
-  - Lewis Hamilton worried about Mercedes top speed after Italian GP practice [Ferrari, Mercedes] (04 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Even with ADUO 2 upgrade, Ferrari is “missing pure power” [Ferrari, Mercedes] (07 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
+  - Audi lodge 'intention to appeal' over Tsunoda decision [Audi] -- https://www.formula1.com/en/latest/all.xml
+  - Audi signals appeal over Tsunoda’s Italian GP non-penalty [Audi] (06 Sep) -- https://www.autosport.com/rss/f1/news/
+  - F1 Italian GP: Antonelli stuns from 19th on the grid to win home race [Mercedes] (06 Sep) -- https://www.autosport.com/rss/f1/news/
   - Verstappen's "Red Bull car made out of paper" comment explained [Red Bull] (05 Sep) -- https://www.autosport.com/rss/f1/news/
   - Piastri hit with three-place Italian GP grid penalty for impeding Lawson [McLaren] (05 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Italian GP: Russell fastest from Hamilton and Verstappen in final practice [Ferrari, Mercedes] (05 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Italian GP: Russell beats Leclerc to top second practice [Ferrari, Mercedes] (04 Sep) -- https://www.autosport.com/rss/f1/news/
   - Briatore questions Monaco GP appeal integrity in explosive Italian GP press conference [McLaren, Alpine] (04 Sep) -- https://www.autosport.com/rss/f1/news/
-  - F1 Italian GP: Leclerc heads Ferrari 1-2 in opening practice [Ferrari] (04 Sep) -- https://www.autosport.com/rss/f1/news/
-  - What drivers expect from F1's low-battery racing at Monza (03 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Ferrari to bring upgraded engine to Italian GP under ADUO [Ferrari] (02 Sep) -- https://www.autosport.com/rss/f1/news/
