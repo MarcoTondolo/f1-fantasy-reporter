@@ -2,19 +2,19 @@
 Madring, Madrid
 
 📊 Top expected points:
-  ANT: 25.0 (p10 -5.0 / p90 43.0)
-  RUS: 23.8 (p10 -2.0 / p90 41.0)
-  HAM: 21.4 (p10 -4.0 / p90 40.0)
-  LEC: 20.3 (p10 -6.0 / p90 39.0)
-  NOR: 17.4 (p10 -10.0 / p90 39.0)
+  ANT: 24.8 (p10 -5.0 / p90 42.0)
+  RUS: 23.3 (p10 -6.0 / p90 41.0)
+  HAM: 20.5 (p10 -6.0 / p90 39.0)
+  LEC: 20.2 (p10 -8.0 / p90 40.0)
+  NOR: 16.9 (p10 -11.0 / p90 38.0)
 
-🏗️ Captain suggestion: ANT (EV 49.9)
+🏗️ Captain suggestion: ANT (EV 49.6)
 
 📈 Likely price risers:
   ANT: 100% (Δ+0.30M)
   NOR: 100% (Δ+0.26M)
   HUL: 100% (Δ+0.57M)
-  RUS: 82% (Δ+0.07M)
-  BOR: 79% (Δ+0.25M)
+  BOR: 80% (Δ+0.25M)
+  RUS: 80% (Δ+0.07M)
 
-🧩 Optimal team: GAS, COL, HUL, LIN, ALB + Mercedes, Ferrari (132.5 pts, $99.4M)
+🧩 Optimal team: COL, HUL, PER, LIN, HAD + Mercedes, Ferrari (131.7 pts, $99.5M)
