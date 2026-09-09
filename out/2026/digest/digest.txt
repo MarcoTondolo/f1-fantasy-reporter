@@ -1,10 +1,9 @@
 F1 Fantasy daily digest -- 2026 round 14
-Generated 2026-09-08 12:09 UTC
+Generated 2026-09-09 12:21 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 14 (FP1 R14 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
-  - How Carlos Alcaraz’s bromance with Alonso made him an F1 fan [Aston Martin] -- https://www.formula1.com/en/latest/all.xml
   - Hadjar to miss third F1 race due to injury [Racing Bulls] (07 Sep) -- https://www.autosport.com/rss/f1/news/
   - Red Bull to keep Dutch GP driver line-up for Monza with Hadjar still injured [Red Bull, Racing Bulls] (02 Sep) -- https://www.autosport.com/rss/f1/news/
   - Isack Hadjar to sit out third F1 race in Madrid as Yuki Tsunoda returns [Red Bull, Racing Bulls] (07 Sep) -- https://www.motorsport.com/rss/f1/news/
@@ -18,6 +17,7 @@ UPGRADE PACKAGES:
   - Even with ADUO 2 upgrade, Ferrari is “missing pure power” [Ferrari, Mercedes] (07 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
+  - What to expect with Madrid set to make F1 return (09 Sep) -- https://www.autosport.com/rss/f1/news/
   - Audi signals appeal over Tsunoda’s Italian GP non-penalty [Audi] (06 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Italian GP: Antonelli stuns from 19th on the grid to win home race [Mercedes] (06 Sep) -- https://www.autosport.com/rss/f1/news/
   - Verstappen's "Red Bull car made out of paper" comment explained [Red Bull] (05 Sep) -- https://www.autosport.com/rss/f1/news/
@@ -25,4 +25,3 @@ PENALTIES / RELIABILITY:
   - F1 Italian GP: Russell fastest from Hamilton and Verstappen in final practice [Ferrari, Mercedes] (05 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Italian GP: Russell beats Leclerc to top second practice [Ferrari, Mercedes] (04 Sep) -- https://www.autosport.com/rss/f1/news/
   - Briatore questions Monaco GP appeal integrity in explosive Italian GP press conference [McLaren, Alpine] (04 Sep) -- https://www.autosport.com/rss/f1/news/
-  - F1 Italian GP: Leclerc heads Ferrari 1-2 in opening practice [Ferrari] (04 Sep) -- https://www.autosport.com/rss/f1/news/
