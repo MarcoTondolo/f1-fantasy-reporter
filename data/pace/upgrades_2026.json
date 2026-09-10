@@ -2,6 +2,21 @@
   "season": 2026,
   "mentions": [
     {
+      "source": "https://www.formula1.com/en/latest/all.xml",
+      "title": "De la Rosa on how Aston Martin\u2019s risky upgrades paid off",
+      "summary": "Pedro de la Rosa reflected on the success of Aston Martin\u2019s major upgrades and working with Adrian Newey in the latest episode of Beyond The Grid.",
+      "link": "https://www.formula1.com/en/latest/article/one-of-the-best-moments-weve-had-de-la-rosa-on-how-aston-martins-risky-upgrade-strategy-paid-off.7upoB0qtRkJJyvu90aoeIE",
+      "published_at": null,
+      "matched_keywords": [
+        "upgrade",
+        "major upgrade"
+      ],
+      "constructors": [
+        "Aston Martin"
+      ],
+      "attributed_round": null
+    },
+    {
       "source": "https://www.autosport.com/rss/f1/news/",
       "title": "Ferrari to bring upgraded engine to Italian GP under ADUO",
       "summary": "Ferrari will introduce an upgrade to its Formula 1 power unit at this weekend\u2019s Italian Grand Prix with it permitted under the Additional Development and Upgrade Opportunities system.<br />This year, F1 introduced the ADUO system, which grants manufacturers extra opportunities to improve their engines should they be lagging behind on performance, with results taken every quarter of a ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/ferraris-italian-gp-aduo-update/10851568/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
@@ -12,34 +27,6 @@
       ],
       "constructors": [
         "Ferrari"
-      ],
-      "attributed_round": 13
-    },
-    {
-      "source": "https://www.autosport.com/rss/f1/news/",
-      "title": "How Ferrari can \"push until the end\" with F1 2026 upgrades, and why it will",
-      "summary": "Ferrari will \"push until the end\" of the 2026 Formula 1 season with car upgrades, team principal Fred Vasseur confirmed, as he shrugged off suggestions the team will have to slow down its development because of cost cap limitations.<br />Ferrari has rolled out an impressive number of incremental upgrades to its 2026 challenger, the SF-26, which have kept the squad in second place in the ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/how-ferrari-can-push-until-the-end-with-f1-2026-upgrades-and-why-it-will/10851266/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
-      "link": "https://www.autosport.com/f1/news/how-ferrari-can-push-until-the-end-with-f1-2026-upgrades-and-why-it-will/10851266/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
-      "published_at": "2026-09-01T08:44:12Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Ferrari"
-      ],
-      "attributed_round": 13
-    },
-    {
-      "source": "https://www.autosport.com/rss/f1/news/",
-      "title": "The underlying upgrade that boosted McLaren's performance jump",
-      "summary": "McLaren\u2019s win in Zandvoort, their second in a row after Budapest, highlighted a key point: the updates introduced on either side of the summer break did more than restore the aerodynamic load the car had been missing. They also enabled the team to take a decisive step forward.<br />At the Barcelona Grand Prix, for instance, McLaren\u2019s strengths had already begun to emerge, and the same was true ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/the-underlying-upgrade-that-boosted-mclarens-performance-jump/10850982/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
-      "link": "https://www.autosport.com/f1/news/the-underlying-upgrade-that-boosted-mclarens-performance-jump/10850982/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
-      "published_at": "2026-08-31T11:41:10Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "McLaren"
       ],
       "attributed_round": 13
     },
