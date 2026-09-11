@@ -5,10 +5,9 @@ season = 2026
 # `probe` on 2026-08-25.
 leagues = []
 
-# Not set yet -- deliberately undecided which league gets a rendered/emailed
-# card. All three are captured either way, so history accumulates regardless
-# of when this gets set.
-# primary_league = 4512504
+# The league whose reports get a rendered/emailed card. All three are
+# captured either way, so history keeps accumulating for the others too.
+primary_league = 4512504
 
 # Where reports are emailed for you to forward into the chat.
 email_to = ""
