@@ -13,8 +13,10 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import pytest
+
 from f1_fantasy.api.models import Chip, LeagueSnapshot, Member, Phase, team_key
-from f1_fantasy.store.diff import chip_status, diff_teams, ownership, score_captains
+from f1_fantasy.store.diff import chip_status, diff_standings, diff_teams, ownership, score_captains
 from tests.conftest import make_players, make_team
 
 
@@ -128,3 +130,34 @@ def test_diff_teams_produces_one_change_entry_per_team_not_per_guid():
 
     assert len(changes) == 2
     assert {c.team_name for c in changes} == {"Squad A", "Squad B"}
+
+
+def test_standings_movement_matches_each_team_to_its_own_previous_points():
+    """Confirmed live in Ciao Squadra 2026: one account's two teams
+    ("sydkav1" team_no 1, "sydkav2" team_no 2) both keyed by the same guid.
+    diff_standings used to build its previous-round lookup by bare guid,
+    so team_no 2's current points got diffed against team_no 1's previous
+    points -- 3010.0 - 1289.0 = a bogus 1721.0 "round winner", printed
+    straight onto the recap/winners_losers/hindsight cards. The real
+    per-team deltas are 3010.0 - 2491.0 = 519.0 and 1671.0 - 1289.0 = 382.0.
+    """
+    previous = _snapshot(
+        {"player_ids": ["1"], "team_name": "sydkav1", "points": 1289.0},
+        {"player_ids": ["2"], "team_name": "sydkav2", "points": 2491.0},
+    )
+    current = _snapshot(
+        {"player_ids": ["1"], "team_name": "sydkav1", "points": 1671.0},
+        {"player_ids": ["2"], "team_name": "sydkav2", "points": 3010.0},
+    )
+    # _snapshot's Member rows are hardcoded to "Squad A"/"Squad B" with fixed
+    # points, ignoring team1_kwargs/team2_kwargs -- override both here to match
+    # the real leaderboard shape (team_name + points) this bug came from.
+    previous.members[0].team_name, previous.members[1].team_name = "sydkav1", "sydkav2"
+    current.members[0].team_name, current.members[1].team_name = "sydkav1", "sydkav2"
+    previous.members[0].points, previous.members[1].points = 1289.0, 2491.0
+    current.members[0].points, current.members[1].points = 1671.0, 3010.0
+
+    moves = {m.team_name: m for m in diff_standings(previous, current)}
+
+    assert moves["sydkav1"].points_gained == pytest.approx(382.0)
+    assert moves["sydkav2"].points_gained == pytest.approx(519.0)

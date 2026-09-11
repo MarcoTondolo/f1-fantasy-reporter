@@ -17,7 +17,7 @@ single swap.
 
 from __future__ import annotations
 
-from f1_fantasy.api.models import Chip, LeagueSnapshot, Model, Player, Team
+from f1_fantasy.api.models import Chip, LeagueSnapshot, Model, Player, Team, team_key
 
 
 class ScoredPlayer(Model):
@@ -256,12 +256,19 @@ def diff_standings(
     previous: LeagueSnapshot | None,
     current: LeagueSnapshot,
 ) -> list[StandingsMove]:
-    """Rank and points movement between two races."""
-    previous_by_guid = {m.guid: m for m in previous.members} if previous else {}
+    """Rank and points movement between two races.
+
+    Keyed by (guid, team_no), not guid alone -- an account can run more than
+    one team in the same league (confirmed live: "sydkav1"/"sydkav2" sharing
+    one guid in Ciao Squadra 2026), and a bare-guid key collapses both teams
+    into one dict entry, silently diffing one team's current points against
+    the *other* team's previous points.
+    """
+    previous_by_team = {team_key(m.guid, m.team_no): m for m in previous.members} if previous else {}
 
     moves: list[StandingsMove] = []
     for member in current.members:
-        before = previous_by_guid.get(member.guid)
+        before = previous_by_team.get(team_key(member.guid, member.team_no))
         moves.append(
             StandingsMove(
                 guid=member.guid,
