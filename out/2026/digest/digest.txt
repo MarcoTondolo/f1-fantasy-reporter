@@ -1,26 +1,28 @@
 F1 Fantasy daily digest -- 2026 round 14
-Generated 2026-09-10 12:14 UTC
+Generated 2026-09-11 12:13 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 14 (FP1 R14 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
   - Hadjar to miss third F1 race due to injury [Racing Bulls] (07 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Red Bull to keep Dutch GP driver line-up for Monza with Hadjar still injured [Red Bull, Racing Bulls] (02 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Isack Hadjar to sit out third F1 race in Madrid as Yuki Tsunoda returns [Red Bull, Racing Bulls] (07 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Lawson and Tsunoda called up again as injury keeps Hadjar out for third weekend | Formula 1 [Red Bull, Racing Bulls] (07 Sep) -- https://www.racefans.net/feed/
+  - “I f***ed up quite a lot”: How Yuki Tsunoda discovered the complexity of F1 2026 at Monza [Red Bull, Racing Bulls] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - “It's always the same” - Carlos Sainz wades into Charles Leclerc and Lewis Hamilton’s Monza clash [Ferrari, Williams] (10 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Yuki Tsunoda responds to Max Verstappen's F1 2026 claim [Red Bull] (10 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 UPGRADE PACKAGES:
-  - De la Rosa on how Aston Martin’s risky upgrades paid off [Aston Martin] -- https://www.formula1.com/en/latest/all.xml
-  - Ferrari to bring upgraded engine to Italian GP under ADUO [Ferrari] (02 Sep) -- https://www.autosport.com/rss/f1/news/
+  - What's behind Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Russell set to take F1 engine penalty after Mercedes introduces power unit upgrade [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
+  - What's behind Fernando Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - George Russell reveals when he’ll take his own F1 engine penalty [Mercedes] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Esteban Ocon: ‘Haas may be testing new drivers, but drivers aren’t the problem’ [Haas F1 Team] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
   - Ferrari’s ADUO 2 upgrade is no “game changer” for Haas either [Ferrari, Haas F1 Team] (08 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Even with ADUO 2 upgrade, Ferrari is “missing pure power” [Ferrari, Mercedes] (07 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
+  - LIVE COVERAGE: First practice for the Spanish Grand Prix -- https://www.formula1.com/en/latest/all.xml
+  - What's behind Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Russell set to take F1 engine penalty after Mercedes introduces power unit upgrade [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - Audi commits to appeal against Tsunoda's Italian GP result [Audi] (10 Sep) -- https://www.autosport.com/rss/f1/news/
   - Verstappen points to Lawson and Tsunoda as proof F1 2026 is too easy (10 Sep) -- https://www.autosport.com/rss/f1/news/
   - What Jacques Villeneueve really learned from Gilles: “I can do this, you can’t” (09 Sep) -- https://www.autosport.com/rss/f1/news/
   - What to expect with Madrid set to make F1 return (09 Sep) -- https://www.autosport.com/rss/f1/news/
   - Audi signals appeal over Tsunoda’s Italian GP non-penalty [Audi] (06 Sep) -- https://www.autosport.com/rss/f1/news/
-  - F1 Italian GP: Antonelli stuns from 19th on the grid to win home race [Mercedes] (06 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Verstappen's "Red Bull car made out of paper" comment explained [Red Bull] (05 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Piastri hit with three-place Italian GP grid penalty for impeding Lawson [McLaren] (05 Sep) -- https://www.autosport.com/rss/f1/news/
