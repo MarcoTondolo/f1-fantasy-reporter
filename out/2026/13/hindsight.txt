@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Spanish Grand Prix
+
+Optimal team scored 428 pts (captain: ANT)
+Closest to perfect: sydkav2 (1721 pts, --1293)
+Furthest from perfect: Caitlyn Landry (111 pts, -317)
+League average gap to optimal: 102.0 pts
