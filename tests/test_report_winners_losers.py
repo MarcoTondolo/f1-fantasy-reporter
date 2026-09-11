@@ -35,6 +35,45 @@ def test_headline_picks_the_highest_and_lowest_points_scored():
     assert context["headline_loser"]["name"] == "member-b"
 
 
+def test_headline_loser_prefers_a_bad_round_from_a_top_half_team_over_the_perpetual_bottom():
+    """User request: don't always crown the last-place team's bad round --
+    it's more fun when the setback lands on a team near the top. Ranks 1-2
+    are the top half of this 4-team league; rank 2 ("b") had a real bad
+    round (-10) and should win "Roughest race" over rank 4 ("d")'s -50,
+    even though -50 is the field-wide worst.
+    """
+    previous = make_snapshot(10, {g: make_team(g, 10, BASE) for g in ("a", "b", "c", "d")})
+    current = make_snapshot(
+        11,
+        {g: make_team(g, 11, BASE) for g in ("a", "b", "c", "d")},
+        standings={"a": (1, 200.0), "b": (2, -10.0), "c": (3, 5.0), "d": (4, -50.0)},
+        phase=Phase.FINAL,
+    )
+
+    context = build_winners_losers(current, previous)
+
+    assert context["headline_loser"]["name"] == "member-b"
+    assert context["headline_loser"]["points"] == pytest.approx(-10.0)
+
+
+def test_headline_loser_falls_back_to_the_field_wide_worst_when_top_half_had_no_bad_round():
+    """If nobody in the top half had a negative round, the story is still
+    real -- report the actual worst round rather than suppressing it.
+    """
+    previous = make_snapshot(10, {g: make_team(g, 10, BASE) for g in ("a", "b", "c", "d")})
+    current = make_snapshot(
+        11,
+        {g: make_team(g, 11, BASE) for g in ("a", "b", "c", "d")},
+        standings={"a": (1, 200.0), "b": (2, 20.0), "c": (3, 5.0), "d": (4, -50.0)},
+        phase=Phase.FINAL,
+    )
+
+    context = build_winners_losers(current, previous)
+
+    assert context["headline_loser"]["name"] == "member-d"
+    assert context["headline_loser"]["points"] == pytest.approx(-50.0)
+
+
 def test_headline_does_not_crown_the_same_person_twice_in_a_solo_league():
     previous = make_snapshot(10, {"a": make_team("a", 10, BASE)})
     current = make_snapshot(

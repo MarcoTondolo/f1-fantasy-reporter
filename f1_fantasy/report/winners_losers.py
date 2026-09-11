@@ -44,10 +44,10 @@ def build_winners_losers(
 ) -> dict:
     moves = diff_standings(previous, current)
 
-    # Headline: the single best and worst race, by points scored this round.
+    # Headline: the single best race this round, and the roughest one.
     by_points = sorted(moves, key=lambda m: m.points_gained, reverse=True)
     headline_winner = by_points[0] if by_points and by_points[0].points_gained > 0 else None
-    headline_loser = by_points[-1] if by_points else None
+    headline_loser = _headline_loser(moves, by_points)
     if headline_loser and headline_winner and headline_loser.guid == headline_winner.guid:
         # A one-member league would otherwise crown the same person twice.
         headline_loser = None
@@ -96,6 +96,26 @@ def build_winners_losers(
         "chip_bets": chip_bets,
         "caveat": _caveat(previous),
     }
+
+
+def _headline_loser(moves: list[StandingsMove], by_points: list[StandingsMove]) -> StandingsMove | None:
+    """The roughest race, biased toward the top half of the standings.
+
+    A plain "lowest points_gained" pick almost always lands on whoever is
+    already weakest overall -- that's not a surprise, it's just their normal
+    week. A bad round from a top-half team is the more fun story, so prefer
+    the worst *negative* round among the top half of the current standings,
+    and only fall back to the field-wide worst when no top-half team actually
+    had a bad round to report.
+    """
+    if not by_points:
+        return None
+    top_half_cutoff = -(-len(moves) // 2)  # ceil(n / 2)
+    top_half_bad_rounds = sorted(
+        (m for m in moves if m.points_gained < 0 and m.rank and m.rank <= top_half_cutoff),
+        key=lambda m: m.points_gained,
+    )
+    return top_half_bad_rounds[0] if top_half_bad_rounds else by_points[-1]
 
 
 def _headline(move: StandingsMove | None) -> dict | None:
