@@ -1,5 +1,5 @@
 F1 Fantasy daily digest -- 2026 round 14
-Generated 2026-09-11 12:13 UTC
+Generated 2026-09-12 11:37 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 14 (FP1 R14 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
@@ -7,22 +7,21 @@ LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
   - Hadjar to miss third F1 race due to injury [Racing Bulls] (07 Sep) -- https://www.autosport.com/rss/f1/news/
   - “I f***ed up quite a lot”: How Yuki Tsunoda discovered the complexity of F1 2026 at Monza [Red Bull, Racing Bulls] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
   - “It's always the same” - Carlos Sainz wades into Charles Leclerc and Lewis Hamilton’s Monza clash [Ferrari, Williams] (10 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Yuki Tsunoda responds to Max Verstappen's F1 2026 claim [Red Bull] (10 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 UPGRADE PACKAGES:
   - What's behind Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - Russell set to take F1 engine penalty after Mercedes introduces power unit upgrade [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
+  - How Monza revealed the true picture – Max Verstappen responds to FIA's surprising ADUO verdict [Red Bull] (12 Sep) -- https://www.motorsport.com/rss/f1/news/
   - What's behind Fernando Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.motorsport.com/rss/f1/news/
   - George Russell reveals when he’ll take his own F1 engine penalty [Mercedes] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
   - Esteban Ocon: ‘Haas may be testing new drivers, but drivers aren’t the problem’ [Haas F1 Team] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Ferrari’s ADUO 2 upgrade is no “game changer” for Haas either [Ferrari, Haas F1 Team] (08 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
-  - LIVE COVERAGE: First practice for the Spanish Grand Prix -- https://www.formula1.com/en/latest/all.xml
+  - LIVE COVERAGE: FP3 in Madrid resumes after Hamilton crash -- https://www.formula1.com/en/latest/all.xml
+  - What the teams said – Friday in Spain -- https://www.formula1.com/en/latest/all.xml
+  - F1 Spanish GP: Antonelli leads tricky second practice as Lindblad crashes [Ferrari] (11 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Why Leclerc isn't using latest Ferrari ADUO2 engine in the Spanish GP [Ferrari] (11 Sep) -- https://www.autosport.com/rss/f1/news/
+  - F1 Spanish GP: Mercedes tops FP1 with Russell fastest at Madring [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - What's behind Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - Russell set to take F1 engine penalty after Mercedes introduces power unit upgrade [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - Audi commits to appeal against Tsunoda's Italian GP result [Audi] (10 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Verstappen points to Lawson and Tsunoda as proof F1 2026 is too easy (10 Sep) -- https://www.autosport.com/rss/f1/news/
-  - What Jacques Villeneueve really learned from Gilles: “I can do this, you can’t” (09 Sep) -- https://www.autosport.com/rss/f1/news/
-  - What to expect with Madrid set to make F1 return (09 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Audi signals appeal over Tsunoda’s Italian GP non-penalty [Audi] (06 Sep) -- https://www.autosport.com/rss/f1/news/

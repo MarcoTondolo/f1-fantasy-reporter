@@ -29,6 +29,20 @@
     },
     {
       "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "How Monza revealed the true picture \u2013 Max Verstappen responds to FIA's surprising ADUO verdict",
+      "summary": "After the race weekend in Zandvoort, the FIA finally publicly confirmed what had already been known in the paddock since the Monaco weekend: every manufacturer has been awarded a token under Formula 1\u2019s Additional Development and Upgrade Opportunities system, except Red Bull Ford Powertrains.<br />Based on the first measurement period, the newcomer from Milton Keynes was placed at the top of the ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/how-monza-revealed-the-true-picture-max-verstappen-responds-to-fias-surprising-aduo-verdict/10854603/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/how-monza-revealed-the-true-picture-max-verstappen-responds-to-fias-surprising-aduo-verdict/10854603/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-12T07:17:36Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "Red Bull"
+      ],
+      "attributed_round": 14
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
       "title": "What's behind Fernando Alonso's cryptic comments about his F1 future?",
       "summary": "Every Thursday, the media day in the paddock begins with a roundtable session with Mike Krack and Honda's chief engineer Shintaro Orihara. Besides the usual questions about power unit driveability and potential upgrades, one topic returns every race weekend: when can we expect an announcement about Fernando Alonso\u2019s future?<br />Krack already said in Monza that the team is in no rush, and Alonso ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/whats-behind-fernando-alonsos-cryptic-comments-about-his-f1-future/10854427/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
       "link": "https://www.motorsport.com/f1/news/whats-behind-fernando-alonsos-cryptic-comments-about-his-f1-future/10854427/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
@@ -66,21 +80,6 @@
         "Haas F1 Team"
       ],
       "attributed_round": 14
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Ferrari\u2019s ADUO 2 upgrade is no \u201cgame changer\u201d for Haas either",
-      "summary": "Oliver Bearman says Ferrari\u2019s ADUO 2 engine upgrade represents \u201ca much smaller step\u201d than Haas\u2019 updated Formula 1 chassis.<br />The Prancing Horse introduced its second and final power unit upgrade of the 2026 season, courtesy of the Additional Development and Upgrade Opportunities system, with one such powertrain handed to Haas for the Italian Grand Prix. It was fitted to Bearman\u2019s ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/ferraris-aduo-2-upgrade-is-no-game-changer-for-haas-either/10853480/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/ferraris-aduo-2-upgrade-is-no-game-changer-for-haas-either/10853480/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-08T08:18:58Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Ferrari",
-        "Haas F1 Team"
-      ],
-      "attributed_round": 13
     }
   ],
   "effects": []
