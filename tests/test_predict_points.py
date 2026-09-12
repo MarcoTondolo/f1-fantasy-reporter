@@ -285,3 +285,59 @@ def test_overtake_points_scale_with_the_scenario_mean():
 
     assert np.mean(quiet) < np.mean(busy)
     assert np.mean(busy) / np.mean(quiet) == pytest.approx(2.5 / 0.3, rel=0.25)
+
+
+def test_passable_cars_ahead_counts_only_cars_you_can_actually_pass():
+    """The ex-ante overtaking feature: a car ahead counts only if you are
+    faster than it by more than the pace margin. Strengths are gap-to-best
+    percentages, so lower is quicker.
+    """
+    from f1_fantasy.predict.points import passable_cars_ahead
+
+    grid = {"quick_but_last": 3, "slow_pole": 1, "slow_second": 2}
+    strengths = {"quick_but_last": 0.0, "slow_pole": 3.0, "slow_second": 3.0}
+
+    counts = passable_cars_ahead(grid, strengths, margin=0.25)
+
+    # The quick car starts behind two cars it is 3.0 faster than.
+    assert counts["quick_but_last"] == 2
+    # The slow cars have nothing ahead they are quicker than.
+    assert counts["slow_pole"] == 0
+    assert counts["slow_second"] == 0
+
+
+def test_passable_cars_ahead_scores_a_genuinely_slow_backmarker_near_zero():
+    """This is what separates the feature from a places-gained term, which
+    handed back-markers the most overtake points. A slow car starting last
+    has many cars ahead and is faster than none of them.
+    """
+    from f1_fantasy.predict.points import passable_cars_ahead
+
+    grid = {f"fast{i}": i for i in range(1, 6)}
+    strengths = {f"fast{i}": 0.1 * i for i in range(1, 6)}
+    grid["slow"] = 6
+    strengths["slow"] = 9.0
+
+    counts = passable_cars_ahead(grid, strengths)
+
+    assert counts["slow"] == 0
+    # Whereas the quickest car, were it to start last, scores every car it
+    # clears the margin against: fast4 (0.4), fast5 (0.5) and slow (9.0),
+    # but not fast2/fast3, which it only out-paces by 0.1 and 0.2.
+    grid["fast1"] = 99
+    assert passable_cars_ahead(grid, strengths)["fast1"] == 3
+
+
+def test_passable_pace_margin_excludes_marginally_slower_cars():
+    """A car you only barely out-pace does not count -- the margin is what
+    the 'enough pace differential to pass' idea operationalises, even though
+    the data could not pin a specific threshold.
+    """
+    from f1_fantasy.predict.points import passable_cars_ahead
+
+    grid = {"me": 2, "ahead": 1}
+    barely_slower = {"me": 0.0, "ahead": 0.1}
+    clearly_slower = {"me": 0.0, "ahead": 2.0}
+
+    assert passable_cars_ahead(grid, barely_slower, margin=0.25)["me"] == 0
+    assert passable_cars_ahead(grid, clearly_slower, margin=0.25)["me"] == 1

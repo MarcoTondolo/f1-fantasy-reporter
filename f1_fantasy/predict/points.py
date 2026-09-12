@@ -297,6 +297,54 @@ def _sample_race_overtake_factor(rng: np.random.Generator) -> float:
     return float(rng.gamma(shape, 1.0 / shape))
 
 
+#: Overtake points per car a driver starts *behind* but is genuinely faster
+#: than, and the pace margin that counts as "genuinely faster" (in form
+#: gap-% points).
+#:
+#: The mechanism: a driver only passes cars they have the pace to pass, so
+#: what predicts overtaking is neither grid position nor car speed on its own
+#: but the *mismatch* between them -- a quick car starting out of position.
+#: Counting the cars ahead of a driver on the grid that they are faster than
+#: by more than PASSABLE_PACE_MARGIN turns that into one ex-ante number.
+#:
+#: Fit on 136 classified driver-rounds from the eight 2026 rounds whose feed
+#: delta covers exactly one race, with pace taken from ``rolling_form`` over
+#: *prior rounds only* (walk-forward, no leakage). It is the strongest
+#: ex-ante predictor of overtake points found:
+#:
+#:     ===================================  =======  =========
+#:     feature                                    r          p
+#:     ===================================  =======  =========
+#:     passable cars ahead                   +0.329    0.00009
+#:     places gained (an outcome, unusable)  +0.257    0.0025
+#:     grid - pace rank (plain mismatch)     +0.183    0.033
+#:     grid position alone                   +0.025    0.77
+#:     car pace alone                        -0.072    0.40
+#:     ===================================  =======  =========
+#:
+#: It beats even the outcome-based places-gained feature while being knowable
+#: before the race, which is what makes it usable here.
+#:
+#: **The pace-margin threshold is not supported, and the margin is kept small
+#: because of that, not to honour it.** The idea that a driver needs a
+#: minimum pace advantage to complete a pass is physically reasonable, but
+#: the fit is flat across margins from 0 to 0.5 (r = 0.324, 0.314, 0.329,
+#: 0.319), so this data cannot distinguish "any pace advantage" from "an
+#: advantage over 0.25". The 0.25 peak is noise-level and 0 performs the
+#: same. What *does* move with the margin is the slope -- 0.86 per car at
+#: margin 0 rising to 2.06 at margin 2.0 -- which is consistent with bigger
+#: pace deltas converting to passes more reliably, but it buys no extra
+#: overall fit, so no threshold is claimed.
+#:
+#: Applied centred on each scenario's own field mean, so it redistributes
+#: overtaking between drivers without moving the field total. The slope is
+#: the measured 0.958 rescaled by 5.31/8.60 -- the raw fit comes from the
+#: clean rounds, which are the higher-overtaking ones (mean 8.60 points a
+#: driver against the 5.31 all-rounds anchor) -- then amplified naturally in
+#: busy races because the race factor multiplies the whole mean.
+OVERTAKE_POINTS_PER_PASSABLE_CAR = 0.59
+PASSABLE_PACE_MARGIN = 0.25
+
 #: **Tested and rejected: redistributing overtake points by places gained.**
 #: Recorded because the conditional evidence for it is genuinely good and it
 #: would otherwise be an obvious thing to try again.
@@ -316,14 +364,25 @@ def _sample_race_overtake_factor(rng: np.random.Generator) -> float:
 #: outcomes. Back-markers have the higher expected places-gained, because
 #: attrition promotes them, so a places-gained term hands them the most
 #: overtake points -- implemented, it gave Stroll 6.00 points/race against
-#: Antonelli's 4.72. The real relationship between car speed and overtake
-#: points is flat: across all 23 drivers of 2026, Spearman(strength,
-#: overtake_pts/race) = -0.022, p=0.445, with everyone inside a 5.2-8.5
-#: band. A flat per-driver mean matches that; a places-gained gradient does
-#: not. Any future attempt needs to condition on something that predicts
-#: *gross* passes rather than net position change -- the two come apart
-#: badly, as Hulkenberg's round 13 shows: zero net places, 14 overtake
-#: points.
+#: Antonelli's 4.72. That is backwards: measured per race over the clean
+#: rounds, faster cars score *more* overtake points, Spearman(strength,
+#: overtake_pts/race) = -0.329 across the 20 drivers with at least four
+#: clean races.
+#:
+#: (An earlier version of this note claimed that relationship was flat,
+#: citing -0.022. That number came from dividing every driver's *cumulative*
+#: season points by 13 regardless of how many races they actually started,
+#: which mangles part-season drivers -- Lawson and Tsunoda between them
+#: started 15 races across two seats. Per-race means on the clean rounds are
+#: the trustworthy version.)
+#:
+#: The replacement, OVERTAKE_POINTS_PER_PASSABLE_CAR, gets the direction
+#: right for the reason places-gained could not: a back-marker starting last
+#: has many cars ahead but is faster than none of them, so it scores them
+#: near zero, while a quick car that qualifies badly scores high. Any future
+#: attempt needs to predict *gross* passes rather than net position change --
+#: the two come apart badly, as Hulkenberg's round 13 shows: zero net
+#: places, 14 overtake points.
 #:
 #:
 #: Variance-to-mean ratio of the per-driver count, held fixed as the mean
@@ -333,6 +392,36 @@ _OVERTAKE_VARIANCE_RATIO = OVERTAKE_VARIANCE / OVERTAKE_MEAN
 #: A driver is never modelled as certain to make no pass at all: the lowest
 #: real classified value across those 137 driver-rounds was 1 point.
 _OVERTAKE_MIN_MEAN = 0.5
+
+
+def passable_cars_ahead(
+    grid: dict[str, int],
+    strengths: dict[str, float],
+    *,
+    margin: float = PASSABLE_PACE_MARGIN,
+) -> dict[str, int]:
+    """Per driver, how many cars start ahead of them that they are faster than.
+
+    "Faster than" means a form gap-% advantage exceeding *margin*. Strengths
+    are gap-to-best percentages, so a lower value is a quicker car and
+    ``strengths[ahead] - strengths[me] > margin`` is the passable condition.
+
+    This is the ex-ante overtaking feature -- see
+    OVERTAKE_POINTS_PER_PASSABLE_CAR. It scores a quick car that qualified
+    badly high and a genuinely slow car starting last near zero, which is
+    what separates it from a places-gained term.
+    """
+    drivers = [d for d in grid if d in strengths]
+    if not drivers:
+        return {}
+    positions = np.array([grid[d] for d in drivers], dtype=float)
+    pace = np.array([strengths[d] for d in drivers], dtype=float)
+    # ahead[i, j] is True where j starts ahead of i and is slower than i by
+    # more than the margin -- a car i has both the track position deficit
+    # and the pace surplus to pass.
+    ahead = positions[None, :] < positions[:, None]
+    slower = (pace[None, :] - pace[:, None]) > margin
+    return dict(zip(drivers, (ahead & slower).sum(axis=1).astype(int)))
 
 
 def _sample_overtake_points(rng: np.random.Generator, mean: float = OVERTAKE_MEAN) -> int:
@@ -577,11 +666,19 @@ def sample_field(
     # then redistributed between drivers by places gained, centred so the
     # redistribution is points-neutral field-wide.
     race_overtake_factor = _sample_race_overtake_factor(rng)
+    # Who starts behind cars they can actually pass, in *this* scenario's
+    # grid -- centred on the field mean so it redistributes overtaking
+    # rather than moving the race total.
+    passable = passable_cars_ahead(grid, strengths)
+    mean_passable = (sum(passable.values()) / len(passable)) if passable else 0.0
 
     breakdowns = {}
     for d in drivers:
         status = "Retired" if dnf[d] else "Finished"
-        overtakes = _sample_overtake_points(rng, OVERTAKE_MEAN * race_overtake_factor)
+        overtake_mean = OVERTAKE_MEAN + OVERTAKE_POINTS_PER_PASSABLE_CAR * (
+            passable.get(d, 0) - mean_passable
+        )
+        overtakes = _sample_overtake_points(rng, overtake_mean * race_overtake_factor)
         breakdown = race_points(
             grid=grid[d],
             position=race_position[d],

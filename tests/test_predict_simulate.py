@@ -73,7 +73,13 @@ def test_simulate_round_gives_a_certain_winner_a_high_price_rise_probability(mon
         seed=1,
     )
 
-    assert result["A"].p_price_rise > result["D"].p_price_rise
+    # Asserted on the quantity the scenario actually controls. An earlier
+    # version compared A's price-rise probability against D's, but at these
+    # prices both clear the "great" PPM threshold in almost every draw, so
+    # the two saturate near 0.78 and differ only by Monte Carlo noise --
+    # A scoring more than double D's points moved that comparison by 0.004.
+    assert result["A"].mean > 2 * result["D"].mean
+    assert result["A"].p_price_rise > 0.7
 
 
 def test_captaincy_ev_doubles_the_mean_and_ranks_best_first():
