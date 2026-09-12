@@ -143,21 +143,62 @@ def test_build_round_distributions_reduces_many_draws_to_one_summary_per_driver(
         assert 0.0 <= distribution.p_dnf <= 1.0
 
 
-def test_constructor_points_add_the_measured_bonus_to_its_drivers_sum():
-    """A constructor scores its two drivers' total plus the constructor-only
-    sources (pit-stop award chief among them), measured at +7.57/race across
-    2026's 143 constructor-rounds. Modelling it as a bare sum under-projects
-    every two-constructor team by ~15 points.
+def test_constructor_points_add_five_per_driver_reaching_q3():
+    """A real rule, not a fitted residual: across 2026 rounds 1-13 a
+    constructor's QualifyingPoints exceeded the sum of its two drivers' by
+    exactly 5 per car classified in the top 10, in 76 of 77 cases.
     """
-    from f1_fantasy.predict.points import CONSTRUCTOR_BONUS_MEAN, constructor_points_from_drivers
-
-    totals = constructor_points_from_drivers(
-        {"A": 10.0, "B": 4.0, "C": 6.0},
-        {"A": "Team A", "B": "Team A", "C": "Team B"},
+    from f1_fantasy.predict.points import (
+        CONSTRUCTOR_Q3_BONUS,
+        CONSTRUCTOR_RACE_RESIDUAL_MEAN,
+        constructor_points_from_drivers,
     )
 
-    assert totals["Team A"] == pytest.approx(14.0 + CONSTRUCTOR_BONUS_MEAN)
-    assert totals["Team B"] == pytest.approx(6.0 + CONSTRUCTOR_BONUS_MEAN)
+    both_in_q3 = constructor_points_from_drivers(
+        {"A": 10.0, "B": 4.0},
+        {"A": "Team A", "B": "Team A"},
+        p_q3={"A": 1.0, "B": 1.0},
+    )
+    neither_in_q3 = constructor_points_from_drivers(
+        {"A": 10.0, "B": 4.0},
+        {"A": "Team A", "B": "Team A"},
+        p_q3={"A": 0.0, "B": 0.0},
+    )
+
+    assert both_in_q3["Team A"] == pytest.approx(14.0 + 2 * CONSTRUCTOR_Q3_BONUS + CONSTRUCTOR_RACE_RESIDUAL_MEAN)
+    assert neither_in_q3["Team A"] == pytest.approx(14.0 + CONSTRUCTOR_RACE_RESIDUAL_MEAN)
+    # A Q3 probability is an expectation, so it scales the bonus.
+    half = constructor_points_from_drivers(
+        {"A": 10.0}, {"A": "Team A"}, p_q3={"A": 0.5}
+    )
+    assert half["Team A"] == pytest.approx(10.0 + 0.5 * CONSTRUCTOR_Q3_BONUS + CONSTRUCTOR_RACE_RESIDUAL_MEAN)
+
+
+def test_constructor_points_exclude_driver_of_the_day():
+    """Constructors do not receive Driver of the Day -- Mercedes' cumulative
+    dotd_pts is 0 while Antonelli's alone is 30 -- so a driver's DOTD
+    expectation must come back out of its constructor's total.
+    """
+    from f1_fantasy.predict.points import CONSTRUCTOR_RACE_RESIDUAL_MEAN, constructor_points_from_drivers
+
+    totals = constructor_points_from_drivers(
+        {"A": 20.0},
+        {"A": "Team A"},
+        driver_dotd_points={"A": 3.0},
+    )
+
+    assert totals["Team A"] == pytest.approx(20.0 - 3.0 + CONSTRUCTOR_RACE_RESIDUAL_MEAN)
+
+
+def test_constructor_points_skip_the_rule_terms_rather_than_guessing_them():
+    """Omitting p_q3/dotd must drop those terms, not substitute a default --
+    a caller working from realised points needs the bare sum.
+    """
+    from f1_fantasy.predict.points import constructor_points_from_drivers
+
+    totals = constructor_points_from_drivers({"A": 20.0}, {"A": "Team A"}, race_residual=0.0)
+
+    assert totals["Team A"] == pytest.approx(20.0)
 
 
 def test_constructor_points_skips_drivers_with_no_known_constructor():

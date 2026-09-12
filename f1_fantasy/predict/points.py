@@ -140,44 +140,88 @@ OVERTAKE_VARIANCE = 21.0
 FASTEST_LAP_TEMPERATURE = 0.350
 DOTD_TEMPERATURE = 0.625
 
-#: How much a constructor scores *above* the sum of its two drivers, in
-#: points per race. Measured across all 143 constructor-rounds of 2026
-#: (public constructor feed's GamedayPoints minus the sum of its drivers'):
-#: mean +7.57, median +6.0, stdev 6.91, range -5 to +30. The constructor-only
-#: sources the driver totals cannot carry (the pit-stop award chief among
-#: them) are real and consistently positive -- only 2 of 143 came in
-#: negative.
+#: Points a constructor scores for each of its drivers who reaches Q3.
 #:
-#: Modelling this as a flat constant rather than a per-constructor rate is
-#: deliberate: the spread does not track team strength in any usable way
-#: (round 13 alone had Audi +13 and Mercedes +2, the slowest and fastest cars
-#: on the grid), so a fitted per-team term would be fitting noise on ~13
-#: observations each.
-CONSTRUCTOR_BONUS_MEAN = 7.57
+#: A real rule read off the game's own numbers, not a fitted residual.
+#: Across 2026 rounds 1-13, comparing each constructor's ``QualifyingPoints``
+#: against the sum of its two drivers': the difference is exactly 5 per
+#: driver classified in the top 10, in 76 of the 77 constructor-rounds where
+#: at least one car reached Q3 (the lone exception is round 4 Red Bull, a
+#: round with a mid-season driver swap, so the "its two drivers" grouping is
+#: itself ambiguous there). Round 13 reads cleanly: Mercedes, McLaren,
+#: Ferrari and Alpine each got +10 with both cars in Q3; Red Bull and Racing
+#: Bulls +5 with one; and the five teams with neither car in Q3 got no
+#: Q3 bonus at all.
+#:
+#: When *neither* car reaches Q3 there is a further small term, between -1
+#: and +3, which tracks how deep into qualifying the cars got and is not
+#: decomposed here -- it is worth a point or two against the ~5-10 this
+#: constant carries, and guessing at it is what this constant replaced.
+CONSTRUCTOR_Q3_BONUS = 5.0
+
+#: What is left on the *race* side once a constructor's race points are
+#: compared against the sum of its drivers', in points per race.
+#:
+#: Measured across all 143 constructor-rounds of 2026: mean +2.78, median
+#: +2.0, and -- the informative part -- it takes discrete values, counted
+#: 2 (47 rounds), 0 (37), 5 (33), 10 (9), 15 (6), -5 (5), -8 (4), -10 (1),
+#: 25 (1). A tiered award, not a smooth bonus.
+#:
+#: The constructor feed carries ``FastestPitstopAward`` and
+#: ``FastestPitstopAwardCount`` fields, which is consistent with these being
+#: the pit-stop award tiers, and the negative values are consistent with
+#: Driver of the Day: a constructor does not receive it (Mercedes' cumulative
+#: ``dotd_pts`` is 0 while Antonelli's alone is 30), so a round where one of
+#: its drivers won DOTD scores 10 *less* than the drivers' sum, netting
+#: negative once a small positive award is added back.
+#:
+#: **Still a residual, and labelled as one.** The exact tier table is not
+#: established, so this is the mean of the observed distribution rather than
+#: a rule. Pinning it down needs per-round pit-stop timings, which the feed
+#: exposes only as a season-cumulative count.
+CONSTRUCTOR_RACE_RESIDUAL_MEAN = 2.78
 
 
 def constructor_points_from_drivers(
     driver_points: dict[str, float],
     constructor_of: dict[str, str],
     *,
-    bonus: float = CONSTRUCTOR_BONUS_MEAN,
+    p_q3: dict[str, float] | None = None,
+    driver_dotd_points: dict[str, float] | None = None,
+    race_residual: float = CONSTRUCTOR_RACE_RESIDUAL_MEAN,
 ) -> dict[str, float]:
-    """Expected constructor points: its drivers' sum, plus the measured bonus.
+    """Expected constructor points, assembled from the rules above.
+
+    A constructor scores its drivers' race and qualifying points, *plus*
+    ``CONSTRUCTOR_Q3_BONUS`` per driver reaching Q3, *minus* any Driver of
+    the Day its drivers collected (constructors do not receive it), plus a
+    small tiered race-side award carried here as a measured residual.
 
     ``constructor_of`` maps driver code to the constructor key the caller
     wants in the result -- translate feed/Jolpica naming *before* calling,
     since optimise_team matches these keys against its price dict.
 
+    ``p_q3`` is each driver's probability of qualifying in the top 10 and
+    ``driver_dotd_points`` their expected Driver of the Day points; both
+    come straight off a DriverPointsDistribution. Omit them and those two
+    terms are skipped rather than guessed.
+
     Callers predicting from a model want this. Anything working from
     *realised* points (report/hindsight.py reading a captured snapshot)
-    must not add the bonus -- the real recorded value already includes it.
+    must not use it -- the recorded value already includes every term.
     """
     totals: dict[str, float] = {}
     for driver, points in driver_points.items():
         constructor = constructor_of.get(driver)
-        if constructor:
-            totals[constructor] = totals.get(constructor, 0.0) + points
-    return {constructor: total + bonus for constructor, total in totals.items()}
+        if not constructor:
+            continue
+        contribution = points
+        if driver_dotd_points:
+            contribution -= driver_dotd_points.get(driver, 0.0)
+        if p_q3:
+            contribution += CONSTRUCTOR_Q3_BONUS * p_q3.get(driver, 0.0)
+        totals[constructor] = totals.get(constructor, 0.0) + contribution
+    return {constructor: total + race_residual for constructor, total in totals.items()}
 
 @dataclass
 class DriverPointsDistribution:
@@ -188,6 +232,9 @@ class DriverPointsDistribution:
     mean: float
     components: dict[str, float] = field(default_factory=dict)
     p_dnf: float = 0.0
+    #: Probability of qualifying in the top 10, which is what the
+    #: constructor Q3 bonus keys on -- see CONSTRUCTOR_Q3_BONUS.
+    p_q3: float = 0.0
 
 
 def _negative_binomial_params(mean: float, variance: float) -> tuple[float, float]:
@@ -578,6 +625,7 @@ def build_round_distributions(
     totals: dict[str, list[float]] = {d: [] for d in strengths}
     component_totals: dict[str, dict[str, list[float]]] = {d: {} for d in strengths}
     dnf_counts: dict[str, int] = dict.fromkeys(strengths, 0)
+    q3_counts: dict[str, int] = dict.fromkeys(strengths, 0)
 
     component_fields = ("position", "positions_gained", "overtakes", "fastest_lap", "driver_of_the_day", "dnf", "qualifying")
 
@@ -587,6 +635,11 @@ def build_round_distributions(
             totals[d].append(breakdown.total)
             if breakdown.dnf:
                 dnf_counts[d] += 1
+            # Only a top-10 qualifying classification scores, so a positive
+            # qualifying component is exactly "reached Q3" -- which is what
+            # the constructor Q3 bonus keys on.
+            if breakdown.qualifying > 0:
+                q3_counts[d] += 1
             for name in component_fields:
                 component_totals[d].setdefault(name, []).append(getattr(breakdown, name))
 
@@ -597,6 +650,7 @@ def build_round_distributions(
             mean=float(np.mean(totals[d])) if totals[d] else 0.0,
             components={name: float(np.mean(values)) for name, values in component_totals[d].items()},
             p_dnf=dnf_counts[d] / n_samples if n_samples else 0.0,
+            p_q3=q3_counts[d] / n_samples if n_samples else 0.0,
         )
         for d in strengths
     }

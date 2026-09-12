@@ -1047,6 +1047,8 @@ def cmd_picks(args: argparse.Namespace) -> int:
     constructor_points = constructor_points_from_drivers(
         driver_points,
         {d: to_feed_constructor_name(c) for d, c in constructor_of.items()},
+        p_q3={d: s.p_q3 for d, s in summaries.items()},
+        driver_dotd_points={d: s.mean_dotd_points for d, s in summaries.items()},
     )
 
     team_selection = optimise_team(

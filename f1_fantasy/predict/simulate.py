@@ -40,6 +40,11 @@ class SimulationSummary:
     p_price_rise: float
     mean_delta_budget: float
     n_samples: int
+    #: Probability of qualifying in the top 10, and expected Driver of the
+    #: Day points -- both needed to assemble constructor points, which carry
+    #: a Q3 bonus their drivers don't and exclude DOTD their drivers do.
+    p_q3: float = 0.0
+    mean_dotd_points: float = 0.0
 
 
 def _recent_price_window(
@@ -89,12 +94,19 @@ def simulate_round(
     totals: dict[str, list[float]] = {d: [] for d in strengths}
     price_rises: dict[str, list[bool]] = {d: [] for d in strengths}
     delta_budgets: dict[str, list[float]] = {d: [] for d in strengths}
+    q3_counts: dict[str, int] = dict.fromkeys(strengths, 0)
+    dotd_totals: dict[str, list[float]] = {d: [] for d in strengths}
 
     for _ in range(n_samples):
         draw = sample_field(strengths, constructor_of, dnf_probabilities, sprint=sprint, rng=rng)
         for d, breakdown in draw.items():
             total = breakdown.total
             totals[d].append(total)
+            # Only a top-10 classification scores, so a positive qualifying
+            # component is exactly "reached Q3".
+            if breakdown.qualifying > 0:
+                q3_counts[d] += 1
+            dotd_totals[d].append(breakdown.driver_of_the_day)
             price = price_before.get(d)
             if price is not None:
                 avg_ppm = prices.average_ppm(recent_windows[d] + [(total, price)])
@@ -114,6 +126,8 @@ def simulate_round(
             p_price_rise=float(np.mean(price_rises[d])) if price_rises[d] else 0.0,
             mean_delta_budget=float(np.mean(delta_budgets[d])) if delta_budgets[d] else 0.0,
             n_samples=n_samples,
+            p_q3=q3_counts[d] / n_samples if n_samples else 0.0,
+            mean_dotd_points=float(np.mean(dotd_totals[d])) if dotd_totals[d] else 0.0,
         )
     return summaries
 

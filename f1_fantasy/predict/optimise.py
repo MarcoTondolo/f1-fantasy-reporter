@@ -292,6 +292,10 @@ def backtest_optimiser(
         constructor_points = points_module.constructor_points_from_drivers(
             driver_points,
             {d: to_feed_constructor_name(dist.constructor) for d, dist in predicted.items()},
+            p_q3={d: dist.p_q3 for d, dist in predicted.items()},
+            driver_dotd_points={
+                d: dist.components.get("driver_of_the_day", 0.0) for d, dist in predicted.items()
+            },
         )
 
         driver_season_points = {code: float(row.get("OverallPpints") or 0) for code, row in driver_feed.items()}
