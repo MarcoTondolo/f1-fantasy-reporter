@@ -285,6 +285,52 @@ _OVERTAKE_N, _OVERTAKE_P = _negative_binomial_params(OVERTAKE_MEAN, OVERTAKE_VAR
 #: neither route could work even in principle.
 OVERTAKE_RACE_LEVEL_CV = 0.676
 
+#: **What drives a race's overtaking level: four hypotheses tested against
+#: the nine 2026 rounds whose feed delta covers exactly one race.** Recorded
+#: because the race factor above is deliberately blind, and these are the
+#: obvious candidates for making it informative.
+#:
+#:     ==========================  =========  ======  ===========
+#:     race-level predictor        pearson r       p    verdict
+#:     ==========================  =========  ======  ===========
+#:     field grid/pace mismatch       +0.669   0.070  suggestive
+#:     pit stops per car              -0.631   0.068  inverted
+#:     safety-car messages            -0.264   0.492  no signal
+#:     DNF count                      +0.096   0.806  no signal
+#:     race laps                      -0.360   0.342  no signal
+#:     ==========================  =========  ======  ===========
+#:
+#: **Pit stops: the hypothesis was that more stops mean more overtaking, and
+#: the association runs the other way.** Zandvoort had the most stops of the
+#: season (3.09 per car) and the fewest overtake points (41); Miami and
+#: Shanghai had the fewest stops (1.09, 0.95) and the most (300, 280). This
+#: is not read as stopping suppressing passes -- it is almost certainly
+#: circuit character driving both, since high-degradation, narrow, twisty
+#: tracks force extra stops *and* make passing hard, while long-straight
+#: DRS circuits need one stop and pass easily. With n=9 the two cannot be
+#: separated, so no causal claim either way.
+#:
+#: **Safety cars: no signal at all**, which is worth stating because
+#: field-bunching is a commonly-cited driver of passing. Red flags could not
+#: be tested -- no 2026 race had one.
+#:
+#: **Field grid/pace mismatch is the most promising but is not used**, for
+#: three reasons that all point the same way. It is only marginal (p=0.070,
+#: n=8); it is collinear with pit stops per car (r=-0.572), so the two are
+#: largely one underlying signal rather than two; and the simulation
+#: reproduces only 56% of its real spread (simulated sd 6.8 against a real
+#: 12.2), because real grids are shuffled by penalties, wet sessions and
+#: mistakes that a clean qualifying permutation does not generate. Layering
+#: it onto the race factor would also use the same signal twice, since
+#: OVERTAKE_POINTS_PER_PASSABLE_CAR already applies its per-driver form.
+#: The blind Gamma already reproduces the correct race-level dispersion
+#: (validated at CV 0.70), so there is no dispersion left for it to fix --
+#: only predictability, which n=8 cannot establish.
+#:
+#: Worth re-running at season end with ~23 rounds, where n would roughly
+#: triple and a genuine relationship at this effect size would clear
+#: significance comfortably.
+
 
 def _sample_race_overtake_factor(rng: np.random.Generator) -> float:
     """One shared multiplier on every driver's overtake mean, per scenario.
