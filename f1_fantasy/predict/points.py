@@ -199,9 +199,107 @@ def _negative_binomial_params(mean: float, variance: float) -> tuple[float, floa
 
 _OVERTAKE_N, _OVERTAKE_P = _negative_binomial_params(OVERTAKE_MEAN, OVERTAKE_VARIANCE)
 
+#: Between-race spread of the *field-wide* overtake-points total, as a
+#: coefficient of variation, drawn once per scenario and shared by every
+#: driver in it.
+#:
+#: Overtaking is the single largest element in this game -- 30.0% of all
+#: points flowing through the 2026 season field-wide, ahead of race position
+#: at 22.5% -- and it is also by far the most race-dependent. Real 2026
+#: per-race field totals, recovered by differencing the feed's cumulative
+#: ``overtaking_pts``: Zandvoort 41, Red Bull Ring ~44, Monaco/Canada ~52
+#: each, Hungaroring 101, Spa 106, Suzuka 106, Round 1 120, Silverstone 192,
+#: Monza 258, Shanghai 280, Miami 300 -- a 7x spread, mean 130.5 with
+#: standard deviation 91.4 (CV 0.70) across all 13 rounds.
+#:
+#: Independent per-driver draws cannot produce that. Summing 23 independent
+#: NB(5.31, 21) draws gives a field total with CV of only ~0.18 -- a
+#: quarter of the real race-to-race variation -- so every simulated race
+#: looked like an average-overtaking race. This multiplies each driver's
+#: overtake mean by one shared Gamma factor per scenario, sized so the
+#: field total's CV comes out at the observed 0.70 once the independent
+#: per-driver noise already contributing ~0.18 is accounted for:
+#: sqrt(0.70^2 - 0.18^2) = 0.676. Mean is left unchanged (OVERTAKE_MEAN
+#: 5.31/driver against 130.5/23 = 5.67 real -- within 7%, already fine).
+#:
+#: **This fixes the dispersion, not the predictability.** A shared factor
+#: makes the simulation produce realistic low- and high-overtaking races in
+#: the right proportion, which is what the p10/p90 and captaincy numbers
+#: depend on. It does *not* know which kind of race is coming. Two routes
+#: to that were tried and both failed: a continuous track proxy
+#: (full-throttle fraction, Pearson r=0.36, p=0.28, n=11 -- see
+#: OVERTAKE_MEAN's note) and a per-circuit history from prior seasons, which
+#: needs per-race overtake counts for 2024/2025 that no available source
+#: provides. A lap-by-lap position-change proxy from FastF1 was built and
+#: rejected on validation: it ranked Zandvoort (176) above Monza (130) when
+#: the real feed has Monza at 258 and Zandvoort at 41, because position
+#: changes caused by *other* cars pitting swamp genuine on-track passes.
+#: For a brand-new circuit with no history at all -- Madrid, round 14 --
+#: neither route could work even in principle.
+OVERTAKE_RACE_LEVEL_CV = 0.676
 
-def _sample_overtake_points(rng: np.random.Generator) -> int:
-    return int(rng.negative_binomial(_OVERTAKE_N, _OVERTAKE_P))
+
+def _sample_race_overtake_factor(rng: np.random.Generator) -> float:
+    """One shared multiplier on every driver's overtake mean, per scenario.
+
+    Gamma with mean 1 and the observed between-race CV, so a scenario is a
+    low-, average- or high-overtaking race in the proportions 2026 actually
+    produced.
+    """
+    shape = 1.0 / (OVERTAKE_RACE_LEVEL_CV**2)
+    return float(rng.gamma(shape, 1.0 / shape))
+
+
+#: **Tested and rejected: redistributing overtake points by places gained.**
+#: Recorded because the conditional evidence for it is genuinely good and it
+#: would otherwise be an obvious thing to try again.
+#:
+#: Fit on 137 classified driver-rounds from the eight 2026 rounds whose feed
+#: delta covers exactly one race (excluding LAW, whose entries are known to
+#: be restated -- see reconcile.KNOWN_INCONSISTENT_DRIVERS -- and the
+#: negative deltas those restatements produce):
+#: ``overtake_pts ~ 8.17 + 0.410 * places_gained``, r=0.264, p=0.0018. That
+#: even *reverses* the earlier null recorded against OVERTAKE_MEAN, which
+#: tested the same idea on the reconciliation residual (slope ~-0.05) and was
+#: measuring a noisier quantity.
+#:
+#: Applying it anyway made the model worse, for a reason worth keeping:
+#: a relationship that holds *conditional on a race outcome* can still
+#: produce the wrong *marginal* once integrated over the distribution of
+#: outcomes. Back-markers have the higher expected places-gained, because
+#: attrition promotes them, so a places-gained term hands them the most
+#: overtake points -- implemented, it gave Stroll 6.00 points/race against
+#: Antonelli's 4.72. The real relationship between car speed and overtake
+#: points is flat: across all 23 drivers of 2026, Spearman(strength,
+#: overtake_pts/race) = -0.022, p=0.445, with everyone inside a 5.2-8.5
+#: band. A flat per-driver mean matches that; a places-gained gradient does
+#: not. Any future attempt needs to condition on something that predicts
+#: *gross* passes rather than net position change -- the two come apart
+#: badly, as Hulkenberg's round 13 shows: zero net places, 14 overtake
+#: points.
+#:
+#:
+#: Variance-to-mean ratio of the per-driver count, held fixed as the mean
+#: moves so the overdispersion fit from real data survives every rescaling.
+_OVERTAKE_VARIANCE_RATIO = OVERTAKE_VARIANCE / OVERTAKE_MEAN
+
+#: A driver is never modelled as certain to make no pass at all: the lowest
+#: real classified value across those 137 driver-rounds was 1 point.
+_OVERTAKE_MIN_MEAN = 0.5
+
+
+def _sample_overtake_points(rng: np.random.Generator, mean: float = OVERTAKE_MEAN) -> int:
+    """Overtake points for one driver, at the mean this scenario implies.
+
+    Holding variance/mean fixed keeps ``p`` constant and scales ``n``
+    linearly, so the per-driver overdispersion fit from real data (mean 5.31,
+    variance 21.0) is preserved at every race level and for every
+    places-gained adjustment.
+    """
+    mean = max(mean, _OVERTAKE_MIN_MEAN)
+    p = 1.0 / _OVERTAKE_VARIANCE_RATIO
+    n = mean * p / (1.0 - p)
+    return int(rng.negative_binomial(n, p))
 
 
 def _strength_softmax(candidates: list[str], strengths: dict[str, float], temperature: float) -> np.ndarray:
@@ -427,11 +525,16 @@ def sample_field(
 
     fastest_lap_winner = _sample_fastest_lap_winner(survivors, strengths, rng)
     dotd_winner = _sample_dotd_winner(survivors, strengths, rng)
+    # One overtaking level for the whole scenario -- see
+    # OVERTAKE_RACE_LEVEL_CV for why this must be shared, not per driver --
+    # then redistributed between drivers by places gained, centred so the
+    # redistribution is points-neutral field-wide.
+    race_overtake_factor = _sample_race_overtake_factor(rng)
 
     breakdowns = {}
     for d in drivers:
         status = "Retired" if dnf[d] else "Finished"
-        overtakes = _sample_overtake_points(rng)
+        overtakes = _sample_overtake_points(rng, OVERTAKE_MEAN * race_overtake_factor)
         breakdown = race_points(
             grid=grid[d],
             position=race_position[d],

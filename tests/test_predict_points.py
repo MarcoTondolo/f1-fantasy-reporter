@@ -199,3 +199,48 @@ def test_fit_event_temperature_recovers_a_planted_concentration():
     diffuse, _ = fit_event_temperature(spread_evenly, strengths_by_round)
 
     assert concentrated < diffuse
+
+
+def test_overtake_race_factor_is_shared_by_the_whole_field_not_drawn_per_driver():
+    """Overtaking is 30% of all points in this game and its per-race field
+    total ranges 41-300 in real 2026 data. Independent per-driver draws give
+    a field total with CV ~0.18 against the real 0.70, so every simulated
+    race looked average. One shared factor per scenario fixes the dispersion
+    -- this pins the sharing, which is the part that matters.
+    """
+    import numpy as np
+
+    from f1_fantasy.predict.points import (
+        OVERTAKE_MEAN,
+        _sample_overtake_points,
+        _sample_race_overtake_factor,
+    )
+
+    rng = np.random.default_rng(11)
+    shared, independent = [], []
+    for _ in range(1500):
+        factor = _sample_race_overtake_factor(rng)
+        shared.append(sum(_sample_overtake_points(rng, OVERTAKE_MEAN * factor) for _ in range(23)))
+        independent.append(sum(_sample_overtake_points(rng, OVERTAKE_MEAN) for _ in range(23)))
+
+    def cv(values):
+        return float(np.std(values) / np.mean(values))
+
+    # Same mean, far wider field-total spread.
+    assert np.mean(shared) == pytest.approx(np.mean(independent), rel=0.1)
+    assert cv(shared) > 3 * cv(independent)
+    # And it lands near the real 0.70 rather than merely being "bigger".
+    assert 0.55 < cv(shared) < 0.85
+
+
+def test_overtake_points_scale_with_the_scenario_mean():
+    import numpy as np
+
+    from f1_fantasy.predict.points import OVERTAKE_MEAN, _sample_overtake_points
+
+    rng = np.random.default_rng(3)
+    quiet = [_sample_overtake_points(rng, OVERTAKE_MEAN * 0.3) for _ in range(3000)]
+    busy = [_sample_overtake_points(rng, OVERTAKE_MEAN * 2.5) for _ in range(3000)]
+
+    assert np.mean(quiet) < np.mean(busy)
+    assert np.mean(busy) / np.mean(quiet) == pytest.approx(2.5 / 0.3, rel=0.25)
