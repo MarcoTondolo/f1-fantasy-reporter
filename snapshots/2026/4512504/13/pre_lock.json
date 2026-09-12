@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-09-11T00:19:34.231479Z",
+  "captured_at": "2026-09-12T13:38:09.791771Z",
   "league_id": 4512504,
   "league_name": "Ciao Squadra 2026",
   "members": [
@@ -1027,8 +1027,8 @@
         },
         {
           "chip": "autopilot",
-          "race_id": null,
-          "used": false
+          "race_id": 14,
+          "used": true
         },
         {
           "chip": "extra_drs",
@@ -1114,8 +1114,8 @@
         },
         {
           "chip": "autopilot",
-          "race_id": null,
-          "used": false
+          "race_id": 14,
+          "used": true
         },
         {
           "chip": "extra_drs",

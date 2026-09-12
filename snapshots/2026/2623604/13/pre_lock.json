@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-09-11T00:19:42.182373Z",
+  "captured_at": "2026-09-12T13:38:16.814561Z",
   "league_id": 2623604,
   "league_name": "DTOUR 2026",
   "members": [
@@ -787,8 +787,8 @@
         },
         {
           "chip": "autopilot",
-          "race_id": null,
-          "used": false
+          "race_id": 14,
+          "used": true
         },
         {
           "chip": "extra_drs",
@@ -1330,8 +1330,8 @@
         },
         {
           "chip": "no_negative",
-          "race_id": null,
-          "used": false
+          "race_id": 14,
+          "used": true
         }
       ],
       "guid": "7c2d6410-131d-11f1-95d0-3919f80e6eb3-0-94071468",
@@ -1765,8 +1765,8 @@
         },
         {
           "chip": "no_negative",
-          "race_id": null,
-          "used": false
+          "race_id": 14,
+          "used": true
         }
       ],
       "guid": "e55c3542-1287-11f1-a536-97887f73c3bf-0-217716918",
