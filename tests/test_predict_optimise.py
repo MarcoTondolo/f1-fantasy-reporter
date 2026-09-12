@@ -43,6 +43,37 @@ def test_optimise_team_returns_none_when_nothing_fits_under_the_cap():
     assert best is None
 
 
+def test_captain_multiplier_scores_the_teams_best_driver_twice():
+    """A+C+Z is the plain-sum optimum at 17 (see the test above). Under a 2x
+    captain the team's best driver (A, 10pts) is counted once more, so 27 --
+    without a captain term a real entry is understated by exactly this much.
+    """
+    plain = optimise_team(
+        DRIVER_POINTS, DRIVER_PRICES, CONSTRUCTOR_POINTS, CONSTRUCTOR_PRICES,
+        cap=10.0, n_drivers=2, n_constructors=1,
+    )
+    captained = optimise_team(
+        DRIVER_POINTS, DRIVER_PRICES, CONSTRUCTOR_POINTS, CONSTRUCTOR_PRICES,
+        cap=10.0, n_drivers=2, n_constructors=1, captain_multiplier=2.0,
+    )
+
+    assert plain.expected_points == pytest.approx(17.0)
+    assert captained.expected_points == pytest.approx(27.0)
+    # The uplift is the best driver's score, not an average or the whole team.
+    assert captained.expected_points - plain.expected_points == pytest.approx(
+        max(DRIVER_POINTS[d] for d in plain.drivers)
+    )
+
+
+def test_mega_captain_multiplier_triples_the_best_driver():
+    captained = optimise_team(
+        DRIVER_POINTS, DRIVER_PRICES, CONSTRUCTOR_POINTS, CONSTRUCTOR_PRICES,
+        cap=10.0, n_drivers=2, n_constructors=1, captain_multiplier=3.0,
+    )
+
+    assert captained.expected_points == pytest.approx(37.0)
+
+
 def test_optimise_team_prefers_budget_growth_when_lambda_is_positive():
     # Two teams score the same points but one has much better expected
     # budget growth -- a positive lambda must prefer it.

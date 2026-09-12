@@ -89,9 +89,18 @@ def optimise_team(
     lam: float = 0.0,
     n_drivers: int = 5,
     n_constructors: int = 2,
+    captain_multiplier: float = 1.0,
 ) -> TeamSelection | None:
     """The provably-optimal team under *cap*, maximising
     ``expected_points + lam * expected_delta_budget``. None if nothing fits.
+
+    ``captain_multiplier`` scores the team's highest-expected driver that
+    many times over, since every real team nominates a captain (2x, or 3x
+    with the Mega Captain chip). At 1.0 a team is scored as a plain sum,
+    which understates any real entry by its best driver's entire expected
+    score -- pass 2.0 for a projection meant to be compared against a real
+    scoreboard. The default stays 1.0 so the already-recorded optimiser
+    backtest artifact stays reproducible.
     """
     driver_combos = list(_combo_sums(driver_prices, driver_points, driver_delta_budget, n_drivers))
     constructor_combos = list(_combo_sums(constructor_prices, constructor_points, constructor_delta_budget, n_constructors))
@@ -100,11 +109,16 @@ def optimise_team(
     for d_items, d_price, d_points, d_delta in driver_combos:
         if d_price > cap:
             continue
+        captain_uplift = 0.0
+        if captain_multiplier != 1.0 and d_items:
+            captain_uplift = (captain_multiplier - 1.0) * max(
+                driver_points.get(d, 0.0) for d in d_items
+            )
         for c_items, c_price, c_points, c_delta in constructor_combos:
             total_price = d_price + c_price
             if total_price > cap:
                 continue
-            points = d_points + c_points
+            points = d_points + c_points + captain_uplift
             delta = d_delta + c_delta
             objective = points + lam * delta
             if best is None or objective > best.objective:
@@ -271,14 +285,14 @@ def backtest_optimiser(
         constructor_prices = {name: float(row.get("OldPlayerValue") or 0) for name, row in constructor_feed.items()}
 
         driver_points = {d: dist.mean for d, dist in predicted.items()}
-        constructor_points: dict[str, float] = {}
-        for d, dist in predicted.items():
-            # dist.constructor is Jolpica-named; constructor_prices below is
-            # keyed by the feed's FUllName -- four of eleven names differ
-            # (see reconcile.CONSTRUCTOR_NAME_TO_FEED), and a bare dict union
-            # silently scores the mismatched ones 0 rather than erroring.
-            name = to_feed_constructor_name(dist.constructor)
-            constructor_points[name] = constructor_points.get(name, 0.0) + dist.mean
+        # dist.constructor is Jolpica-named; constructor_prices above is keyed
+        # by the feed's FUllName -- four of eleven names differ (see
+        # reconcile.CONSTRUCTOR_NAME_TO_FEED), and a bare dict union silently
+        # scores the mismatched ones 0 rather than erroring.
+        constructor_points = points_module.constructor_points_from_drivers(
+            driver_points,
+            {d: to_feed_constructor_name(dist.constructor) for d, dist in predicted.items()},
+        )
 
         driver_season_points = {code: float(row.get("OverallPpints") or 0) for code, row in driver_feed.items()}
         constructor_season_points = {name: float(row.get("OverallPpints") or 0) for name, row in constructor_feed.items()}

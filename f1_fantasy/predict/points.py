@@ -22,6 +22,7 @@ first, and that difference is the whole reason this module exists.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -99,18 +100,84 @@ N_POINT_ESTIMATE_SAMPLES = 1000
 OVERTAKE_MEAN = 5.31
 OVERTAKE_VARIANCE = 21.0
 
-#: Fastest-lap rate by starting-grid bucket, fit from real fetch_race_results
-#: data across all of 2024, 2025 and 2026 (1221 driver-races). Cleanly
-#: monotonic and the bucket rates already sum close to 1 across a typical
-#: field (0.172*3 + 0.072*3 + 0.021*4 + 0.018*10 ~= 1.0), consistent with
-#: "exactly one fastest lap per race" -- a real, well-evidenced calibration,
-#: not a guess.
-GRID_BUCKET_FASTEST_LAP_RATE: dict[tuple[int, int], float] = {
-    (1, 3): 0.1722,
-    (4, 6): 0.0722,
-    (7, 10): 0.0208,
-    (11, 99): 0.0177,
-}
+#: Softmax temperatures over driver strength (form.py's gap-to-best %, 0 =
+#: fastest) for the two single-winner-per-race bonus events, each worth 10
+#: points. Lower temperature = more concentrated on the fastest cars.
+#:
+#: **Fit by maximum likelihood against the real 2026 winners**, recovered by
+#: differencing the public driver feed's cumulative ``fastest_lap_pts`` /
+#: ``dotd_pts`` across rounds 2-13 -- 12 fastest laps (ANT 7, NOR 2, LEC 2,
+#: HAM 1) and 12 driver-of-the-day awards (ANT 3, VER 3, HAM 2, LEC 2, PIA 1,
+#: NOR 1). Grid search over T against the summed log-likelihood of each
+#: observed winner under that round's own walk-forward
+#: ``rolling_form`` strengths: T=0.350 for fastest lap (loglik -21.41),
+#: T=0.625 for driver of the day (loglik -27.42).
+#:
+#: This replaces two weaker earlier models, both of which badly flattened
+#: these bonuses across the field:
+#:
+#: - Fastest lap was keyed on *starting-grid bucket* (grid 1-3 at 0.172),
+#:   which discards the car-pace information the strength score already
+#:   carries. Confirmed wrong against real data: Antonelli's modelled
+#:   fastest-lap expectation was 1.23 points/race against 6.2 actual (he
+#:   took 7 of the season's 12). Only four drivers took any fastest lap all
+#:   season -- it is concentrated on the quickest car, not on whoever
+#:   happens to start near the front.
+#: - Driver of the day was weighted by *places gained*, a documented
+#:   heuristic fit to only 4 confirmed cases, which pushed probability onto
+#:   backmarkers climbing the order. The recovered 12-case record is instead
+#:   entirely front-runners, so a strength fit on 12 observations supersedes
+#:   a places-gained guess on 4.
+#:
+#: **Known limit, reported rather than fitted away:** a strength softmax
+#: cannot reproduce the full concentration. Form separates Antonelli only
+#: modestly from his own team-mate Russell (implied shares 0.284 vs 0.200 at
+#: round 13), yet Antonelli took 7 fastest laps and Russell none. Closing
+#: that would need a per-driver fastest-lap skill term, which on n=12 would
+#: be fitting noise. So this recovers most of the missing concentration
+#: (Antonelli 1.23 -> 2.84 points/race against 6.2 actual) and is honest
+#: about the rest.
+FASTEST_LAP_TEMPERATURE = 0.350
+DOTD_TEMPERATURE = 0.625
+
+#: How much a constructor scores *above* the sum of its two drivers, in
+#: points per race. Measured across all 143 constructor-rounds of 2026
+#: (public constructor feed's GamedayPoints minus the sum of its drivers'):
+#: mean +7.57, median +6.0, stdev 6.91, range -5 to +30. The constructor-only
+#: sources the driver totals cannot carry (the pit-stop award chief among
+#: them) are real and consistently positive -- only 2 of 143 came in
+#: negative.
+#:
+#: Modelling this as a flat constant rather than a per-constructor rate is
+#: deliberate: the spread does not track team strength in any usable way
+#: (round 13 alone had Audi +13 and Mercedes +2, the slowest and fastest cars
+#: on the grid), so a fitted per-team term would be fitting noise on ~13
+#: observations each.
+CONSTRUCTOR_BONUS_MEAN = 7.57
+
+
+def constructor_points_from_drivers(
+    driver_points: dict[str, float],
+    constructor_of: dict[str, str],
+    *,
+    bonus: float = CONSTRUCTOR_BONUS_MEAN,
+) -> dict[str, float]:
+    """Expected constructor points: its drivers' sum, plus the measured bonus.
+
+    ``constructor_of`` maps driver code to the constructor key the caller
+    wants in the result -- translate feed/Jolpica naming *before* calling,
+    since optimise_team matches these keys against its price dict.
+
+    Callers predicting from a model want this. Anything working from
+    *realised* points (report/hindsight.py reading a captured snapshot)
+    must not add the bonus -- the real recorded value already includes it.
+    """
+    totals: dict[str, float] = {}
+    for driver, points in driver_points.items():
+        constructor = constructor_of.get(driver)
+        if constructor:
+            totals[constructor] = totals.get(constructor, 0.0) + points
+    return {constructor: total + bonus for constructor, total in totals.items()}
 
 @dataclass
 class DriverPointsDistribution:
@@ -137,34 +204,71 @@ def _sample_overtake_points(rng: np.random.Generator) -> int:
     return int(rng.negative_binomial(_OVERTAKE_N, _OVERTAKE_P))
 
 
-def _grid_bucket_rate(grid_position: int) -> float:
-    for (lo, hi), rate in GRID_BUCKET_FASTEST_LAP_RATE.items():
-        if lo <= grid_position <= hi:
-            return rate
-    return GRID_BUCKET_FASTEST_LAP_RATE[(11, 99)]
+def _strength_softmax(candidates: list[str], strengths: dict[str, float], temperature: float) -> np.ndarray:
+    """Probability over *candidates* falling off with strength gap.
+
+    Strengths are form.py's gap-to-best % (0 = fastest), so the weight is
+    ``exp(-gap / temperature)`` -- the fastest car carries the most mass and
+    a lower temperature concentrates it harder.
+    """
+    gaps = np.array([strengths.get(d, 0.0) for d in candidates], dtype=float)
+    # Subtract the minimum first: mathematically identical after
+    # normalisation, but keeps exp() away from underflow on a wide field.
+    weights = np.exp(-(gaps - gaps.min()) / temperature)
+    return weights / weights.sum()
 
 
-def _sample_fastest_lap_winner(survivors: list[str], grid: dict[str, int], rng: np.random.Generator) -> str | None:
+def _sample_fastest_lap_winner(
+    survivors: list[str], strengths: dict[str, float], rng: np.random.Generator
+) -> str | None:
     if not survivors:
         return None
-    weights = np.array([_grid_bucket_rate(grid[d]) for d in survivors])
-    weights = weights / weights.sum()
-    return str(rng.choice(survivors, p=weights))
+    return str(rng.choice(survivors, p=_strength_softmax(survivors, strengths, FASTEST_LAP_TEMPERATURE)))
 
 
 def _sample_dotd_winner(
-    survivors: list[str], grid: dict[str, int], race_position: dict[str, int], rng: np.random.Generator
+    survivors: list[str], strengths: dict[str, float], rng: np.random.Generator
 ) -> str | None:
-    """Weighted toward drivers who gained places, the pattern in the only 4
-    confirmed real Driver of the Day cases (reconcile.py) -- all 4 gained
-    places (+1, +3, +2, +2). n=4 is too small to fit confidently; this is a
-    documented heuristic, not a calibrated rate, same honesty standard as
-    form.py's "0.898 is 2026-specific" caveat."""
     if not survivors:
         return None
-    gains = np.array([max(0.0, grid[d] - race_position[d]) + 0.1 for d in survivors])
-    weights = gains / gains.sum()
-    return str(rng.choice(survivors, p=weights))
+    return str(rng.choice(survivors, p=_strength_softmax(survivors, strengths, DOTD_TEMPERATURE)))
+
+
+def fit_event_temperature(
+    observed_winners: dict[int, list[str]],
+    strengths_by_round: dict[int, dict[str, float]],
+    *,
+    grid: np.ndarray | None = None,
+) -> tuple[float, float]:
+    """Maximum-likelihood softmax temperature for a single-winner-per-race event.
+
+    Kept in-module rather than as a one-off script so the derivation behind
+    FASTEST_LAP_TEMPERATURE/DOTD_TEMPERATURE stays inspectable, the same way
+    calibrate_noise_scale documents the noise constants. Returns
+    ``(temperature, log_likelihood)``.
+    """
+    if grid is None:
+        grid = np.arange(0.05, 6.0, 0.025)
+
+    def log_likelihood(temperature: float) -> float:
+        total = 0.0
+        for round_number, winners in observed_winners.items():
+            strengths = strengths_by_round.get(round_number)
+            if not strengths:
+                continue
+            candidates = list(strengths)
+            probabilities = dict(zip(candidates, _strength_softmax(candidates, strengths, temperature)))
+            for winner in winners:
+                total += math.log(max(probabilities.get(winner, 1e-9), 1e-9))
+        return total
+
+    best_temperature = float(grid[0])
+    best_score = -math.inf
+    for temperature in grid:
+        score = log_likelihood(float(temperature))
+        if score > best_score:
+            best_score, best_temperature = score, float(temperature)
+    return best_temperature, best_score
 
 
 def plackett_luce_order(strengths: dict[str, float], noise_scale: float, rng: np.random.Generator) -> list[str]:
@@ -321,8 +425,8 @@ def sample_field(
     full_order = race_order + retirees
     race_position = {d: i + 1 for i, d in enumerate(full_order)}
 
-    fastest_lap_winner = _sample_fastest_lap_winner(survivors, grid, rng)
-    dotd_winner = _sample_dotd_winner(survivors, grid, race_position, rng)
+    fastest_lap_winner = _sample_fastest_lap_winner(survivors, strengths, rng)
+    dotd_winner = _sample_dotd_winner(survivors, strengths, rng)
 
     breakdowns = {}
     for d in drivers:

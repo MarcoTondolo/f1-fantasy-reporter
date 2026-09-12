@@ -986,6 +986,7 @@ def cmd_picks(args: argparse.Namespace) -> int:
 
     from f1_fantasy.calendar import current_event, fetch_calendar
     from f1_fantasy.predict.optimise import optimise_team
+    from f1_fantasy.predict.points import constructor_points_from_drivers
     from f1_fantasy.predict.prices import round_history
     from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed, to_feed_constructor_name
     from f1_fantasy.predict.simulate import simulate_round
@@ -1040,17 +1041,17 @@ def cmd_picks(args: argparse.Namespace) -> int:
 
     constructor_of = {q.driver_code: q.constructor for q in fetch_qualifying(config.season, last_round)}
     driver_points = {d: s.mean for d, s in summaries.items()}
-    constructor_points: dict[str, float] = {}
-    for d, s in summaries.items():
-        constructor = constructor_of.get(d)
-        if constructor:
-            # constructor_of is Jolpica-named; constructor_prices above is
-            # keyed by the feed's FUllName -- translate first, or the four
-            # names that differ get silently valued at 0 by optimise_team.
-            name = to_feed_constructor_name(constructor)
-            constructor_points[name] = constructor_points.get(name, 0.0) + s.mean
+    # constructor_of is Jolpica-named; constructor_prices above is keyed by
+    # the feed's FUllName -- translate before aggregating, or the four names
+    # that differ get silently valued at 0 by optimise_team.
+    constructor_points = constructor_points_from_drivers(
+        driver_points,
+        {d: to_feed_constructor_name(c) for d, c in constructor_of.items()},
+    )
 
-    team_selection = optimise_team(driver_points, price_before, constructor_points, constructor_prices)
+    team_selection = optimise_team(
+        driver_points, price_before, constructor_points, constructor_prices, captain_multiplier=2.0
+    )
 
     context = picks_report.build_picks(next_event, summaries, team_selection, league_name=args.league_name or "")
     out_dir = Path(config.output_dir) / str(config.season) / str(target_round)

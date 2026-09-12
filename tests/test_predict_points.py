@@ -141,3 +141,61 @@ def test_build_round_distributions_reduces_many_draws_to_one_summary_per_driver(
     assert result["A"].mean > result["C"].mean
     for distribution in result.values():
         assert 0.0 <= distribution.p_dnf <= 1.0
+
+
+def test_constructor_points_add_the_measured_bonus_to_its_drivers_sum():
+    """A constructor scores its two drivers' total plus the constructor-only
+    sources (pit-stop award chief among them), measured at +7.57/race across
+    2026's 143 constructor-rounds. Modelling it as a bare sum under-projects
+    every two-constructor team by ~15 points.
+    """
+    from f1_fantasy.predict.points import CONSTRUCTOR_BONUS_MEAN, constructor_points_from_drivers
+
+    totals = constructor_points_from_drivers(
+        {"A": 10.0, "B": 4.0, "C": 6.0},
+        {"A": "Team A", "B": "Team A", "C": "Team B"},
+    )
+
+    assert totals["Team A"] == pytest.approx(14.0 + CONSTRUCTOR_BONUS_MEAN)
+    assert totals["Team B"] == pytest.approx(6.0 + CONSTRUCTOR_BONUS_MEAN)
+
+
+def test_constructor_points_skips_drivers_with_no_known_constructor():
+    from f1_fantasy.predict.points import constructor_points_from_drivers
+
+    totals = constructor_points_from_drivers({"A": 10.0, "orphan": 99.0}, {"A": "Team A"})
+
+    assert set(totals) == {"Team A"}
+
+
+def test_fastest_lap_concentrates_on_the_fastest_car_not_the_front_row():
+    """The earlier grid-bucket model gave the pole-sitter ~0.17 of fastest
+    laps regardless of car pace. Real 2026: only four drivers took any
+    fastest lap all season and Antonelli alone took 7 of 12. Strength here is
+    form.py's gap-to-best %, so 0.0 is the quickest car.
+    """
+    from f1_fantasy.predict.points import FASTEST_LAP_TEMPERATURE, _strength_softmax
+
+    strengths = {"quick": 0.0, "mid": 1.0, "slow": 2.0}
+    shares = dict(zip(strengths, _strength_softmax(list(strengths), strengths, FASTEST_LAP_TEMPERATURE)))
+
+    assert shares["quick"] > shares["mid"] > shares["slow"]
+    # Steeply concentrated, not merely monotonic: the quickest car takes the
+    # clear majority of a three-car field.
+    assert shares["quick"] > 0.9
+
+
+def test_fit_event_temperature_recovers_a_planted_concentration():
+    """Known-answer check on the in-module fitter: winners drawn only from
+    the strongest driver must fit a low (highly concentrated) temperature.
+    """
+    from f1_fantasy.predict.points import fit_event_temperature
+
+    strengths_by_round = {r: {"quick": 0.0, "mid": 1.0, "slow": 2.0} for r in range(1, 9)}
+    always_quick = {r: ["quick"] for r in range(1, 9)}
+    spread_evenly = {1: ["quick"], 2: ["mid"], 3: ["slow"], 4: ["quick"], 5: ["mid"], 6: ["slow"]}
+
+    concentrated, _ = fit_event_temperature(always_quick, strengths_by_round)
+    diffuse, _ = fit_event_temperature(spread_evenly, strengths_by_round)
+
+    assert concentrated < diffuse
