@@ -75,3 +75,72 @@ def test_an_unknown_round_resolves_to_nothing_rather_than_the_wrong_race(at):
     assert event is None
     assert due == []
     assert state is None
+
+
+# -- picks: where a driver's constructor comes from -------------------------
+
+
+def test_constructor_attribution_covers_every_driver_the_game_prices():
+    """Regression test for Aston Martin's 0.4 expected points at round 15.
+
+    cmd_picks used to read constructor_of from a qualifying classification,
+    which lists only drivers who took part in that session. Anyone who missed
+    it -- Hadjar, injured for round 14, and Stroll and Bearman, absent from
+    that classification -- fell out of the mapping, so their expected points
+    never reached their constructor and it was valued as if it fielded one car
+    or none. The driver feed's own TeamName covers the whole field, so this
+    pins the property that matters: every priced driver has a constructor.
+    """
+    from f1_fantasy.predict.points import constructor_points_from_drivers
+
+    driver_points = {"STR": 4.1, "ALO": -2.6, "BEA": 4.0, "OCO": 4.6}
+    # What a qualifying classification gave us: two of the four missing.
+    from_qualifying = {"ALO": "Aston Martin", "OCO": "Haas F1 Team"}
+    # What the feed's TeamName gives us: all four.
+    from_feed = {
+        "STR": "Aston Martin", "ALO": "Aston Martin",
+        "BEA": "Haas F1 Team", "OCO": "Haas F1 Team",
+    }
+
+    partial = constructor_points_from_drivers(driver_points, from_qualifying)
+    complete = constructor_points_from_drivers(driver_points, from_feed)
+
+    # The dropped drivers are pure loss to their constructor, not redistributed.
+    assert complete["Aston Martin"] - partial["Aston Martin"] == pytest.approx(4.1)
+    assert complete["Haas F1 Team"] - partial["Haas F1 Team"] == pytest.approx(4.0)
+    # And a driver missing from the mapping is silent, not an error -- which is
+    # exactly why this went unnoticed.
+    assert set(partial) == {"Aston Martin", "Haas F1 Team"}
+
+
+def test_a_constructor_never_scores_more_than_its_two_cars():
+    """Round 15 had Verstappen, Lawson and Hadjar all listed at Red Bull Racing.
+
+    The driver feed keys drivers by contracted team, so a mid-season swap puts
+    three drivers on one constructor and summing them credits a third car that
+    cannot score.
+    """
+    from f1_fantasy.cli import _two_best_drivers_per_constructor
+
+    constructor_of = {
+        "VER": "Red Bull Racing", "LAW": "Red Bull Racing", "HAD": "Red Bull Racing",
+        "RUS": "Mercedes", "ANT": "Mercedes",
+    }
+    driver_points = {"VER": 17.4, "LAW": 7.6, "HAD": 13.4, "RUS": 25.6, "ANT": 28.6}
+
+    kept = _two_best_drivers_per_constructor(constructor_of, driver_points)
+
+    assert sorted(k for k, v in kept.items() if v == "Red Bull Racing") == ["HAD", "VER"]
+    assert sorted(k for k, v in kept.items() if v == "Mercedes") == ["ANT", "RUS"]
+
+
+def test_a_driver_with_no_predicted_points_is_dropped_not_counted_at_zero():
+    """A driver the form model has never seen must not displace one it has."""
+    from f1_fantasy.cli import _two_best_drivers_per_constructor
+
+    kept = _two_best_drivers_per_constructor(
+        {"VER": "Red Bull Racing", "LAW": "Red Bull Racing", "NEW": "Red Bull Racing"},
+        {"VER": 17.4, "LAW": 7.6},
+    )
+
+    assert sorted(kept) == ["LAW", "VER"]

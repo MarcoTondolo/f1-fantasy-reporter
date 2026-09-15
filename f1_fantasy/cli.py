@@ -969,6 +969,25 @@ def cmd_benchmarks(args: argparse.Namespace) -> int:
     return 0
 
 
+def _two_best_drivers_per_constructor(
+    constructor_of: dict[str, str], driver_points: dict[str, float]
+) -> dict[str, str]:
+    """``constructor_of`` restricted to each constructor's two best drivers.
+
+    Drivers with no predicted points are dropped rather than counted at zero --
+    a driver the model has no form for cannot be one of the two that score.
+    """
+    by_constructor: dict[str, list[str]] = {}
+    for driver, constructor in constructor_of.items():
+        if driver in driver_points:
+            by_constructor.setdefault(constructor, []).append(driver)
+    kept = {}
+    for constructor, drivers in by_constructor.items():
+        for driver in sorted(drivers, key=lambda d: -driver_points[d])[:2]:
+            kept[driver] = constructor
+    return kept
+
+
 def cmd_picks(args: argparse.Namespace) -> int:
     """Render the picks card for the next race: expected points, price-rise
     probability, captain suggestion, optimal team.
@@ -988,11 +1007,10 @@ def cmd_picks(args: argparse.Namespace) -> int:
     from f1_fantasy.predict.optimise import optimise_team
     from f1_fantasy.predict.points import constructor_points_from_drivers
     from f1_fantasy.predict.prices import round_history
-    from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed, to_feed_constructor_name
+    from f1_fantasy.predict.reconcile import fetch_constructor_feed_rows, fetch_driver_feed
     from f1_fantasy.predict.simulate import simulate_round
     from f1_fantasy.render import render_card
     from f1_fantasy.report import picks as picks_report
-    from f1_fantasy.results import fetch_qualifying
 
     config = Config.load(args.config)
     events = fetch_calendar(config.season)
@@ -1039,14 +1057,34 @@ def cmd_picks(args: argparse.Namespace) -> int:
         print("not enough form history to build picks yet", file=sys.stderr)
         return 1
 
-    constructor_of = {q.driver_code: q.constructor for q in fetch_qualifying(config.season, last_round)}
+    # The driver feed's own TeamName, not a qualifying classification. A
+    # classification only lists drivers who took part, so anyone who missed
+    # that session -- an injury stand-in, or Hadjar's round-14 absence --
+    # dropped out of constructor_of entirely and their expected points never
+    # reached their constructor: Aston Martin came out at 0.4 points for round
+    # 15 because Stroll was missing, and Haas lost Bearman the same way. This
+    # field covers every driver the game prices, and is already in the feed's
+    # own naming, so it needs no to_feed_constructor_name translation either.
+    constructor_of = {
+        code: row["TeamName"] for code, row in driver_feed.items() if row.get("TeamName")
+    }
     driver_points = {d: s.mean for d, s in summaries.items()}
-    # constructor_of is Jolpica-named; constructor_prices above is keyed by
-    # the feed's FUllName -- translate before aggregating, or the four names
-    # that differ get silently valued at 0 by optimise_team.
+    # A constructor fields two cars, so only two drivers can score for it. The
+    # feed lists drivers by contracted team, which during a mid-season swap
+    # means three: for round 15 Red Bull Racing carried Verstappen, Lawson and
+    # Hadjar at once, and summing all three put it at 51.2 expected points
+    # against a true two-car figure. Keep each constructor's two best.
+    #
+    # This is the least-wrong option, not a correct one. Who actually drives is
+    # what settles it, and that is only knowable from session data -- which for
+    # an upcoming round does not exist yet (news/lineup_watch.py reports the
+    # same gap). While a swap is unresolved this can therefore keep the wrong
+    # pair: it prefers the injured Hadjar to his own stand-in Lawson purely
+    # because Hadjar's form is stronger. Practice data resolves it.
+    constructor_of = _two_best_drivers_per_constructor(constructor_of, driver_points)
     constructor_points = constructor_points_from_drivers(
         driver_points,
-        {d: to_feed_constructor_name(c) for d, c in constructor_of.items()},
+        constructor_of,
         p_q3={d: s.p_q3 for d, s in summaries.items()},
         driver_dotd_points={d: s.mean_dotd_points for d, s in summaries.items()},
     )
