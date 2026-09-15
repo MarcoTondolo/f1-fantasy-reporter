@@ -1,24 +1,23 @@
-F1 Fantasy daily digest -- 2026 round 14
-Generated 2026-09-12 11:37 UTC
+F1 Fantasy daily digest -- 2026 round 15
+Generated 2026-09-15 12:41 UTC
 
-Confirmed lineup changes: no qualifying or practice session data yet for round 14 (FP1 R14 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
+Confirmed lineup changes: no qualifying or practice session data yet for round 15 (FP1 R15 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
+  - Lawson reflects on his Red Bull outings after sixth in Madrid [Red Bull] -- https://www.formula1.com/en/latest/all.xml
+  - Honda replaces F1 power unit boss in organisation shuffle [Aston Martin] (14 Sep) -- https://www.autosport.com/rss/f1/news/
   - Hadjar to miss third F1 race due to injury [Racing Bulls] (07 Sep) -- https://www.autosport.com/rss/f1/news/
-  - “I f***ed up quite a lot”: How Yuki Tsunoda discovered the complexity of F1 2026 at Monza [Red Bull, Racing Bulls] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - “It's always the same” - Carlos Sainz wades into Charles Leclerc and Lewis Hamilton’s Monza clash [Ferrari, Williams] (10 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Red Bull insists “there is nothing wrong” with Isack Hadjar's recovery [Red Bull, Racing Bulls] (15 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Aston Martin partner Honda replaces F1 power unit boss [Aston Martin] (14 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 UPGRADE PACKAGES:
   - What's behind Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - Russell set to take F1 engine penalty after Mercedes introduces power unit upgrade [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
-  - How Monza revealed the true picture – Max Verstappen responds to FIA's surprising ADUO verdict [Red Bull] (12 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - What's behind Fernando Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - George Russell reveals when he’ll take his own F1 engine penalty [Mercedes] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Esteban Ocon: ‘Haas may be testing new drivers, but drivers aren’t the problem’ [Haas F1 Team] (11 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Williams tipped for "huge step" forward at Azerbaijan GP with major upgrade [Williams] (14 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
-  - LIVE COVERAGE: FP3 in Madrid resumes after Hamilton crash -- https://www.formula1.com/en/latest/all.xml
-  - What the teams said – Friday in Spain -- https://www.formula1.com/en/latest/all.xml
+  - Honda replaces F1 power unit boss in organisation shuffle [Aston Martin] (14 Sep) -- https://www.autosport.com/rss/f1/news/
+  - F1 Spanish GP: Antonelli tops FP3 after Hamilton and Bearman cause red flags [Ferrari, Mercedes] (12 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Spanish GP: Antonelli leads tricky second practice as Lindblad crashes [Ferrari] (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - Why Leclerc isn't using latest Ferrari ADUO2 engine in the Spanish GP [Ferrari] (11 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Spanish GP: Mercedes tops FP1 with Russell fastest at Madring [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
