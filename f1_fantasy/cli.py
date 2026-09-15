@@ -1257,15 +1257,30 @@ def cmd_capture(args: argparse.Namespace) -> int:
 # --------------------------------------------------------------------------
 
 
-def _resolve_event(config: Config, force: str | None):
-    """Current race event, the actions due for it, and the run state."""
-    from f1_fantasy.calendar import current_event, fetch_calendar
+def _resolve_event(config: Config, force: str | None, round_number: int | None = None):
+    """The race event to act on, the actions due for it, and the run state.
+
+    ``round_number`` names the round explicitly; without it the calendar picks
+    the current one. A forced action always applied to whatever
+    ``current_event`` happened to return, which meant re-rendering one round's
+    card from a manual dispatch marked a *different* round's action done and
+    silently consumed its slot -- exactly how round 14's 2026 recap was lost.
+    Anything driven by hand should say which round it means.
+    """
+    from f1_fantasy.calendar import POST_RACE_GRACE, current_event, fetch_calendar
     from f1_fantasy.runner import utcnow
     from f1_fantasy.schedule import Action, RunState, due_actions
 
     events = fetch_calendar(config.season)
     now = utcnow()
-    event = current_event(events, now)
+    if round_number is None:
+        # The recap is post-race work, so this must keep resolving to a race
+        # that has run for as long as due_actions can still ask for it.
+        event = current_event(events, now, grace=POST_RACE_GRACE)
+    else:
+        event = next((e for e in events if e.round == round_number), None)
+        if event is None:
+            log.error("round %d is not in the %d calendar", round_number, config.season)
     if event is None:
         return None, [], None
 
@@ -1282,7 +1297,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
     many hourly runs where nothing is happening.
     """
     config = Config.load(args.config)
-    event, due, _ = _resolve_event(config, args.force)
+    event, due, _ = _resolve_event(config, args.force, args.round)
 
     if event is None:
         print("due=")
@@ -1303,7 +1318,7 @@ def cmd_tick(args: argparse.Namespace) -> int:
     config = Config.load(args.config)
     credentials = Credentials.from_env()
 
-    event, due, state = _resolve_event(config, args.force)
+    event, due, state = _resolve_event(config, args.force, args.round)
     if event is None:
         print("no upcoming race in the calendar")
         return 0
@@ -1615,10 +1630,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     plan = sub.add_parser("plan", help="print what is due, for CI to gate on")
     plan.add_argument("--force", choices=actions, help="ignore the calendar")
+    plan.add_argument(
+        "--round",
+        type=int,
+        help="act on this round instead of the calendar's current one",
+    )
     plan.set_defaults(func=cmd_plan)
 
     tick = sub.add_parser("tick", help="run whatever the calendar says is due")
     tick.add_argument("--force", choices=actions, help="ignore the calendar")
+    tick.add_argument(
+        "--round",
+        type=int,
+        help="act on this round instead of the calendar's current one",
+    )
     tick.add_argument("--dry-run", action="store_true", help="render but do not send")
     tick.add_argument("--race", type=int, help="race id (default: current)")
     tick.set_defaults(func=cmd_tick)

@@ -20,6 +20,10 @@ on:
         required: false
         type: choice
         options: ["", "pace", "preview", "lockout", "recap", "news"]
+      round:
+        description: "Round to act on (default: whatever the calendar says is current). Always set this when forcing an action for a past race, so the run cannot mark a different round done."
+        required: false
+        type: string
       dry_run:
         description: "Render but do not send"
         required: false
@@ -56,6 +60,7 @@ jobs:
           pip install -e .
           python -m f1_fantasy plan \
             ${{ inputs.action && format('--force {0}', inputs.action) || '' }} \
+            ${{ inputs.round && format('--round {0}', inputs.round) || '' }} \
             >> "$GITHUB_OUTPUT"
 
       # Everything below is skipped on a quiet tick, which is most of them.
@@ -83,6 +88,7 @@ jobs:
         run: |
           python -m f1_fantasy tick \
             ${{ inputs.action && format('--force {0}', inputs.action) || '' }} \
+            ${{ inputs.round && format('--round {0}', inputs.round) || '' }} \
             ${{ inputs.dry_run && '--dry-run' || '' }}
 
       - name: Commit snapshots and cards

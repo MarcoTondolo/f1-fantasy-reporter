@@ -6,7 +6,12 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from f1_fantasy.calendar import current_event, parse_calendar, previous_event
+from f1_fantasy.calendar import (
+    POST_RACE_GRACE,
+    current_event,
+    parse_calendar,
+    previous_event,
+)
 from f1_fantasy.schedule import Action, RunState, due_actions, points_are_settled
 
 UTC = timezone.utc
@@ -32,9 +37,11 @@ STANDARD = {
     "Qualifying": {"date": "2026-08-29", "time": "13:00:00Z"},
 }
 
+SPRINT_ROUND = 16
+
 SPRINT = {
     "season": "2026",
-    "round": "16",
+    "round": str(SPRINT_ROUND),
     "raceName": "Sprint Land Grand Prix",
     "date": "2026-09-06",
     "time": "13:00:00Z",
@@ -103,6 +110,41 @@ def test_calendar_selects_the_current_then_next_event():
     assert previous_event(events, after).round == 15
 
     assert current_event(events, datetime(2027, 1, 1, tzinfo=UTC)) is None
+
+
+def test_post_race_grace_keeps_a_race_current_while_its_recap_can_be_due():
+    """Regression test for round 14 of 2026, whose recap was never produced.
+
+    At DEFAULT_GRACE a race stops being current one day after the flag, while
+    ``due_actions`` keeps the recap window open for three. In that two-day
+    overlap the round was unreachable: the tick resolved to the *next* race and
+    reported nothing due for it, and a forced recap rendered one round's card
+    while marking a different round's action done -- which is how round 14's
+    slot was consumed. Any moment where the recap is still due must resolve to
+    the race it belongs to under POST_RACE_GRACE.
+    """
+    events = parse_calendar(_payload(STANDARD, SPRINT))
+    dutch = events[0]
+
+    two_days_after = dutch.starts_at + timedelta(days=2)
+    assert Action.RECAP in due_actions(dutch, two_days_after, set())
+    assert current_event(events, two_days_after, grace=POST_RACE_GRACE).round == dutch.round
+
+    # The default stays short, so the forward-looking cards (picks, preview)
+    # still point at the race being prepared for rather than the one just run.
+    assert current_event(events, two_days_after).round == SPRINT_ROUND
+
+
+def test_post_race_grace_never_reaches_into_the_next_weekend():
+    """Three days is safe only because the next race is at least seven away."""
+    events = parse_calendar(_payload(STANDARD, SPRINT))
+    dutch, sprint = events
+
+    assert sprint.starts_at - dutch.starts_at >= timedelta(days=7)
+    # Once the recap window has closed, the next race is current again.
+    after_window = dutch.starts_at + POST_RACE_GRACE + timedelta(hours=1)
+    assert Action.RECAP not in due_actions(dutch, after_window, set())
+    assert current_event(events, after_window, grace=POST_RACE_GRACE).round == sprint.round
 
 
 # -- scheduling -------------------------------------------------------------

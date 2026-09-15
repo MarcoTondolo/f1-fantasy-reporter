@@ -145,15 +145,37 @@ def fetch_calendar(season: int, *, timeout: float = 20.0) -> list[RaceEvent]:
         return parse_calendar(json.loads(response.read().decode("utf-8")))
 
 
-def current_event(events: list[RaceEvent], now: datetime) -> RaceEvent | None:
+#: Default grace: how long after the flag a race still counts as current.
+#:
+#: One day suits the forward-looking callers (preview, picks, benchmarks), which
+#: want the race being *prepared for* -- a longer grace would have them spend
+#: the days after a race generating picks for one already run.
+DEFAULT_GRACE = timedelta(days=1)
+
+#: Grace for callers servicing post-race work. It has to cover the longest
+#: window ``schedule.due_actions`` can still open, which is the recap's
+#: (``starts_at`` + 3 days). Under DEFAULT_GRACE a recap that had not run by
+#: Monday became unreachable: the tick resolved to the *next* race and reported
+#: nothing due, and a forced recap marked the wrong round done, which is how
+#: round 14 of 2026 lost its recap. Races are at least seven days apart and the
+#: next weekend's earliest window (its preview, 24h before a lockout roughly two
+#: days before the race) opens about four days after the previous race, so three
+#: days never reaches into it.
+POST_RACE_GRACE = timedelta(days=3)
+
+
+def current_event(
+    events: list[RaceEvent], now: datetime, *, grace: timedelta = DEFAULT_GRACE
+) -> RaceEvent | None:
     """The race weekend *now* falls in, or the next one.
 
-    A weekend is treated as running from three days before the race until a day
-    after, so a Friday tick during a race week resolves to that race rather than
-    the previous one.
+    A weekend is treated as running from three days before the race until
+    *grace* after it, so a Friday tick during a race week resolves to that race
+    rather than the previous one. Callers that still have work to do for a race
+    after the flag should pass ``grace=POST_RACE_GRACE``.
     """
     for event in events:
-        if now <= event.starts_at + timedelta(days=1):
+        if now <= event.starts_at + grace:
             return event
     return None
 
