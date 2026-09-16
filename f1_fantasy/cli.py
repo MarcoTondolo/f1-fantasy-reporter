@@ -130,6 +130,41 @@ def cmd_probe(args: argparse.Namespace) -> int:
     team = own[0]
     print(f"  ok -- {len(team.picks)} picks, captain {team.captain_id}, value {team.value}")
 
+    # Regression check for the round-13/14 bug where a second team under this
+    # account echoed the first: any member row sharing this account's own guid
+    # but a different team_no should resolve to genuinely different picks via
+    # the opponent endpoint, not a repeat of team_no 1.
+    own_team_nos = sorted({m.team_no for m in members if m.guid == api.guid})
+    if len(own_team_nos) > 1:
+        print(f"\n== This account's other teams (team_no {own_team_nos[1:]}) ==")
+        own_signature = _team_signature(team)
+        for team_no in own_team_nos[1:]:
+            found = api.try_opponent_teams(api.guid, race_id, team_no)
+            if not found:
+                print(f"  team_no {team_no}: opponent endpoint returned nothing")
+                _dump_raw(
+                    api, f"opponent team_no={team_no}",
+                    f"/services/user/opponentteam/opponentgamedayplayerteamget/1/{api.guid}/1/{race_id}/{team_no}",
+                )
+                continue
+            matches = [t for t in found if t.team_no == team_no]
+            if not matches:
+                print(f"  team_no {team_no}: returned {len(found)} team(s), none tagged team_no={team_no}")
+                _dump_raw(
+                    api, f"opponent team_no={team_no}",
+                    f"/services/user/opponentteam/opponentgamedayplayerteamget/1/{api.guid}/1/{race_id}/{team_no}",
+                )
+                continue
+            other = matches[0]
+            if _team_signature(other) == own_signature:
+                print(f"  team_no {team_no}: WARNING -- identical picks to team_no 1, likely echoing")
+                _dump_raw(
+                    api, f"opponent team_no={team_no}",
+                    f"/services/user/opponentteam/opponentgamedayplayerteamget/1/{api.guid}/1/{race_id}/{team_no}",
+                )
+            else:
+                print(f"  team_no {team_no}: ok -- {len(other.picks)} distinct picks, value {other.value}")
+
     # The actual question -- and the one a non-empty response alone cannot
     # answer. Confirmed live: getteam ignores the guid in its URL and just
     # returns the caller's own team every time, so a naive "did I get
