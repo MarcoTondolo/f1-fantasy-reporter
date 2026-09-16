@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Spanish Grand Prix
+
+Optimal team scored 186 pts (captain: COL)
+Closest to perfect: Chris Krueger (182 pts, -4)
+Furthest from perfect: Paul Gosse (37 pts, -149)
+League average gap to optimal: 76.9 pts
