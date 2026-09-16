@@ -1,6 +1,6 @@
 🔮 *Hindsight* -- Italian Grand Prix
 
 Optimal team scored 428 pts (captain: ANT)
-Closest to perfect: sydkav2 (586 pts, --158)
-Furthest from perfect: Caitlyn Landry (198 pts, -230)
-League average gap to optimal: 73.0 pts
+Closest to perfect: sydkav2 (519 pts, --91)
+Furthest from perfect: Caitlyn Landry (111 pts, -317)
+League average gap to optimal: 182.1 pts
