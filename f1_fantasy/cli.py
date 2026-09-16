@@ -130,55 +130,38 @@ def cmd_probe(args: argparse.Namespace) -> int:
     team = own[0]
     print(f"  ok -- {len(team.picks)} picks, captain {team.captain_id}, value {team.value}")
 
-    # Regression check for the round-13/14 bug where a second team under this
-    # account echoed the first. First attempt found nothing: api.guid (the
-    # bare F1_USER_GUID secret) never string-matches a leaderboard row's guid
-    # (a compound "<uuid>-0-<n>" form -- confirmed live, both are visible in
-    # this log's masking pattern: a bare-guid request masks entirely, a
-    # compound-guid request leaves "-0-<n>" showing). Match by prefix instead.
-    own_compound_guids = sorted({m.guid for m in members if m.guid.startswith(api.guid[:8])})
-    own_team_nos = sorted({m.team_no for m in members if m.guid.startswith(api.guid[:8])})
-    print("\n== Multi-team diagnostic ==")
-    print(f"  api.guid (from secret): {api.guid!r} (len {len(api.guid)})")
-    print(f"  leaderboard guids starting with the same 8 chars: {own_compound_guids}")
-    print(f"  team_nos found under those guids: {own_team_nos}")
-    if len(own_team_nos) > 1 and own_compound_guids:
-        compound_guid = own_compound_guids[0]
-        own_signature = _team_signature(team)
-        for team_no in own_team_nos[1:]:
-            # Attempt 1: opponent endpoint with the compound guid -- what
-            # collect.py's retry path actually does today.
-            found = api.try_opponent_teams(compound_guid, race_id, team_no)
-            matches = [t for t in found if t.team_no == team_no] if found else []
-            if not found:
-                print(f"  team_no {team_no} via opponent endpoint: no data")
-            elif not matches:
-                print(f"  team_no {team_no} via opponent endpoint: "
-                      f"returned {[t.team_no for t in found]}, none tagged {team_no}")
-            else:
-                same = _team_signature(matches[0]) == own_signature
-                print(f"  team_no {team_no} via opponent endpoint: "
-                      f"{'SAME as team_no 1 (echo)' if same else 'genuinely different -- ok'}")
+    # Regression check for the round-13/14 bug where "cadillac thrillz"
+    # (team_no 2) silently duplicated "Chucky Layclercks" (team_no 1).
+    # Root-caused live 2026-09-16: getteam authenticates by session token,
+    # not by the guid string in its URL, and returns this account's *entire*
+    # userTeam list in one call, correctly discriminated by team_no -- the
+    # opponent endpoint was the one that couldn't reach team_no 2 (it always
+    # answered with team_no 1 again), and collect.py's own guid check
+    # (exact string equality against the bare api.guid) never matched a
+    # leaderboard row's compound "<uuid>-0-<n>" guid in the first place, so
+    # every one of this account's rows -- including team_no 1 -- went
+    # through that failing retry path rather than the one call that
+    # actually works. Both fixed in collect.py; this just keeps the fix
+    # honest against the real API going forward.
+    from f1_fantasy.collect import _is_own_account
 
-            # Attempt 2 (untested so far): getteam with the compound guid
-            # instead of the bare api.guid -- getteam's echo behaviour has
-            # only ever been confirmed for *other* members' plain guids, never
-            # for one of this account's own compound identifiers.
-            found2 = api.try_teams(race_id, guid=compound_guid)
-            if not found2:
-                print(f"  team_no {team_no} via getteam(compound guid): no data")
-            else:
-                print(f"  team_no {team_no} via getteam(compound guid): "
-                      f"returned team_no(s) {[t.team_no for t in found2]}")
-
-            _dump_raw(
-                api, f"opponent team_no={team_no} (compound guid)",
-                f"/services/user/opponentteam/opponentgamedayplayerteamget/1/{compound_guid}/1/{race_id}/{team_no}",
-            )
-            _dump_raw(
-                api, f"getteam(compound guid) for team_no={team_no}",
-                f"/services/user/gameplay/{compound_guid}/getteam/1/1/{race_id}/1",
-            )
+    own_rows = [m for m in members if _is_own_account(m.guid, api.guid)]
+    own_team_nos = sorted({m.team_no for m in own_rows})
+    if len(own_team_nos) > 1:
+        compound_guid = own_rows[0].guid
+        found = api.try_teams(race_id, guid=compound_guid)
+        by_team_no = {t.team_no: t for t in found} if found else {}
+        print(f"\n== This account's teams (team_no {own_team_nos}) ==")
+        signatures = set()
+        for team_no in own_team_nos:
+            t = by_team_no.get(team_no)
+            if t is None:
+                print(f"  team_no {team_no}: MISSING from getteam's response")
+                continue
+            sig = _team_signature(t)
+            warning = " -- WARNING: identical to another of this account's teams" if sig in signatures else ""
+            print(f"  team_no {team_no}: {len(t.picks)} picks, value {t.value}{warning}")
+            signatures.add(sig)
 
     # The actual question -- and the one a non-empty response alone cannot
     # answer. Confirmed live: getteam ignores the guid in its URL and just
@@ -187,7 +170,7 @@ def cmd_probe(args: argparse.Namespace) -> int:
     # content against the caller's own team is what actually tells readable
     # apart from "this endpoint is just handing back my team again".
     print("\n== Other members' teams ==")
-    others = [m for m in members if m.guid != api.guid]
+    others = [m for m in members if not _is_own_account(m.guid, api.guid)]
     if not others:
         print("  you are the only member; cannot test")
         return 0

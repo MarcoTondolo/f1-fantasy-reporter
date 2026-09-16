@@ -82,3 +82,43 @@ def test_rolling_form_only_averages_rounds_a_driver_actually_appeared_in(monkeyp
 
     assert form["A"] == pytest.approx(2.0)
     assert form["B"] == pytest.approx(1.0)
+
+
+def test_recent_form_averages_only_the_last_window_of_rounds(monkeypatch):
+    """Regression fixture for the Norris case: three rounds where a driver's
+    older form (poor) and recent form (strong) diverge sharply. rolling_form
+    (season-to-date) must show the dilution; recent_form_gap_pct (last-2
+    window here) must show the recent trend uncontaminated by it."""
+    from f1_fantasy.predict import form as form_module
+    from f1_fantasy.predict.form import recent_form_gap_pct
+
+    # Rounds 1-3: mediocre. Rounds 4-5: fastest every time.
+    calls = {
+        1: {"NOR": 0.5, "ANT": 0.1},
+        2: {"NOR": 0.5, "ANT": 0.1},
+        3: {"NOR": 0.5, "ANT": 0.1},
+        4: {"NOR": 0.0, "ANT": 0.2},
+        5: {"NOR": 0.0, "ANT": 0.2},
+    }
+    monkeypatch.setattr(form_module, "qualifying_gap_pct", lambda season, rnd: calls[rnd])
+
+    season_to_date = rolling_form(2026, [1, 2, 3, 4, 5])
+    recent = recent_form_gap_pct(2026, [1, 2, 3, 4, 5], window=2)
+
+    # Season-to-date still ranks Norris behind Antonelli -- exactly the
+    # dilution the docstring describes.
+    assert season_to_date["NOR"] > season_to_date["ANT"]
+    # The last-2-rounds window shows Norris has actually been faster.
+    assert recent["NOR"] < recent["ANT"]
+    assert recent["NOR"] == pytest.approx(0.0)
+
+
+def test_recent_form_defaults_to_a_three_round_window(monkeypatch):
+    from f1_fantasy.predict import form as form_module
+    from f1_fantasy.predict.form import recent_form_gap_pct
+
+    calls = {1: {"A": 9.0}, 2: {"A": 0.0}, 3: {"A": 3.0}, 4: {"A": 3.0}}
+    monkeypatch.setattr(form_module, "qualifying_gap_pct", lambda season, rnd: calls[rnd])
+
+    # Default window is 3 -- round 1's 9.0 must not be included.
+    assert recent_form_gap_pct(2026, [1, 2, 3, 4])["A"] == pytest.approx(2.0)

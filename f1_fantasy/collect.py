@@ -60,6 +60,20 @@ class TeamAccess:
         return f"{self.readable}/{self.total} member teams readable"
 
 
+def _is_own_account(member_guid: str, api_guid: str) -> bool:
+    """Whether a leaderboard row's guid names the authenticated account.
+
+    ``api_guid`` (``Credentials.guid``, i.e. ``F1_USER_GUID``) is the bare
+    UUID copied from the login response. A leaderboard row's guid is a
+    compound ``"<uuid>-0-<n>"`` form -- confirmed live 2026-09-16 across
+    every member in a real league, not just this account's own rows -- so
+    the two never match by exact equality even for this account's own
+    entries. Matched by prefix instead; a UUID is high-entropy enough that
+    an accidental collision with another member's guid is not a real risk.
+    """
+    return member_guid == api_guid or member_guid.startswith(api_guid)
+
+
 def _pick_team(teams: list[Team], member: Member) -> Team | None:
     """Choose the team matching the member's leaderboard entry.
 
@@ -113,28 +127,26 @@ def collect_league(
     for index, member in enumerate(fetchable):
         if index and spacing:
             time.sleep(spacing)
-        # getteam silently echoes the caller's own team for any other guid
-        # rather than erroring (confirmed live) -- it must only ever be used
-        # for the authenticated account itself. Every other member goes
+        # getteam silently echoes the caller's own team(s) for any other
+        # guid rather than erroring (confirmed live) -- it must only ever be
+        # used for the authenticated account itself. Every other member goes
         # through the dedicated opponent endpoint instead.
-        if member.guid == api.guid:
+        if _is_own_account(member.guid, api.guid):
+            # One call recovers every team this account holds: getteam
+            # authenticates by session token, not by the guid string in its
+            # URL, and returns the account's *full* userTeam list regardless
+            # -- confirmed live 2026-09-16, a two-team account's response
+            # carried both team_no 1 and 2, each with genuinely independent
+            # bank/value/points/picks. _pick_team already discriminates by
+            # team_no from that one list, so no retry is needed here. (An
+            # earlier version of this fetch retried a team_no mismatch via
+            # the opponent endpoint instead -- confirmed live, also on
+            # 2026-09-16, that the opponent endpoint is the one that *can't*
+            # reach this account's own non-primary team: asked for team_no 2
+            # it always answers with team_no 1 again. That silent duplicate
+            # shipped for two rounds before this was caught.)
             found = api.try_teams(race_id, guid=member.guid)
             team = _pick_team(found, member) if found else None
-            if team is not None and team.team_no != member.team_no:
-                # getteam also echoes the caller's own *primary* team for a
-                # second team_no under the same guid (confirmed live: an
-                # account running two teams in one league) -- it never
-                # actually serves anything but that one team, no matter which
-                # team_no was requested. The opponent endpoint takes team_no
-                # as an explicit URL segment and does discriminate correctly
-                # by it (confirmed live for other members' teams already),
-                # so it also recovers this account's own non-primary teams.
-                log.debug(
-                    "getteam returned team_no %s for %s's team_no %s -- retrying via the opponent endpoint",
-                    team.team_no, member.user_name, member.team_no,
-                )
-                found = api.try_opponent_teams(member.guid, race_id, member.team_no)
-                team = _pick_team(found, member) if found else None
         else:
             found = api.try_opponent_teams(member.guid, race_id, member.team_no)
             team = _pick_team(found, member) if found else None

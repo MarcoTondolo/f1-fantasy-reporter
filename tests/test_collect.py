@@ -168,28 +168,40 @@ def test_own_team_uses_try_teams_but_other_members_use_try_opponent_teams():
     assert team_key("other-guid", 1) in snapshot.teams
 
 
-def test_own_accounts_second_team_falls_back_to_the_opponent_endpoint():
-    """getteam also echoes the caller's own *primary* team for a second
-    team_no under the same guid (confirmed live: an account running two
-    teams in one league) -- it never actually serves anything but that one
-    team, no matter which team_no was requested. The opponent endpoint takes
-    team_no as an explicit URL segment and discriminates correctly by it, so
-    it recovers this account's own non-primary team too. Without the
-    fallback, this member's team_no-2 pick list would silently be a
-    duplicate of team_no-1's -- exactly the bug this test pins.
+def test_own_accounts_second_team_comes_from_the_same_getteam_call():
+    """Regression test for the round-13/14 bug: getteam returns this
+    account's *entire* userTeam list in one call, discriminated by team_no --
+    confirmed live 2026-09-16, where a two-team account's getteam response
+    carried both team_no 1 and 2 with genuinely independent bank/value/picks.
+    It authenticates by session token, not by the guid string in the URL, so
+    it answers identically regardless of exactly which of this account's own
+    guids is passed.
+
+    An earlier version instead retried a team_no mismatch via the opponent
+    endpoint, on the (then-untested) assumption that endpoint discriminates
+    correctly by team_no for this account too. Also confirmed live the same
+    day: it does not -- asked for team_no 2 it answers with team_no 1 again,
+    which is exactly how "cadillac thrillz" shipped as a silent duplicate of
+    "Chucky Layclercks" for two real rounds. _pick_team must get everything
+    it needs from the one getteam call; the opponent endpoint must not be
+    consulted for this account's own rows at all.
     """
-    primary = _member("self-guid", 1)
-    second = _member("self-guid", 2)
+    primary = _member("self-guid-0-999", 1)
+    second = _member("self-guid-0-999", 2)
     second.team_no = 2
-    primary_team = make_team("self-guid", 11, ["1"], team_no=1)
-    real_second_team = make_team("self-guid", 11, ["2"], team_no=2)
+    primary_team = make_team("self-guid-0-999", 11, ["1"], team_no=1)
+    real_second_team = make_team("self-guid-0-999", 11, ["2"], team_no=2)
     api = FakeApi(
         [primary, second],
-        # getteam always returns only the primary team, regardless of guid --
-        # this is the echo the fallback must detect and route around.
-        teams_by_guid={"self-guid": [primary_team]},
+        # One guid maps to the account's full team list, both entries.
+        teams_by_guid={"self-guid-0-999": [primary_team, real_second_team]},
+        # api.guid is the bare secret; leaderboard rows carry the compound
+        # "<uuid>-0-<n>" form -- the two never match by exact equality.
         guid="self-guid",
-        opponent_teams_by_guid={"self-guid": [real_second_team]},
+        # If the opponent endpoint were ever consulted for this account's
+        # own rows, it would answer with the known-wrong echo -- present
+        # here so the test would fail loudly if that path were taken again.
+        opponent_teams_by_guid={"self-guid-0-999": [primary_team]},
     )
 
     snapshot, access = collect_league(
@@ -197,10 +209,21 @@ def test_own_accounts_second_team_falls_back_to_the_opponent_endpoint():
     )
 
     assert access.readable == 2
-    assert snapshot.teams[team_key("self-guid", 1)] is primary_team
-    assert snapshot.teams[team_key("self-guid", 2)] is real_second_team
-    # Both the initial (echoed) attempt and the corrective retry go through
-    # the API -- own_path_guids records the former, opponent_path_guids the
-    # fallback retry for the mismatched team_no.
-    assert api.own_path_guids == ["self-guid", "self-guid"]
-    assert api.opponent_path_guids == ["self-guid"]
+    assert snapshot.teams[team_key("self-guid-0-999", 1)] is primary_team
+    assert snapshot.teams[team_key("self-guid-0-999", 2)] is real_second_team
+    # Both rows go through try_teams; the opponent endpoint is never touched
+    # for this account's own guid.
+    assert api.own_path_guids == ["self-guid-0-999", "self-guid-0-999"]
+    assert api.opponent_path_guids == []
+
+
+def test_is_own_account_matches_by_prefix_not_exact_equality():
+    """api.guid (the bare F1_USER_GUID secret) and a leaderboard row's guid
+    (compound "<uuid>-0-<n>") are two different strings for the same
+    account -- confirmed live 2026-09-16 -- so exact equality would reject
+    every one of this account's own rows, including its primary team."""
+    from f1_fantasy.collect import _is_own_account
+
+    assert _is_own_account("46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702", "46d0040c-141d-11f1-b1e2-2dda4e54308a")
+    assert _is_own_account("same-guid", "same-guid")
+    assert not _is_own_account("c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229", "46d0040c-141d-11f1-b1e2-2dda4e54308a")
