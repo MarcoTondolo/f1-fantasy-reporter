@@ -24,6 +24,10 @@ on:
         description: "Round to act on (default: whatever the calendar says is current). Always set this when forcing an action for a past race, so the run cannot mark a different round done."
         required: false
         type: string
+      race:
+        description: "Race id to fetch (default: the API's current race id). Set this together with round whenever they differ -- the API's own \"current race\" pointer does not always match the calendar round you asked for by --round, and tick fetches by race id, not by round. Leaving this unset while forcing a past round silently re-captures whatever race the API still considers current."
+        required: false
+        type: string
       dry_run:
         description: "Render but do not send"
         required: false
@@ -89,6 +93,7 @@ jobs:
           python -m f1_fantasy tick \
             ${{ inputs.action && format('--force {0}', inputs.action) || '' }} \
             ${{ inputs.round && format('--round {0}', inputs.round) || '' }} \
+            ${{ inputs.race && format('--race {0}', inputs.race) || '' }} \
             ${{ inputs.dry_run && '--dry-run' || '' }}
 
       - name: Commit snapshots and cards

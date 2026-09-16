@@ -1402,6 +1402,15 @@ def cmd_tick(args: argparse.Namespace) -> int:
     api = build_api(credentials)
     store = SnapshotStore(config.snapshot_dir)
     publisher = build_publisher(config, credentials, dry_run=args.dry_run)
+    # event.round (above, from the calendar) and race_id (below, from the
+    # live API) are two independent numbers that happen to agree during a
+    # normal weekend but not always afterward: api.current_race_id() tracks
+    # the API's own "current race" pointer, which does not necessarily match
+    # whatever round --round asked for. Confirmed live 2026-09-16: a forced
+    # `--round 13` dispatch (no --race) silently re-captured round 14's data
+    # again, because current_race_id() still pointed at 14 -- round 13's
+    # snapshot was untouched and its state.json entry was marked done anyway.
+    # Always pass --race explicitly alongside --round for a past event.
     race_id = args.race or api.current_race_id()
 
     for action in due:
