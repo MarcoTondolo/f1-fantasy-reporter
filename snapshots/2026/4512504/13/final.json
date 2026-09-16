@@ -1,12 +1,12 @@
 {
-  "captured_at": "2026-09-11T00:42:05.519844Z",
+  "captured_at": "2026-09-16T03:03:09.153307Z",
   "league_id": 4512504,
   "league_name": "Ciao Squadra 2026",
   "members": [
     {
       "guid": "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702",
       "is_admin": true,
-      "points": 3437.0,
+      "points": 3610.0,
       "rank": 1,
       "team_id": 1137720303,
       "team_name": "Chucky Layclercks",
@@ -17,7 +17,7 @@
     {
       "guid": "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229",
       "is_admin": false,
-      "points": 3191.0,
+      "points": 3389.0,
       "rank": 2,
       "team_id": 2066480210,
       "team_name": "dbdbdb",
@@ -28,7 +28,7 @@
     {
       "guid": "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141",
       "is_admin": false,
-      "points": 3084.0,
+      "points": 3280.0,
       "rank": 3,
       "team_id": 1820510202,
       "team_name": "Lewis' eighth",
@@ -39,7 +39,7 @@
     {
       "guid": "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702",
       "is_admin": true,
-      "points": 3079.0,
+      "points": 3261.0,
       "rank": 4,
       "team_id": 1137720303,
       "team_name": "cadillac thrillz",
@@ -50,84 +50,95 @@
     {
       "guid": "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931",
       "is_admin": false,
-      "points": 3010.0,
+      "points": 3077.0,
       "rank": 5,
       "team_id": 2289880402,
       "team_name": "sydkav2",
       "team_no": 2,
-      "trend": 2,
+      "trend": 1,
       "user_name": ""
     },
     {
       "guid": "5a9bc96e-1961-11f1-9075-aba426ce3dce-0-179187119",
       "is_admin": false,
-      "points": 2761.0,
+      "points": 2900.0,
       "rank": 6,
       "team_id": 2786640410,
       "team_name": "Active Aero Club",
       "team_no": 1,
-      "trend": 3,
+      "trend": 1,
       "user_name": "Sylvester Sawala"
     },
     {
       "guid": "8838624c-174f-11f1-afa1-6b1dd2bc1616-0-166547141",
       "is_admin": false,
-      "points": 2660.0,
+      "points": 2820.0,
       "rank": 7,
       "team_id": 1820510202,
       "team_name": "Rest In Peace MGU-H",
       "team_no": 1,
-      "trend": 2,
+      "trend": 1,
       "user_name": "Paul Brown"
     },
     {
       "guid": "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062",
       "is_admin": false,
-      "points": 2587.0,
+      "points": 2742.0,
       "rank": 8,
       "team_id": 1438960303,
       "team_name": "Bad Viiibbrrations",
       "team_no": 2,
-      "trend": 3,
+      "trend": 1,
       "user_name": "Marie Lunny"
     },
     {
       "guid": "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849",
       "is_admin": false,
-      "points": 2502.0,
+      "points": 2547.0,
       "rank": 9,
       "team_id": 1454130210,
       "team_name": "Th' Rude Boys",
       "team_no": 2,
-      "trend": 3,
+      "trend": 1,
       "user_name": "Jacob Vander Zanden"
     },
     {
       "guid": "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194",
       "is_admin": false,
-      "points": 2471.0,
+      "points": 2514.0,
       "rank": 10,
       "team_id": 941300305,
       "team_name": "The Hamilton Line",
       "team_no": 2,
-      "trend": 2,
+      "trend": 1,
       "user_name": "Paul Gosse"
     },
     {
       "guid": "940cc5c0-15bc-11f1-a4fd-354d280fc6c3-0-50866062",
       "is_admin": false,
-      "points": 2384.0,
+      "points": 2482.0,
       "rank": 11,
       "team_id": 1438960303,
       "team_name": "Good Viiibbrrations",
       "team_no": 1,
-      "trend": 3,
+      "trend": 1,
       "user_name": "Marie Lunny"
+    },
+    {
+      "guid": "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229",
+      "is_admin": false,
+      "points": 2442.0,
+      "rank": 12,
+      "team_id": 2066480210,
+      "team_name": "dbdbdb2",
+      "team_no": 2,
+      "trend": 2,
+      "user_name": "Derek Blais"
     },
     {
       "guid": "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714",
       "is_admin": false,
-      "points": 2326.0,
+      "points": 2442.0,
       "rank": 12,
       "team_id": 1141710305,
       "team_name": "Inny or Audi?",
@@ -136,43 +147,54 @@
       "user_name": "Daniel Frank"
     },
     {
-      "guid": "c9697cfc-1807-11f1-8f34-51ef40b99e66-0-198616229",
+      "guid": "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849",
       "is_admin": false,
-      "points": 2297.0,
-      "rank": 13,
-      "team_id": 2066480210,
-      "team_name": "dbdbdb2",
-      "team_no": 2,
-      "trend": 1,
-      "user_name": "Derek Blais"
+      "points": 2434.0,
+      "rank": 14,
+      "team_id": 1454130210,
+      "team_name": "Th' Hard Mods",
+      "team_no": 1,
+      "trend": 2,
+      "user_name": "Jacob Vander Zanden"
     },
     {
       "guid": "3df60b10-166b-11f1-a76d-a7a37128dead-0-35655021",
       "is_admin": false,
-      "points": 2277.0,
-      "rank": 14,
+      "points": 2418.0,
+      "rank": 15,
       "team_id": 1584990202,
       "team_name": "BBQ2 Racing",
       "team_no": 2,
+      "trend": 3,
+      "user_name": "Matthew Bielawski"
+    },
+    {
+      "guid": "3df60b10-166b-11f1-a76d-a7a37128dead-0-35655021",
+      "is_admin": false,
+      "points": 2265.0,
+      "rank": 16,
+      "team_id": 1584990202,
+      "team_name": "BBQ1 Racing",
+      "team_no": 1,
       "trend": 2,
       "user_name": "Matthew Bielawski"
     },
     {
-      "guid": "28562cce-15d8-11f1-b3f8-2b08b171feaf-0-218074849",
+      "guid": "e02076de-1178-11f1-9ab9-47680fdfd1ea-0-223277995",
       "is_admin": false,
-      "points": 2260.0,
-      "rank": 15,
-      "team_id": 1454130210,
-      "team_name": "Th' Hard Mods",
+      "points": 2220.0,
+      "rank": 17,
+      "team_id": 261170406,
+      "team_name": "DannyRickGasly",
       "team_no": 1,
-      "trend": 3,
-      "user_name": "Jacob Vander Zanden"
+      "trend": 2,
+      "user_name": "Caitlyn Landry"
     },
     {
       "guid": "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951",
       "is_admin": false,
-      "points": 2148.0,
-      "rank": 16,
+      "points": 2199.0,
+      "rank": 18,
       "team_id": 1638530402,
       "team_name": "The Blur I",
       "team_no": 1,
@@ -180,31 +202,9 @@
       "user_name": "Rob Sardellitti"
     },
     {
-      "guid": "3df60b10-166b-11f1-a76d-a7a37128dead-0-35655021",
-      "is_admin": false,
-      "points": 2135.0,
-      "rank": 17,
-      "team_id": 1584990202,
-      "team_name": "BBQ1 Racing",
-      "team_no": 1,
-      "trend": 1,
-      "user_name": "Matthew Bielawski"
-    },
-    {
-      "guid": "e02076de-1178-11f1-9ab9-47680fdfd1ea-0-223277995",
-      "is_admin": false,
-      "points": 2095.0,
-      "rank": 18,
-      "team_id": 261170406,
-      "team_name": "DannyRickGasly",
-      "team_no": 1,
-      "trend": 1,
-      "user_name": "Caitlyn Landry"
-    },
-    {
       "guid": "f38f84da-1420-11f1-b1e2-2dda4e54308a-0-183159714",
       "is_admin": false,
-      "points": 1893.0,
+      "points": 2006.0,
       "rank": 19,
       "team_id": 1141710305,
       "team_name": "Something Alonso Lines",
@@ -213,21 +213,10 @@
       "user_name": "Daniel Frank"
     },
     {
-      "guid": "70558ff4-17d3-11f1-bab6-e12db015fb66-0-200893771",
-      "is_admin": false,
-      "points": 1676.0,
-      "rank": 20,
-      "team_id": 1936620402,
-      "team_name": "Max is king 2026",
-      "team_no": 3,
-      "trend": 1,
-      "user_name": "James Carroll"
-    },
-    {
       "guid": "e5eb183a-18a3-11f1-b6c4-ef306c0629ac-0-201690931",
       "is_admin": false,
-      "points": 1671.0,
-      "rank": 21,
+      "points": 1791.0,
+      "rank": 20,
       "team_id": 2289880402,
       "team_name": "sydkav1",
       "team_no": 1,
@@ -235,9 +224,20 @@
       "user_name": ""
     },
     {
+      "guid": "70558ff4-17d3-11f1-bab6-e12db015fb66-0-200893771",
+      "is_admin": false,
+      "points": 1748.0,
+      "rank": 21,
+      "team_id": 1936620402,
+      "team_name": "Max is king 2026",
+      "team_no": 3,
+      "trend": 3,
+      "user_name": "James Carroll"
+    },
+    {
       "guid": "b84b8fd0-1336-11f1-a17c-ed2c312a2e58-0-218054194",
       "is_admin": false,
-      "points": 1596.0,
+      "points": 1633.0,
       "rank": 22,
       "team_id": 941300305,
       "team_name": "Piastri & Chill",
@@ -248,40 +248,40 @@
     {
       "guid": "e02076de-1178-11f1-9ab9-47680fdfd1ea-0-223277995",
       "is_admin": false,
-      "points": 1531.0,
+      "points": 1618.0,
       "rank": 23,
       "team_id": 261170406,
       "team_name": "DNFButMakeItCute",
       "team_no": 2,
-      "trend": 3,
+      "trend": 1,
       "user_name": "Caitlyn Landry"
     },
     {
       "guid": "6dc408c0-1962-11f1-a2dc-7d9f10b2c2af-0-189108915",
       "is_admin": false,
-      "points": 1510.0,
+      "points": 1595.0,
       "rank": 24,
       "team_id": 2790100406,
       "team_name": "Lethal Weapons",
       "team_no": 1,
-      "trend": 3,
+      "trend": 1,
       "user_name": "Johnathan Bald"
     },
     {
       "guid": "c96abc94-1694-11f1-8221-83f63fe9b80e-0-35534951",
       "is_admin": false,
-      "points": 1457.0,
+      "points": 1519.0,
       "rank": 25,
       "team_id": 1638530402,
       "team_name": "The Blur II: The Sequel",
       "team_no": 2,
-      "trend": 3,
+      "trend": 1,
       "user_name": "Rob Sardellitti"
     },
     {
       "guid": "70558ff4-17d3-11f1-bab6-e12db015fb66-0-200893771",
       "is_admin": false,
-      "points": 1136.0,
+      "points": 1174.0,
       "rank": 26,
       "team_id": 1936620402,
       "team_name": "Bow to max 2026",
@@ -830,7 +830,7 @@
           "slot": 6
         }
       ],
-      "points": 2260.0,
+      "points": 2434.0,
       "race_id": 13,
       "team_name": "Th' Hard Mods",
       "team_no": 1,
@@ -917,7 +917,7 @@
           "slot": 6
         }
       ],
-      "points": 2260.0,
+      "points": 2434.0,
       "race_id": 13,
       "team_name": "Th' Hard Mods",
       "team_no": 1,
@@ -1004,7 +1004,7 @@
           "slot": 6
         }
       ],
-      "points": 2135.0,
+      "points": 2265.0,
       "race_id": 13,
       "team_name": "BBQ1 Racing",
       "team_no": 1,
@@ -1027,8 +1027,8 @@
         },
         {
           "chip": "autopilot",
-          "race_id": null,
-          "used": false
+          "race_id": 14,
+          "used": true
         },
         {
           "chip": "extra_drs",
@@ -1091,7 +1091,7 @@
           "slot": 7
         }
       ],
-      "points": 3437.0,
+      "points": 3610.0,
       "race_id": 13,
       "team_name": "Chucky Layclercks",
       "team_no": 1,
@@ -1100,7 +1100,7 @@
       "value": 126.8
     },
     "46d0040c-141d-11f1-b1e2-2dda4e54308a-0-115473702:2": {
-      "bank": 0.7,
+      "bank": 0.8,
       "chips": [
         {
           "chip": "wildcard",
@@ -1114,12 +1114,12 @@
         },
         {
           "chip": "autopilot",
-          "race_id": null,
-          "used": false
+          "race_id": 12,
+          "used": true
         },
         {
           "chip": "extra_drs",
-          "race_id": 12,
+          "race_id": 9,
           "used": true
         },
         {
@@ -1139,52 +1139,52 @@
           "is_captain": false,
           "is_mega_captain": false,
           "player_id": "11",
-          "slot": 2
-        },
-        {
-          "is_captain": false,
-          "is_mega_captain": false,
-          "player_id": "11051",
-          "slot": 5
-        },
-        {
-          "is_captain": false,
-          "is_mega_captain": false,
-          "player_id": "111",
-          "slot": 1
-        },
-        {
-          "is_captain": true,
-          "is_mega_captain": false,
-          "player_id": "11161",
           "slot": 4
         },
         {
           "is_captain": false,
           "is_mega_captain": false,
-          "player_id": "115",
+          "player_id": "111",
           "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "129",
+          "slot": 5
         },
         {
           "is_captain": false,
           "is_mega_captain": false,
           "player_id": "25",
-          "slot": 6
+          "slot": 7
         },
         {
           "is_captain": false,
           "is_mega_captain": false,
           "player_id": "28",
-          "slot": 7
+          "slot": 6
         }
       ],
-      "points": 3437.0,
+      "points": 3261.0,
       "race_id": 13,
-      "team_name": "Chucky Layclercks",
-      "team_no": 1,
-      "transfers_left": 0,
-      "transfers_made": 2,
-      "value": 126.8
+      "team_name": "cadillac thrillz",
+      "team_no": 2,
+      "transfers_left": -1,
+      "transfers_made": 3,
+      "value": 121.8
     },
     "5a9bc96e-1961-11f1-9075-aba426ce3dce-0-179187119:1": {
       "bank": 0.1,
@@ -1265,7 +1265,7 @@
           "slot": 6
         }
       ],
-      "points": 2761.0,
+      "points": 2900.0,
       "race_id": 13,
       "team_name": "Active Aero Club",
       "team_no": 1,
@@ -1352,7 +1352,7 @@
           "slot": 7
         }
       ],
-      "points": 2660.0,
+      "points": 2820.0,
       "race_id": 13,
       "team_name": "Rest In Peace MGU-H",
       "team_no": 1,
@@ -1439,7 +1439,7 @@
           "slot": 7
         }
       ],
-      "points": 2660.0,
+      "points": 2820.0,
       "race_id": 13,
       "team_name": "Rest In Peace MGU-H",
       "team_no": 1,
@@ -1526,7 +1526,7 @@
           "slot": 7
         }
       ],
-      "points": 2384.0,
+      "points": 2482.0,
       "race_id": 13,
       "team_name": "Good Viiibbrrations",
       "team_no": 1,
@@ -1613,7 +1613,7 @@
           "slot": 7
         }
       ],
-      "points": 2384.0,
+      "points": 2482.0,
       "race_id": 13,
       "team_name": "Good Viiibbrrations",
       "team_no": 1,
@@ -1700,7 +1700,7 @@
           "slot": 6
         }
       ],
-      "points": 1596.0,
+      "points": 1633.0,
       "race_id": 13,
       "team_name": "Piastri & Chill",
       "team_no": 1,
@@ -1787,7 +1787,7 @@
           "slot": 7
         }
       ],
-      "points": 3191.0,
+      "points": 3389.0,
       "race_id": 13,
       "team_name": "dbdbdb",
       "team_no": 1,
@@ -1874,7 +1874,7 @@
           "slot": 7
         }
       ],
-      "points": 3191.0,
+      "points": 3389.0,
       "race_id": 13,
       "team_name": "dbdbdb",
       "team_no": 1,
@@ -1961,7 +1961,7 @@
           "slot": 6
         }
       ],
-      "points": 1671.0,
+      "points": 1791.0,
       "race_id": 13,
       "team_name": "sydkav1",
       "team_no": 1,
@@ -2048,7 +2048,7 @@
           "slot": 6
         }
       ],
-      "points": 2326.0,
+      "points": 2442.0,
       "race_id": 13,
       "team_name": "Inny or Audi?",
       "team_no": 1,
