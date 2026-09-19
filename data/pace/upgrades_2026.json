@@ -2,6 +2,38 @@
   "season": 2026,
   "mentions": [
     {
+      "source": "https://www.formula1.com/en/latest/all.xml",
+      "title": "Why Williams' FW48 upgrade package in Baku is so crucial",
+      "summary": "Williams will introduce a long-awaited upgrade package at the Azerbaijan Grand Prix.",
+      "link": "https://www.formula1.com/en/latest/article/why-the-fw48-upgrade-package-in-baku-is-so-crucial-for-williams.2vxRlXS2yDBqT7O5VMCn3s",
+      "published_at": null,
+      "matched_keywords": [
+        "upgrade",
+        "upgrade package"
+      ],
+      "constructors": [
+        "Williams"
+      ],
+      "attributed_round": null
+    },
+    {
+      "source": "https://www.autosport.com/rss/f1/news/",
+      "title": "Mercedes aims to end pole drought with upcoming Malaysia F1 upgrades",
+      "summary": "Mercedes has confirmed its next big Formula 1 car upgrade will arrive at the forthcoming grand prix in Malaysia, where it hopes to get back into contention for pole.<br />The Silver Arrows is the runaway leader of the 2026 championship with a 145-point advantage over second-placed Ferrari, despite its last major upgrade package being Montreal in May.<br />Mercedes has instead preferred to fit minor ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/mercedes-aims-to-end-pole-drought-with-upcoming-malaysia-f1-upgrades/10857058/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
+      "link": "https://www.autosport.com/f1/news/mercedes-aims-to-end-pole-drought-with-upcoming-malaysia-f1-upgrades/10857058/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
+      "published_at": "2026-09-19T08:05:18Z",
+      "matched_keywords": [
+        "upgrade",
+        "upgrade package",
+        "major upgrade"
+      ],
+      "constructors": [
+        "Ferrari",
+        "Mercedes"
+      ],
+      "attributed_round": 14
+    },
+    {
       "source": "https://www.autosport.com/rss/f1/news/",
       "title": "What's behind Alonso's cryptic comments about his F1 future?",
       "summary": "Every Thursday, the media day in the paddock begins with a roundtable session with Mike Krack and Honda's chief engineer Shintaro Orihara. Besides the usual questions about power unit driveability and potential upgrades, one topic returns every race weekend: when can we expect an announcement about Fernando Alonso\u2019s future?<br />Krack already said in Monza that the team is in no rush, and Alonso ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/whats-behind-fernando-alonsos-cryptic-comments-about-his-f1-future/10854444/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
@@ -23,6 +55,23 @@
         "upgrade"
       ],
       "constructors": [
+        "Mercedes"
+      ],
+      "attributed_round": 14
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Mercedes aims to end pole drought with upcoming Malaysia F1 upgrades",
+      "summary": "Mercedes has confirmed its next big Formula 1 car upgrade will arrive at the forthcoming grand prix in Malaysia, where it hopes to get back into contention for pole.<br />The Silver Arrows is the runaway leader of the 2026 championship with a 145-point advantage over second-placed Ferrari, despite its last major upgrade package being Montreal in May.<br />Mercedes has instead preferred to fit minor ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/mercedes-aims-to-end-pole-draught-with-upcoming-malaysia-f1-upgrades/10856860/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/mercedes-aims-to-end-pole-draught-with-upcoming-malaysia-f1-upgrades/10856860/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-19T08:05:14Z",
+      "matched_keywords": [
+        "upgrade",
+        "upgrade package",
+        "major upgrade"
+      ],
+      "constructors": [
+        "Ferrari",
         "Mercedes"
       ],
       "attributed_round": 14
