@@ -1,10 +1,9 @@
 F1 Fantasy daily digest -- 2026 round 15
-Generated 2026-09-19 11:57 UTC
+Generated 2026-09-20 12:22 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 15 (FP1 R15 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
-  - Mekies offers update on Hadjar's injury recovery -- https://www.formula1.com/en/latest/all.xml
   - Honda replaces F1 power unit boss in organisation shuffle [Aston Martin] (14 Sep) -- https://www.autosport.com/rss/f1/news/
 
 UPGRADE PACKAGES:
@@ -17,6 +16,7 @@ UPGRADE PACKAGES:
   - Kimi Antonelli could get "more and more panicked" in F1 title fight, says Nico Rosberg [McLaren, Ferrari, Mercedes] (18 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
+  - Remembering one of F1’s most intriguing ‘what if?’ moments [McLaren] -- https://www.formula1.com/en/latest/all.xml
   - How Justin Rose and McLaren are pursuing marginal gains in golf [McLaren] -- https://www.formula1.com/en/latest/all.xml
   - Inside F1’s ‘brutal’ fuel development race -- https://www.formula1.com/en/latest/all.xml
   - How 46 fashion designers reimagined McLaren’s F1 history [McLaren] -- https://www.formula1.com/en/latest/all.xml
@@ -24,4 +24,3 @@ PENALTIES / RELIABILITY:
   - Former Mercedes F1 tech chief Elliott joins Alpine as CTO [Mercedes, Alpine] (17 Sep) -- https://www.autosport.com/rss/f1/news/
   - Honda replaces F1 power unit boss in organisation shuffle [Aston Martin] (14 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Spanish GP: Antonelli tops FP3 after Hamilton and Bearman cause red flags [Ferrari, Mercedes] (12 Sep) -- https://www.autosport.com/rss/f1/news/
-  - F1 Spanish GP: Antonelli leads tricky second practice as Lindblad crashes [Ferrari] (11 Sep) -- https://www.autosport.com/rss/f1/news/
