@@ -90,6 +90,20 @@
         "Mercedes"
       ],
       "attributed_round": 14
+    },
+    {
+      "source": "https://www.racefans.net/feed/",
+      "title": "Saturday race, Williams\u2019 upgrade, title fight fades and more Azerbaijan GP talking points | Formula 1",
+      "summary": "Formula 1 embarks upon nine rounds in just eleven weeks to conclude its season. Here are the six talking points for the Azerbaijan Grand Prix.",
+      "link": "https://www.racefans.net/2026/09/22/saturday-race-title-fight-fades-williams-big-upgrade-and-more-azerbaijan-gp-talking-points/",
+      "published_at": "2026-09-22T06:15:14Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "Williams"
+      ],
+      "attributed_round": 15
     }
   ],
   "effects": []
