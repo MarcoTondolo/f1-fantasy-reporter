@@ -1,25 +1,24 @@
 F1 Fantasy daily digest -- 2026 round 15
-Generated 2026-09-22 12:37 UTC
+Generated 2026-09-23 12:45 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 15 (FP1 R15 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
-  - Hadjar to make racing return with Red Bull at Azerbaijan GP [Red Bull] -- https://www.formula1.com/en/latest/all.xml
+  - Hadjar elated to ‘come back to the fight’ amid new contract -- https://www.formula1.com/en/latest/all.xml
   - Hadjar set to make Red Bull return at Azerbaijan GP after injury recovery [Red Bull, Racing Bulls] (22 Sep) -- https://www.autosport.com/rss/f1/news/
   - Honda replaces F1 power unit boss in organisation shuffle [Aston Martin] (14 Sep) -- https://www.autosport.com/rss/f1/news/
+  - F1 fans back Isack Hadjar after Red Bull contract extension [Red Bull] (23 Sep) -- https://www.motorsport.com/rss/f1/news/
   - Isack Hadjar to make Red Bull return at F1 Azerbaijan GP [Red Bull, Racing Bulls] (22 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Hadjar says injured wrist is “still it’s going to be painful for a while” after comeback | Formula 1 (23 Sep) -- https://www.racefans.net/feed/
   - Social Media: Red Bull confirms Hadjar’s return from injury in Azerbaijan GP | Brief [Red Bull] (22 Sep) -- https://www.racefans.net/feed/
 
 UPGRADE PACKAGES:
   - Mercedes aims to end pole drought with upcoming Malaysia F1 upgrades [Ferrari, Mercedes] (19 Sep) -- https://www.autosport.com/rss/f1/news/
   - What's behind Alonso's cryptic comments about his F1 future? (11 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Russell set to take F1 engine penalty after Mercedes introduces power unit upgrade [Mercedes] (11 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Mercedes aims to end pole drought with upcoming Malaysia F1 upgrades [Ferrari, Mercedes] (19 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Williams upgrades "won't be enough" to fix 2026 F1 struggles, says James Vowles [Williams] (18 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Kimi Antonelli could get "more and more panicked" in F1 title fight, says Nico Rosberg [McLaren, Ferrari, Mercedes] (18 Sep) -- https://www.motorsport.com/rss/f1/news/
   - Saturday race, Williams’ upgrade, title fight fades and more Azerbaijan GP talking points | Formula 1 [Williams] (22 Sep) -- https://www.racefans.net/feed/
 
 PENALTIES / RELIABILITY:
+  - The initial plan for F1's next engine regulation in 2030 (23 Sep) -- https://www.autosport.com/rss/f1/news/
   - Hadjar set to make Red Bull return at Azerbaijan GP after injury recovery [Red Bull, Racing Bulls] (22 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 approves shorter races for 2027 to fit revised power unit plan (21 Sep) -- https://www.autosport.com/rss/f1/news/
   - Why Leclerc didn’t copy Hamilton’s driving style amid F1 2026 struggle [Ferrari] (21 Sep) -- https://www.autosport.com/rss/f1/news/
@@ -27,4 +26,3 @@ PENALTIES / RELIABILITY:
   - Former Mercedes F1 tech chief Elliott joins Alpine as CTO [Mercedes, Alpine] (17 Sep) -- https://www.autosport.com/rss/f1/news/
   - Honda replaces F1 power unit boss in organisation shuffle [Aston Martin] (14 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Spanish GP: Antonelli tops FP3 after Hamilton and Bearman cause red flags [Ferrari, Mercedes] (12 Sep) -- https://www.autosport.com/rss/f1/news/
-  - F1 Spanish GP: Antonelli leads tricky second practice as Lindblad crashes [Ferrari] (11 Sep) -- https://www.autosport.com/rss/f1/news/
