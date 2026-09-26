@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Azerbaijan Grand Prix
+
+Optimal team scored 218 pts (captain: HAD)
+Closest to perfect: Derek Blais (204 pts, -14)
+Furthest from perfect: Paul Gosse (5 pts, -213)
+League average gap to optimal: 98.1 pts
