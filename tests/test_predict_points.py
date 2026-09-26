@@ -14,6 +14,7 @@ import pytest
 
 from f1_fantasy.predict import points as points_module
 from f1_fantasy.predict.points import (
+    build_grid_conditioned_distributions,
     build_round_distributions,
     calibrate_noise_scale,
     plackett_luce_order,
@@ -141,6 +142,71 @@ def test_build_round_distributions_reduces_many_draws_to_one_summary_per_driver(
     assert result["A"].mean > result["C"].mean
     for distribution in result.values():
         assert 0.0 <= distribution.p_dnf <= 1.0
+        assert distribution.p10 <= distribution.mean <= distribution.p90
+
+
+def test_sample_field_with_fixed_grid_uses_it_instead_of_simulating_one():
+    from f1_fantasy.predict.scoring import qualifying_points
+
+    strengths = {"A": 0.0, "B": 1.0, "C": 2.0}  # A is fastest by form
+    constructor_of = {"A": "Team A", "B": "Team B", "C": "Team B"}
+    fixed_grid = {"A": 3, "B": 1, "C": 2}  # but A actually qualified last
+    rng = np.random.default_rng(0)
+
+    for _ in range(20):
+        draw = sample_field(strengths, constructor_of, {}, fixed_grid=fixed_grid, rng=rng)
+        # The grid a real qualifying result set must be respected verbatim,
+        # regardless of what the simulated quali order would have been.
+        for driver, grid_position in fixed_grid.items():
+            assert draw[driver].qualifying == qualifying_points(grid_position)
+
+
+def test_sample_field_with_fixed_grid_missing_a_driver_raises():
+    strengths = {"A": 0.0, "B": 1.0}
+    rng = np.random.default_rng(0)
+
+    with pytest.raises(ValueError, match="missing drivers"):
+        sample_field(strengths, {}, {}, fixed_grid={"A": 1}, rng=rng)
+
+
+def test_build_grid_conditioned_distributions_conditions_on_the_real_grid(monkeypatch):
+    from f1_fantasy.results import QualifyingResult
+
+    # Form says A is fastest, C is slowest -- but the real grid (what
+    # actually happened) starts C on pole and A at the back.
+    monkeypatch.setattr(points_module, "rolling_form", lambda season, rounds: {"A": 0.0, "B": 1.0, "C": 2.0})
+    real_grid = [
+        QualifyingResult(driver_code="C", driver_name="C", constructor="Team B", position=1),
+        QualifyingResult(driver_code="B", driver_name="B", constructor="Team B", position=2),
+        QualifyingResult(driver_code="A", driver_name="A", constructor="Team A", position=3),
+    ]
+    monkeypatch.setattr(points_module, "fetch_qualifying", lambda season, rnd: real_grid)
+    monkeypatch.setattr(points_module, "constructor_history", lambda season, rounds: {})
+
+    result = build_grid_conditioned_distributions(2026, [1], 2, n_samples=200, seed=0)
+
+    assert set(result) == {"A", "B", "C"}
+    # A is the fastest car starting dead last: it should show far more
+    # simulated positions-gained than C, the slowest car starting on pole --
+    # build_round_distributions, which simulates its own qualifying, would
+    # mostly never put A at the back to begin with.
+    assert result["A"].components["positions_gained"] > result["C"].components["positions_gained"]
+
+
+def test_build_grid_conditioned_distributions_raises_without_a_real_qualifying_result(monkeypatch):
+    from f1_fantasy.results import QualifyingResult
+
+    monkeypatch.setattr(points_module, "rolling_form", lambda season, rounds: {"A": 0.0, "B": 1.0})
+    train_round_result = [QualifyingResult(driver_code="A", driver_name="A", constructor="Team A", position=1)]
+
+    def fetch_qualifying(season, rnd):
+        return [] if rnd == 2 else train_round_result
+
+    monkeypatch.setattr(points_module, "fetch_qualifying", fetch_qualifying)
+    monkeypatch.setattr(points_module, "constructor_history", lambda season, rounds: {})
+
+    with pytest.raises(ValueError, match="no qualifying result"):
+        build_grid_conditioned_distributions(2026, [1], 2)
 
 
 def test_constructor_points_add_five_per_driver_reaching_q3():

@@ -246,10 +246,10 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     print(f"  season:         {config.season}")
     print(f"  leagues:        {config.leagues or 'all private leagues'}")
     print(f"  primary league: {config.primary_league or 'first found'}")
-    print(f"  email to:       {config.email_to or 'NOT SET'}")
+    print(f"  email to:       {credentials.email_to or 'NOT SET'}")
 
     print("\n== Delivery ==")
-    if credentials.can_send_email and config.email_to:
+    if credentials.can_send_email and credentials.email_to:
         print(f"  ok -- SMTP via {credentials.smtp_host} as {credentials.smtp_user}")
     else:
         print("  email not configured; reports will be written to disk only")
@@ -795,7 +795,8 @@ def cmd_daily_digest(args: argparse.Namespace) -> int:
     if args.dry_run:
         publisher = NullPublisher()
     else:
-        publisher = EmailPublisher(Credentials.from_env(), config.email_to)
+        credentials = Credentials.from_env()
+        publisher = EmailPublisher(credentials, credentials.email_to)
         if not publisher.configured:
             print("email not configured; digest written to disk only", file=sys.stderr)
             publisher = NullPublisher()
@@ -804,6 +805,29 @@ def cmd_daily_digest(args: argparse.Namespace) -> int:
 
     print(text)
     print(f"written {out_path}")
+    return 0
+
+
+def cmd_build_site(args: argparse.Namespace) -> int:
+    """Rebuild the static site under docs/ from this repo's own committed
+    out/, snapshots/, and data/pace/ -- an assembly step, not new analysis.
+    Safe to re-run any time; every file it writes is regenerated from
+    scratch on each run.
+    """
+    from f1_fantasy.site import build_site
+
+    config = Config.load(args.config)
+    league_name = args.league_name
+    if not league_name and config.primary_league:
+        # Best effort: read it off the newest snapshot for the primary league
+        # rather than requiring it as a required flag every time.
+        candidates = sorted(Path(config.snapshot_dir, str(config.season), str(config.primary_league)).glob("*/*.json"))
+        if candidates:
+            league_name = json.loads(candidates[-1].read_text(encoding="utf-8")).get("league_name")
+    league_name = league_name or "F1 Fantasy"
+
+    pages = build_site(config.season, league_name, out_dir=config.output_dir, snapshot_dir=config.snapshot_dir)
+    print(f"built {len(pages)} round page(s) under docs/ for {config.season} ({league_name})")
     return 0
 
 
@@ -1138,12 +1162,13 @@ def cmd_picks(args: argparse.Namespace) -> int:
         from f1_fantasy.publish.base import Report
         from f1_fantasy.publish.email import EmailPublisher
 
-        publisher = EmailPublisher(Credentials.from_env(), config.email_to)
+        picks_credentials = Credentials.from_env()
+        publisher = EmailPublisher(picks_credentials, picks_credentials.email_to)
         if not publisher.configured:
             print("email not configured (SMTP secrets/email_to); picks card written to disk only", file=sys.stderr)
         else:
             publisher.publish(Report(kind="picks", title=context["title"], caption=caption_text, images=[path]))
-            print(f"emailed to {config.email_to}")
+            print(f"emailed to {picks_credentials.email_to}")
 
     return 0
 
@@ -1177,7 +1202,7 @@ def cmd_race_backtest(args: argparse.Namespace) -> int:
 #: Default round count per season -- 2024 and 2025 both ran the full 24-race
 #: calendar; 2026 is backfilled only through the 12 rounds this project has
 #: covered elsewhere.
-DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 12}
+DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 14}
 
 
 def cmd_points_backtest(args: argparse.Namespace) -> int:
@@ -1401,7 +1426,7 @@ def cmd_tick(args: argparse.Namespace) -> int:
 
     api = build_api(credentials)
     store = SnapshotStore(config.snapshot_dir)
-    publisher = build_publisher(config, credentials, dry_run=args.dry_run)
+    publisher = build_publisher(credentials, dry_run=args.dry_run)
     # event.round (above, from the calendar) and race_id (below, from the
     # live API) are two independent numbers that happen to agree during a
     # normal weekend but not always afterward: api.current_race_id() tracks
@@ -1535,6 +1560,13 @@ def build_parser() -> argparse.ArgumentParser:
     daily_digest.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")
     daily_digest.add_argument("--dry-run", action="store_true", help="write to disk only, never send email")
     daily_digest.set_defaults(func=cmd_daily_digest)
+
+    build_site = sub.add_parser(
+        "build-site",
+        help="rebuild the static site under docs/ (one page per race weekend) from this repo's own committed output",
+    )
+    build_site.add_argument("--league-name", help="site title (default: read off the newest primary-league snapshot)")
+    build_site.set_defaults(func=cmd_build_site)
 
     record_benchmark = sub.add_parser(
         "record-benchmark",

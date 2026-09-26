@@ -68,11 +68,11 @@ COMPANION_BUILDERS: dict[Action, list[tuple[str, object, object, str]]] = {
 }
 
 
-def build_publisher(config: Config, credentials: Credentials, *, dry_run: bool) -> Publisher:
+def build_publisher(credentials: Credentials, *, dry_run: bool) -> Publisher:
     if dry_run:
         log.info("dry run: rendering only, nothing will be sent")
         return NullPublisher()
-    publisher = EmailPublisher(credentials, config.email_to)
+    publisher = EmailPublisher(credentials, credentials.email_to)
     if not publisher.configured:
         log.warning("email not configured; reports will only be written to disk")
         return NullPublisher()

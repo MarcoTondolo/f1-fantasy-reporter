@@ -1,0 +1,133 @@
+<title>Baku pre-race deep dive</title>
+<meta name="description" content="Track character, tyre strategy, Safety Car risk, and the Antonelli Final Fix call for round 15.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --page: #0d0d0d; --surface: #1a1a19; --surface-raised: #232322;
+  --ink: #ffffff; --ink-secondary: #c3c2b7; --ink-muted: #898781;
+  --grid: #2c2c2a; --baseline: #383835; --hairline: rgba(255,255,255,0.10);
+  --pos: #0ca30c; --neg: #d03b3b; --accent: #e10600;
+  --status-upcoming: #fab219; --status-completed: #0ca30c;
+  --font-display: 'Barlow Condensed', 'Liberation Sans', system-ui, sans-serif;
+  --font-body: 'Inter', 'Liberation Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--page); color: var(--ink); font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased; margin: 0; padding: 20px 16px 48px;
+  display: flex; justify-content: center;
+}
+.page { width: 100%; max-width: 1080px; display: flex; flex-direction: column; gap: 22px; }
+a { color: inherit; }
+.eyebrow {
+  font-family: var(--font-display); font-weight: 700; font-size: 13px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+}
+header.site-header { border-bottom: 2px solid var(--accent); padding-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
+h1 {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5.5vw, 44px);
+  line-height: 0.98; letter-spacing: -0.01em; text-transform: uppercase; margin: 0; text-wrap: balance;
+}
+.subtitle { color: var(--ink-secondary); font-size: 14px; max-width: 700px; }
+.nav-back { font-size: 13px; color: var(--ink-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.nav-back:hover { color: var(--ink); }
+
+.round-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.round-card {
+  background: var(--surface); border-radius: 4px; padding: 18px; text-decoration: none;
+  display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--hairline);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.round-card:hover { border-color: var(--baseline); transform: translateY(-1px); }
+.round-num { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--ink-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.round-name { font-family: var(--font-display); font-weight: 700; font-size: 22px; text-transform: uppercase; line-height: 1.05; }
+.round-circuit { font-size: 12px; color: var(--ink-muted); }
+.status-pill {
+  align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px; margin-top: 4px;
+}
+.status-pill.completed { background: rgba(12,163,12,0.16); color: var(--status-completed); }
+.status-pill.upcoming { background: rgba(250,178,25,0.16); color: var(--status-upcoming); }
+
+.section-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-muted); border-bottom: 1px solid var(--hairline); padding-bottom: 8px; margin: 6px 0 -4px;
+}
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.card {
+  background: var(--surface); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
+}
+.card-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.02em; }
+.card-caption { font-size: 13px; line-height: 1.6; color: var(--ink-secondary); }
+.card img { max-width: 100%; border-radius: 3px; display: block; }
+
+.metric-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.metric {
+  background: var(--surface-raised); border-radius: 4px; padding: 12px 16px; min-width: 130px; flex: 1;
+}
+.metric-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px; }
+.metric-value { font-family: var(--font-display); font-weight: 700; font-size: 24px; font-variant-numeric: tabular-nums; }
+.metric-value.good { color: var(--status-completed); }
+.metric-value.warn { color: var(--status-upcoming); }
+
+.extras-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.extras-list a {
+  background: var(--accent); color: var(--ink); font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  text-decoration: none; padding: 9px 16px; border-radius: 999px;
+}
+.empty-note { color: var(--ink-muted); font-size: 13px; padding: 8px 0; }
+
+footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6; padding-top: 8px; border-top: 1px solid var(--hairline); }
+
+@media (max-width: 560px) { .card, .round-card { padding: 14px; } }
+</style>
+
+<div class="page">
+  <a class="nav-back" href="../../rounds/round-15.html">&larr; Round 15</a>
+  <header class="site-header">
+    <div class="eyebrow">Round 15 &middot; Pre-race deep dive</div>
+    <h1>Baku: track, tyres, incidents &amp; the Antonelli call</h1>
+    <div class="subtitle">Azerbaijan Grand Prix &mdash; written the morning after qualifying, before the race.</div>
+  </header>
+
+  <div class="section-title">Track character</div><div class="card"><div class="card-caption" style="font-size:14px">Baku&rsquo;s clipping severity (full-throttle energy demand under the 2026 regs) comes out at <b>0.073</b> &mdash;
+    mid-pack among the 12 circuits already gated this season, not the extreme high-speed outlier its reputation
+    suggests. The tight castle section dilutes what the long straights would otherwise demand. Year-on-year vs 2025
+    at the same circuit: every team lost time, but <b>Mercedes lost the least (1.07s)</b>, Aston Martin the most
+    (4.74s) &mdash; consistent with Russell taking pole.</div></div>
+
+  <div class="section-title">Tyre strategy</div><div class="card"><div class="card-caption" style="font-size:14px">All three dry compounds nominated. Practice long-run pace (push laps only, filtering the alternating
+    push/cooldown pattern most drivers ran through their stints): Soft degrades fastest, Medium next, Hard lowest
+    &mdash; see the pace ladder&rsquo;s long-run view for the exact numbers per driver. 2025&rsquo;s race here was a
+    1-stop for 17 of 20 finishers (Medium &rarr; Hard the dominant pattern); a second stop only becomes
+    &ldquo;free&rdquo; opportunistically behind a Safety Car.</div></div>
+
+  <div class="section-title">Safety Car / VSC / red flag risk</div><div class="card"><div class="card-caption" style="font-size:14px">The standout number. Every one of the last 5 Baku races (2021&ndash;2025) had a Safety Car or Virtual Safety Car
+    deployed &mdash; 2021 also had a genuine red flag (Perez/Stroll wall impact). Against this season&rsquo;s overall
+    base rate (SC in 7 of 14 races, zero VSCs, zero red flags in 2026 so far), Baku is running well above the
+    season&rsquo;s incident rate. That cuts both ways: more overtaking upside when the field bunches up, more
+    DNF/damage risk on a wall-lined street circuit.</div></div>
+
+  <div class="section-title">Antonelli qualified P16 (Q1 out) &mdash; captain on both your teams</div><div class="card"><div class="card-caption" style="font-size:14px">Grid-conditioned model (built specifically for this call &mdash; see <code>predict.points.build_grid_conditioned_distributions</code>
+    in the repo): even from P16, Antonelli still projects as the <b>#1 expected scorer in the field</b> (mean 39.1,
+    next best Russell at 24.9), because his rolling-form strength ranks #1 of 23 drivers this season and Baku&rsquo;s
+    1-stop, high-incident profile rewards a fast car starting mid-pack. Real spread as your captain (2x): roughly
+    <b>4 to 128 points</b> (10th&ndash;90th percentile) &mdash; a genuine bet, not a safe one, and the model has no
+    way to know <i>why</i> he was knocked out in Q1.
+    <br><br>
+    <b>Verdict: don&rsquo;t burn Final Fix to bench him.</b> The math doesn&rsquo;t support dropping your highest
+    projected scorer over one bad grid slot, especially at a track this good for a recovery drive. If the captain
+    2x variance specifically is the worry, check whether captaincy alone can still be swapped for free before
+    lights out &mdash; that de-risks the multiplier without spending your last chip.</div></div>
+
+  <div class="section-title">Follow-up: Norris &rarr; Verstappen?</div><div class="card"><div class="card-caption" style="font-size:14px">Doesn&rsquo;t clear the bar on any signal checked: Norris starts three grid slots ahead (P5 vs P8), projects
+    marginally higher for the race (18.2 vs 17.1), ranks fractionally ahead on rolling season form (#5 vs #6),
+    outscored Verstappen over the last 4 rounds (avg 27.8 vs 14.5, or 24.7 excluding Verstappen&rsquo;s round-12
+    DNF), and costs less ($27.0M vs $27.3M). If you want to upgrade that slot anyway, Hamilton and Leclerc both
+    outrank Norris on the model right now and cost less than either driver above.</div></div>
+
+  <footer class="site-footer">Written from live model output and public race-control/timing data during round 15 race week. See the pace ladder for the underlying session-by-session numbers.</footer>
+</div>

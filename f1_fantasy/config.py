@@ -26,6 +26,12 @@ class Credentials(Model):
     smtp_port: int = 587
     smtp_user: str = ""
     smtp_password: str = ""
+    #: Where reports are emailed. A personal address, not a "choice" like the
+    #: rest of Config -- kept out of the committed config.toml so the repo
+    #: can go public (e.g. for GitHub Pages) without leaking it. Was
+    #: previously Config.email_to; moved here alongside the SMTP secrets it
+    #: always travels with.
+    email_to: str = ""
     #: For predict/f1fantasytools_capture.py's screenshot-to-vision benchmark
     #: capture -- unset means that source is skipped, never a hard failure.
     anthropic_api_key: str = ""
@@ -43,6 +49,7 @@ class Credentials(Model):
             smtp_port=int(os.environ.get("SMTP_PORT", "").strip() or "587"),
             smtp_user=os.environ.get("SMTP_USER", "").strip(),
             smtp_password=os.environ.get("SMTP_PASS", "").strip(),
+            email_to=os.environ.get("EMAIL_TO", "").strip(),
             anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip(),
         )
 
@@ -62,8 +69,6 @@ class Config(Model):
     #: requests. Raise it for a league you've confirmed is small enough to
     #: want full coverage of.
     max_team_fetches: int = 15
-    #: Where reports are emailed.
-    email_to: str = ""
     #: Local timezone for rendering session times in reports.
     timezone: str = "Europe/London"
 

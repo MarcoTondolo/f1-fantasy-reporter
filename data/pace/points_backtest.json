@@ -1,499 +1,13 @@
 {
-  "2024": {
-    "season": 2024,
-    "rounds_evaluated": 23,
-    "per_round": [
-      {
-        "round": 2,
-        "n_drivers": 19,
-        "mae": 10.004526315789473,
-        "spearman": 0.7808520735463813,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 3,
-        "n_drivers": 19,
-        "mae": 10.020842105263158,
-        "spearman": 0.34064982400265226,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 17,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 4,
-        "n_drivers": 20,
-        "mae": 9.847999999999999,
-        "spearman": 0.7794976247792713,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 5,
-        "n_drivers": 20,
-        "mae": 9.0062,
-        "spearman": 0.783654974929722,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 6,
-        "n_drivers": 20,
-        "mae": 7.2729,
-        "spearman": 0.6134152827128745,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 7,
-        "n_drivers": 20,
-        "mae": 8.381300000000001,
-        "spearman": 0.8330221231925481,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 8,
-        "n_drivers": 20,
-        "mae": 11.435,
-        "spearman": 0.43748166444332215,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 7,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 9,
-        "n_drivers": 20,
-        "mae": 12.2897,
-        "spearman": 0.3684440977198751,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 17,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 10,
-        "n_drivers": 20,
-        "mae": 7.7323,
-        "spearman": 0.6556158427029494,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 11,
-        "n_drivers": 20,
-        "mae": 8.006399999999998,
-        "spearman": 0.4374077216942813,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 5,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 12,
-        "n_drivers": 20,
-        "mae": 9.0608,
-        "spearman": 0.42980832816732006,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 13,
-        "n_drivers": 20,
-        "mae": 8.8875,
-        "spearman": 0.7852318483867509,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 6,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 14,
-        "n_drivers": 20,
-        "mae": 9.572199999999999,
-        "spearman": 0.6754640926520571,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 6,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 15,
-        "n_drivers": 20,
-        "mae": 7.351699999999999,
-        "spearman": 0.6867720852745803,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 16,
-        "n_drivers": 19,
-        "mae": 8.36084210526316,
-        "spearman": 0.5908694112210953,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 17,
-        "n_drivers": 20,
-        "mae": 9.711,
-        "spearman": 0.485489816593666,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 5,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 18,
-        "n_drivers": 20,
-        "mae": 7.0455,
-        "spearman": 0.8094888698120745,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 19,
-        "n_drivers": 19,
-        "mae": 9.355894736842107,
-        "spearman": 0.46411637026711483,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 5,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 20,
-        "n_drivers": 20,
-        "mae": 10.5531,
-        "spearman": 0.6046006722175779,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 3,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 21,
-        "n_drivers": 20,
-        "mae": 15.347500000000002,
-        "spearman": 0.12655389673396134,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 6,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 22,
-        "n_drivers": 20,
-        "mae": 9.1477,
-        "spearman": 0.7165981233192447,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 4,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 23,
-        "n_drivers": 20,
-        "mae": 11.548800000000002,
-        "spearman": 0.61533184352807,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 7,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 24,
-        "n_drivers": 19,
-        "mae": 11.738526315789475,
-        "spearman": 0.5665354060762738,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      }
-    ],
-    "summary": {
-      "mean_mae": 9.638183981693363,
-      "mean_spearman": 0.5907348693032027,
-      "benchmark_projected_mean_mae": null,
-      "benchmark_projected_mean_spearman": null,
-      "top_pick_top3_hit_rate": 0.5217391304347826
-    }
-  },
-  "2025": {
-    "season": 2025,
-    "rounds_evaluated": 23,
-    "per_round": [
-      {
-        "round": 2,
-        "n_drivers": 19,
-        "mae": 10.452736842105262,
-        "spearman": 0.3994733760855844,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 3,
-        "n_drivers": 20,
-        "mae": 7.171400000000001,
-        "spearman": 0.6797474102993869,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 3,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 4,
-        "n_drivers": 20,
-        "mae": 9.0223,
-        "spearman": 0.6889808685808169,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 5,
-        "n_drivers": 20,
-        "mae": 7.4983,
-        "spearman": 0.7665076236006406,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 6,
-        "n_drivers": 20,
-        "mae": 14.921900000000003,
-        "spearman": 0.6270916636628547,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 7,
-        "n_drivers": 19,
-        "mae": 10.164000000000001,
-        "spearman": 0.6540827806236493,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 8,
-        "n_drivers": 20,
-        "mae": 9.450699999999998,
-        "spearman": 0.4117428292601122,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 3,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 9,
-        "n_drivers": 19,
-        "mae": 8.724947368421052,
-        "spearman": 0.4163376472560525,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 10,
-        "n_drivers": 20,
-        "mae": 10.238199999999999,
-        "spearman": 0.49642216248352705,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 4,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 11,
-        "n_drivers": 20,
-        "mae": 10.7705,
-        "spearman": 0.39518278859517175,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 12,
-        "n_drivers": 20,
-        "mae": 14.119900000000001,
-        "spearman": 0.3294335158847814,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 13,
-        "n_drivers": 20,
-        "mae": 5.7606,
-        "spearman": 0.6920188570765547,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 14,
-        "n_drivers": 20,
-        "mae": 8.2604,
-        "spearman": 0.5387510930703028,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 3,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 15,
-        "n_drivers": 20,
-        "mae": 12.062300000000002,
-        "spearman": 0.05267119624988994,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 16,
-        "n_drivers": 20,
-        "mae": 8.386,
-        "spearman": 0.6922500078556962,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 3,
-        "top_pick_in_top3": true
-      },
-      {
-        "round": 17,
-        "n_drivers": 20,
-        "mae": 11.212200000000001,
-        "spearman": 0.316898959997271,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 20,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 18,
-        "n_drivers": 20,
-        "mae": 7.512299999999999,
-        "spearman": 0.8450839819899063,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 4,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 19,
-        "n_drivers": 20,
-        "mae": 7.6437,
-        "spearman": 0.7236453989668871,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 5,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 20,
-        "n_drivers": 20,
-        "mae": 10.666900000000002,
-        "spearman": 0.6468171780083315,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 6,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 21,
-        "n_drivers": 20,
-        "mae": 10.629199999999999,
-        "spearman": 0.4294847990825834,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 5,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 22,
-        "n_drivers": 20,
-        "mae": 13.216800000000001,
-        "spearman": 0.5062155869358453,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 17,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 23,
-        "n_drivers": 20,
-        "mae": 11.1088,
-        "spearman": 0.551493181941012,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 4,
-        "top_pick_in_top3": false
-      },
-      {
-        "round": 24,
-        "n_drivers": 20,
-        "mae": 7.697599999999999,
-        "spearman": 0.4147831843652668,
-        "projected_mae": null,
-        "projected_spearman": null,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
-      }
-    ],
-    "summary": {
-      "mean_mae": 9.856160183066361,
-      "mean_spearman": 0.5337006996466142,
-      "benchmark_projected_mean_mae": null,
-      "benchmark_projected_mean_spearman": null,
-      "top_pick_top3_hit_rate": 0.6521739130434783
-    }
-  },
   "2026": {
     "season": 2026,
-    "rounds_evaluated": 11,
+    "rounds_evaluated": 13,
     "per_round": [
       {
         "round": 2,
         "n_drivers": 19,
-        "mae": 16.623999999999995,
-        "spearman": 0.57432038086171,
+        "mae": 16.235052631578945,
+        "spearman": 0.5892720599959352,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 4,
@@ -502,28 +16,28 @@
       {
         "round": 3,
         "n_drivers": 22,
-        "mae": 8.037363636363635,
-        "spearman": 0.6122941067816412,
+        "mae": 7.742636363636365,
+        "spearman": 0.6275872990879356,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
-        "top_pick_actual_rank": 4,
-        "top_pick_in_top3": false
+        "top_pick_actual_rank": 1,
+        "top_pick_in_top3": true
       },
       {
         "round": 4,
         "n_drivers": 22,
-        "mae": 16.979727272727274,
-        "spearman": 0.18778307576640565,
+        "mae": 16.144545454545455,
+        "spearman": 0.3303172176131955,
         "projected_mae": 0.0,
         "projected_spearman": 0.9999999999999999,
-        "top_pick_actual_rank": 3,
-        "top_pick_in_top3": true
+        "top_pick_actual_rank": 4,
+        "top_pick_in_top3": false
       },
       {
         "round": 5,
         "n_drivers": 22,
-        "mae": 11.738636363636363,
-        "spearman": 0.5883019915379948,
+        "mae": 11.563,
+        "spearman": 0.5521335693877242,
         "projected_mae": 0.0,
         "projected_spearman": 0.9999999999999999,
         "top_pick_actual_rank": 1,
@@ -532,8 +46,8 @@
       {
         "round": 6,
         "n_drivers": 22,
-        "mae": 13.977000000000002,
-        "spearman": 0.3050847944531933,
+        "mae": 13.933,
+        "spearman": 0.253744086647992,
         "projected_mae": 0.0,
         "projected_spearman": 0.9999999999999999,
         "top_pick_actual_rank": 1,
@@ -542,8 +56,8 @@
       {
         "round": 7,
         "n_drivers": 22,
-        "mae": 11.403818181818181,
-        "spearman": 0.6184288859157404,
+        "mae": 11.103545454545456,
+        "spearman": 0.6336917560434598,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 17,
@@ -552,8 +66,8 @@
       {
         "round": 8,
         "n_drivers": 22,
-        "mae": 8.778454545454544,
-        "spearman": 0.8034247829526271,
+        "mae": 8.028454545454547,
+        "spearman": 0.7869471883941928,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 3,
@@ -562,18 +76,18 @@
       {
         "round": 9,
         "n_drivers": 22,
-        "mae": 12.249818181818183,
-        "spearman": 0.7185304045031334,
+        "mae": 12.630454545454542,
+        "spearman": 0.7128726847826363,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
-        "top_pick_actual_rank": 2,
-        "top_pick_in_top3": true
+        "top_pick_actual_rank": 6,
+        "top_pick_in_top3": false
       },
       {
         "round": 10,
         "n_drivers": 22,
-        "mae": 9.713636363636361,
-        "spearman": 0.5661698942132284,
+        "mae": 9.486909090909093,
+        "spearman": 0.5911063059703675,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 20,
@@ -582,8 +96,8 @@
       {
         "round": 11,
         "n_drivers": 22,
-        "mae": 8.759636363636364,
-        "spearman": 0.5691666038820096,
+        "mae": 8.559272727272726,
+        "spearman": 0.6014156062888432,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 4,
@@ -592,23 +106,43 @@
       {
         "round": 12,
         "n_drivers": 22,
-        "mae": 10.964363636363636,
-        "spearman": 0.5162572305595947,
+        "mae": 10.722454545454546,
+        "spearman": 0.5015554912446445,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 3,
         "top_pick_in_top3": true
+      },
+      {
+        "round": 13,
+        "n_drivers": 23,
+        "mae": 13.02991304347826,
+        "spearman": 0.5530525077632786,
+        "projected_mae": 0.0,
+        "projected_spearman": 1.0,
+        "top_pick_actual_rank": 1,
+        "top_pick_in_top3": true
+      },
+      {
+        "round": 14,
+        "n_drivers": 23,
+        "mae": 8.857826086956521,
+        "spearman": 0.6143576401494802,
+        "projected_mae": 0.0,
+        "projected_spearman": 1.0,
+        "top_pick_actual_rank": 2,
+        "top_pick_in_top3": true
       }
     ],
     "summary": {
-      "mean_mae": 11.747859504132231,
-      "mean_spearman": 0.5508874683115708,
+      "mean_mae": 11.387466499175881,
+      "mean_spearman": 0.5652348779515143,
       "benchmark_projected_mean_mae": 0.0,
       "benchmark_projected_mean_spearman": 1.0,
-      "top_pick_top3_hit_rate": 0.5454545454545454
+      "top_pick_top3_hit_rate": 0.5384615384615384
     },
     "optimiser_backtest": {
-      "rounds_evaluated": 11,
+      "rounds_evaluated": 13,
       "per_round": [
         {
           "round": 2,
@@ -628,8 +162,8 @@
         {
           "round": 3,
           "optimised": [
-            203.0,
-            2.0999999999999934
+            178.0,
+            2.399999999999995
           ],
           "naive_baseline": [
             179.0,
@@ -658,8 +192,8 @@
         {
           "round": 5,
           "optimised": [
-            227.0,
-            0.8000000000000003
+            236.0,
+            -1.100000000000001
           ],
           "naive_baseline": [
             147.0,
@@ -673,37 +207,37 @@
         {
           "round": 6,
           "optimised": [
-            160.0,
+            163.0,
             0.5000000000000022
           ],
           "naive_baseline": [
-            13.0,
+            4.0,
             3.552713678800501e-15
           ],
           "season_points_baseline": [
-            154.0,
-            0.8000000000000034
+            163.0,
+            0.5000000000000022
           ]
         },
         {
           "round": 7,
           "optimised": [
-            137.0,
-            -1.1999999999999988
+            140.0,
+            -1.1999999999999984
           ],
           "naive_baseline": [
             87.0,
             -1.2000000000000046
           ],
           "season_points_baseline": [
-            147.0,
-            1.1999999999999993
+            103.0,
+            1.5999999999999996
           ]
         },
         {
           "round": 8,
           "optimised": [
-            180.0,
+            177.0,
             1.999999999999993
           ],
           "naive_baseline": [
@@ -711,8 +245,8 @@
             -1.7763568394002505e-15
           ],
           "season_points_baseline": [
-            165.0,
-            1.1999999999999948
+            175.0,
+            0.09999999999999476
           ]
         },
         {
@@ -726,23 +260,23 @@
             -0.7999999999999976
           ],
           "season_points_baseline": [
-            290.0,
-            2.0000000000000053
+            239.0,
+            1.2000000000000002
           ]
         },
         {
           "round": 10,
           "optimised": [
-            170.0,
-            1.5000000000000027
+            171.0,
+            3.0000000000000018
           ],
           "naive_baseline": [
             97.0,
             0.4000000000000017
           ],
           "season_points_baseline": [
-            143.0,
-            2.8000000000000016
+            119.0,
+            3.200000000000001
           ]
         },
         {
@@ -756,8 +290,8 @@
             1.5999999999999988
           ],
           "season_points_baseline": [
-            175.0,
-            2.799999999999998
+            153.0,
+            0.8999999999999986
           ]
         },
         {
@@ -771,18 +305,48 @@
             1.5999999999999952
           ],
           "season_points_baseline": [
-            174.0,
-            1.6000000000000023
+            189.0,
+            2.200000000000003
+          ]
+        },
+        {
+          "round": 13,
+          "optimised": [
+            204.0,
+            -0.20000000000000506
+          ],
+          "naive_baseline": [
+            227.0,
+            0.5999999999999983
+          ],
+          "season_points_baseline": [
+            215.0,
+            -4.884981308350689e-15
+          ]
+        },
+        {
+          "round": 14,
+          "optimised": [
+            126.0,
+            1.200000000000006
+          ],
+          "naive_baseline": [
+            131.0,
+            0.4000000000000048
+          ],
+          "season_points_baseline": [
+            110.0,
+            0.4000000000000057
           ]
         }
       ],
       "summary": {
-        "optimised_mean_points": 199.45454545454547,
-        "optimised_mean_delta_budget": 1.4363636363636358,
-        "naive_baseline_mean_points": 141.0909090909091,
-        "naive_baseline_mean_delta_budget": 0.19999999999999954,
-        "season_points_baseline_mean_points": 201.36363636363637,
-        "season_points_baseline_mean_delta_budget": 2.2181818181818183
+        "optimised_mean_points": 193.23076923076923,
+        "optimised_mean_delta_budget": 1.2846153846153843,
+        "naive_baseline_mean_points": 146.23076923076923,
+        "naive_baseline_mean_delta_budget": 0.246153846153846,
+        "season_points_baseline_mean_points": 187.15384615384616,
+        "season_points_baseline_mean_delta_budget": 1.6999999999999997
       }
     }
   }

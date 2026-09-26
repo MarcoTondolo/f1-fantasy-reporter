@@ -89,6 +89,7 @@ jobs:
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: |
           python -m f1_fantasy tick \
             ${{ inputs.action && format('--force {0}', inputs.action) || '' }} \
@@ -185,6 +186,7 @@ jobs:
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: |
           python -m f1_fantasy daily-digest \
             ${{ inputs.dry_run && '--dry-run' || '' }}
@@ -199,6 +201,7 @@ jobs:
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python -m f1_fantasy picks --email
 
       # f1fantasytools.com is unreachable from this project's dev sandbox

@@ -1,0 +1,623 @@
+<title>Baku Pace Ladder</title>
+<meta name="description" content="One-lap and long-run pace, by tyre compound, for every driver through practice and qualifying at the Azerbaijan Grand Prix.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-raised: #232322;
+    --surface-sunken: #131312;
+    --ink: #ffffff;
+    --ink-secondary: #c3c2b7;
+    --ink-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --hairline: rgba(255,255,255,0.10);
+    --pos: #0ca30c;
+    --neg: #d03b3b;
+    --accent: #e10600;
+    --tyre-soft: #ff3333;
+    --tyre-medium: #ffd400;
+    --tyre-hard: #f0f0f0;
+    --font-display: 'Barlow Condensed', 'Liberation Sans', system-ui, sans-serif;
+    --font-body: 'Inter', 'Liberation Sans', system-ui, sans-serif;
+    color-scheme: dark;
+  }
+
+  /* One committed dark broadcast-graphic look, matching this project's own
+     report cards -- deliberate, not an oversight, so no light-mode block. */
+  * { box-sizing: border-box; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    padding: 20px 16px 40px;
+    display: flex;
+    justify-content: center;
+  }
+  .page { width: 100%; max-width: 1120px; display: flex; flex-direction: column; gap: 22px; }
+
+  .eyebrow {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  header { border-bottom: 2px solid var(--accent); padding-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 6vw, 48px);
+    line-height: 0.96;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .subtitle { color: var(--ink-secondary); font-size: 14px; max-width: 680px; }
+  .subtitle b { color: var(--ink); font-weight: 600; }
+
+  .controls { display: flex; flex-direction: column; gap: 12px; }
+  .control-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .control-label { font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
+
+  .segmented { display: inline-flex; background: var(--surface-raised); border-radius: 999px; padding: 3px; gap: 2px; border: 1px solid var(--hairline); }
+  .segmented button {
+    font-family: var(--font-body); font-weight: 600; font-size: 13px; color: var(--ink-secondary);
+    background: transparent; border: none; border-radius: 999px; padding: 7px 16px; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .segmented button.active { background: var(--accent); color: var(--ink); }
+  .segmented button:not(.active):hover { color: var(--ink); }
+
+  .filter-btn {
+    font-family: var(--font-body); font-weight: 600; font-size: 13px; color: var(--ink-secondary);
+    background: var(--surface-raised); border: 1px solid var(--hairline); border-radius: 999px;
+    padding: 7px 16px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .filter-btn:hover { color: var(--ink); border-color: var(--baseline); }
+  .filter-btn.active { background: var(--ink); color: var(--page); border-color: var(--ink); }
+
+  .chart-card { background: var(--surface); border-radius: 4px; padding: 24px 20px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .chart-title { font-family: var(--font-display); font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: 0.01em; }
+  .chart-note { font-size: 12px; color: var(--ink-muted); }
+
+  .chart-wrap { position: relative; width: 100%; overflow-x: auto; }
+  svg#chart { display: block; width: 100%; min-width: 800px; height: auto; }
+
+  .session-tick text { font-family: var(--font-display); font-weight: 700; font-size: 14px; fill: var(--ink-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+  .session-time text { font-family: var(--font-body); font-size: 10px; fill: var(--ink-muted); }
+  .session-coverage text { font-family: var(--font-body); font-size: 10px; fill: var(--ink-muted); }
+  .y-tick text { font-family: var(--font-body); font-size: 11px; fill: var(--ink-muted); font-variant-numeric: tabular-nums; }
+
+  .driver-line { fill: none; stroke-width: 2px; opacity: 0.85; transition: opacity 0.18s, stroke-width 0.18s; }
+  .driver-line.yours { stroke-width: 3px; }
+  .driver-dot { transition: opacity 0.18s, r 0.18s; cursor: pointer; }
+  .driver-label { font-family: var(--font-body); font-weight: 600; font-size: 12px; fill: var(--ink); transition: opacity 0.18s; cursor: pointer; font-variant-numeric: tabular-nums; }
+  .driver-swatch { transition: opacity 0.18s; }
+  .driver-leader { transition: opacity 0.18s; }
+
+  .fade { opacity: 0.08 !important; }
+  .lift { opacity: 1 !important; }
+
+  #tooltip {
+    position: absolute; pointer-events: none; background: var(--surface-raised); border: 1px solid var(--hairline);
+    border-radius: 4px; padding: 10px 12px; font-size: 12px; color: var(--ink); min-width: 176px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45); opacity: 0; transition: opacity 0.1s; z-index: 5;
+  }
+  #tooltip.show { opacity: 1; }
+  #tooltip .tt-name { font-family: var(--font-display); font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 2px; }
+  #tooltip .tt-team { color: var(--ink-muted); font-size: 11px; margin-bottom: 8px; }
+  #tooltip .tt-row { display: flex; justify-content: space-between; gap: 14px; padding: 3px 0; font-variant-numeric: tabular-nums; }
+  #tooltip .tt-row .tt-lab { color: var(--ink-muted); display: flex; align-items: center; gap: 5px; }
+  #tooltip .tt-row.hl { color: var(--ink); font-weight: 600; }
+  #tooltip .tt-row.empty { color: var(--ink-muted); font-style: normal; }
+  .tyre-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex: none; border: 1px solid rgba(0,0,0,0.35); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; padding: 14px 4px 4px; border-top: 1px solid var(--hairline); }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-secondary); }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+  .legend-divider { width: 1px; align-self: stretch; background: var(--hairline); margin: 0 2px; }
+
+  .table-card { background: var(--surface); border-radius: 4px; padding: 20px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  thead th {
+    text-align: left; font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--ink-muted); padding: 0 10px 10px; border-bottom: 1px solid var(--baseline);
+    cursor: pointer; white-space: nowrap;
+  }
+  thead th:hover { color: var(--ink-secondary); }
+  thead th.sorted { color: var(--accent); }
+  thead th .arrow { display: inline-block; width: 10px; }
+  tbody td { padding: 9px 10px; font-size: 13px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tbody tr.yours-row td:first-child { border-left: 2px solid var(--accent); }
+  tbody tr:hover td { background: var(--surface-raised); }
+  .cell-driver { display: flex; align-items: center; gap: 8px; font-family: var(--font-body); font-weight: 600; }
+  .row-swatch { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+  .cell-sub { color: var(--ink-muted); font-size: 11px; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+  .cell-team { color: var(--ink-secondary); }
+  .cell-empty { color: var(--ink-muted); }
+  .pill-you { background: var(--accent); color: var(--ink); font-size: 9px; font-weight: 700; letter-spacing: 0.04em; border-radius: 999px; padding: 2px 6px; margin-left: 6px; text-transform: uppercase; }
+
+  footer { font-size: 11px; color: var(--ink-muted); line-height: 1.65; padding-top: 4px; }
+  footer b { color: var(--ink-secondary); }
+  footer p { margin-bottom: 6px; }
+  footer p:last-child { margin-bottom: 0; }
+
+  @media (max-width: 560px) {
+    .chart-card, .table-card { padding: 16px 12px; }
+    table { min-width: 660px; }
+  }
+</style>
+
+<div class="page">
+  <header>
+    <div class="eyebrow">Round 15 &middot; Practice &rarr; Qualifying</div>
+    <h1>Azerbaijan Grand Prix pace ladder</h1>
+    <div class="subtitle">Baku City Circuit &mdash; one-lap pace and race-run pace, by tyre compound. <b>Race pace isn't in here yet</b> &mdash; lights out is Sept 26, 11:00 UTC, and this chart is ready to take that column the moment the race runs.</div>
+  </header>
+
+  <div class="controls">
+    <div class="control-row">
+      <span class="control-label">View</span>
+      <div class="segmented" id="mode-toggle">
+        <button data-mode="one_lap" class="active">One-lap pace</button>
+        <button data-mode="long_run">Long-run pace</button>
+      </div>
+    </div>
+    <div class="control-row" id="filters">
+      <span class="control-label">Show</span>
+      <button class="filter-btn active" data-filter="all">All 22</button>
+      <button class="filter-btn" data-filter="yours">Your picks (7)</button>
+      <button class="filter-btn" data-filter="front">Front 6 on the grid</button>
+      <button class="filter-btn" data-filter="back">Back 6 on the grid</button>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-head">
+      <div class="chart-title" id="chart-title">Gap to session-fastest lap</div>
+      <div class="chart-note" id="chart-note">Lower is better &middot; hover a line or a name to isolate it</div>
+    </div>
+    <div class="chart-wrap">
+      <svg id="chart" viewBox="0 0 1080 620" preserveAspectRatio="xMidYMid meet"></svg>
+      <div id="tooltip"></div>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="table-card">
+    <table id="data-table">
+      <thead id="table-head"></thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script id="payload" type="application/json">{"season": 2026, "round": 15, "race_name": "Azerbaijan Grand Prix", "practice_sessions": ["FP1", "FP2", "FP3"], "all_sessions": ["FP1", "FP2", "FP3", "Q"], "fastest_one_lap": {"FP1": 105.387, "FP2": 103.347, "FP3": 103.922, "Q": 102.526}, "fastest_long_run": {"FP1": {"SOFT": 107.592, "HARD": 107.588, "MEDIUM": 109.041}, "FP2": {"MEDIUM": 108.519, "SOFT": 108.517, "HARD": 109.633}, "FP3": {"SOFT": 104.345, "MEDIUM": 107.43}}, "drivers": [{"code": "RUS", "name": "George Russell", "team": "Mercedes", "color": "#27F4D2", "grid": 1, "yours": false, "one_lap": {"FP1": {"seconds": 105.387, "compound": "SOFT", "tyre_life": 6.0}, "FP2": {"seconds": 103.347, "compound": "SOFT", "tyre_life": 7.0}, "FP3": {"seconds": 104.021, "compound": "SOFT", "tyre_life": 5.0}, "Q": {"seconds": 102.526, "compound": "SOFT", "tyre_life": 7.0}}, "long_run": {"FP1": {"compound": "SOFT", "mean_seconds": 110.659, "n_laps": 5}, "FP2": {"compound": "MEDIUM", "mean_seconds": 108.964, "n_laps": 5}}, "one_lap_gaps": {"FP1": 0.0, "FP2": 0.0, "FP3": 0.099, "Q": 0.0}, "long_run_gaps": {"FP1": 3.067, "FP2": 0.445}}, {"code": "LEC", "name": "Charles Leclerc", "team": "Ferrari", "color": "#E8002D", "grid": 2, "yours": true, "one_lap": {"FP1": {"seconds": 105.791, "compound": "MEDIUM", "tyre_life": 8.0}, "FP2": {"seconds": 104.473, "compound": "SOFT", "tyre_life": 3.0}, "FP3": {"seconds": 104.544, "compound": "SOFT", "tyre_life": 3.0}, "Q": {"seconds": 103.363, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP1": {"compound": "HARD", "mean_seconds": 108.406, "n_laps": 4}, "FP2": {"compound": "SOFT", "mean_seconds": 108.773, "n_laps": 5}}, "one_lap_gaps": {"FP1": 0.404, "FP2": 1.126, "FP3": 0.622, "Q": 0.837}, "long_run_gaps": {"FP1": 0.818, "FP2": 0.256}}, {"code": "PIA", "name": "Oscar Piastri", "team": "McLaren", "color": "#FF8000", "grid": 3, "yours": false, "one_lap": {"FP1": {"seconds": 106.398, "compound": "SOFT", "tyre_life": 7.0}, "FP2": {"seconds": 104.857, "compound": "SOFT", "tyre_life": 3.0}, "FP3": {"seconds": 104.746, "compound": "SOFT", "tyre_life": 8.0}, "Q": {"seconds": 103.364, "compound": "SOFT", "tyre_life": 2.0}}, "long_run": {"FP2": {"compound": "SOFT", "mean_seconds": 109.08, "n_laps": 7}}, "one_lap_gaps": {"FP1": 1.011, "FP2": 1.51, "FP3": 0.824, "Q": 0.838}, "long_run_gaps": {"FP2": 0.563}}, {"code": "HAD", "name": "Isack Hadjar", "team": "Red Bull Racing", "color": "#3671C6", "grid": 4, "yours": false, "one_lap": {"FP1": {"seconds": 107.873, "compound": "HARD", "tyre_life": 6.0}, "FP2": {"seconds": 104.868, "compound": "SOFT", "tyre_life": 3.0}, "FP3": {"seconds": 105.176, "compound": "SOFT", "tyre_life": 9.0}, "Q": {"seconds": 103.5, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP2": {"compound": "SOFT", "mean_seconds": 109.525, "n_laps": 6}}, "one_lap_gaps": {"FP1": 2.486, "FP2": 1.521, "FP3": 1.254, "Q": 0.974}, "long_run_gaps": {"FP2": 1.008}}, {"code": "NOR", "name": "Lando Norris", "team": "McLaren", "color": "#FF8000", "grid": 5, "yours": true, "one_lap": {"FP1": {"seconds": 106.981, "compound": "MEDIUM", "tyre_life": 10.0}, "FP2": {"seconds": 104.831, "compound": "SOFT", "tyre_life": 2.0}, "FP3": {"seconds": 104.899, "compound": "SOFT", "tyre_life": 4.0}, "Q": {"seconds": 103.672, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP2": {"compound": "SOFT", "mean_seconds": 109.429, "n_laps": 7}, "FP3": {"compound": "SOFT", "mean_seconds": 105.186, "n_laps": 4}}, "one_lap_gaps": {"FP1": 1.594, "FP2": 1.484, "FP3": 0.977, "Q": 1.146}, "long_run_gaps": {"FP2": 0.912, "FP3": 0.841}}, {"code": "HAM", "name": "Lewis Hamilton", "team": "Ferrari", "color": "#E8002D", "grid": 6, "yours": false, "one_lap": {"FP1": {"seconds": 105.824, "compound": "MEDIUM", "tyre_life": 8.0}, "FP2": {"seconds": 104.665, "compound": "SOFT", "tyre_life": 3.0}, "FP3": {"seconds": 104.033, "compound": "SOFT", "tyre_life": 5.0}, "Q": {"seconds": 103.858, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP1": {"compound": "HARD", "mean_seconds": 107.588, "n_laps": 4}, "FP2": {"compound": "SOFT", "mean_seconds": 108.968, "n_laps": 5}}, "one_lap_gaps": {"FP1": 0.437, "FP2": 1.318, "FP3": 0.111, "Q": 1.332}, "long_run_gaps": {"FP1": 0.0, "FP2": 0.451}}, {"code": "GAS", "name": "Pierre Gasly", "team": "Alpine", "color": "#FF87BC", "grid": 7, "yours": false, "one_lap": {"FP1": {"seconds": 107.043, "compound": "HARD", "tyre_life": 12.0}, "FP2": {"seconds": 104.843, "compound": "SOFT", "tyre_life": 6.0}, "FP3": {"seconds": 104.637, "compound": "SOFT", "tyre_life": 6.0}, "Q": {"seconds": 104.047, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP1": {"compound": "HARD", "mean_seconds": 108.224, "n_laps": 5}, "FP2": {"compound": "MEDIUM", "mean_seconds": 109.496, "n_laps": 5}}, "one_lap_gaps": {"FP1": 1.656, "FP2": 1.496, "FP3": 0.715, "Q": 1.521}, "long_run_gaps": {"FP1": 0.636, "FP2": 0.977}}, {"code": "VER", "name": "Max Verstappen", "team": "Red Bull Racing", "color": "#3671C6", "grid": 8, "yours": false, "one_lap": {"FP1": {"seconds": 105.787, "compound": "SOFT", "tyre_life": 4.0}, "FP2": {"seconds": 104.174, "compound": "SOFT", "tyre_life": 4.0}, "FP3": {"seconds": 103.922, "compound": "SOFT", "tyre_life": 9.0}, "Q": {"seconds": 103.706, "compound": "SOFT", "tyre_life": 7.0}}, "long_run": {"FP1": {"compound": "HARD", "mean_seconds": 109.607, "n_laps": 5}, "FP2": {"compound": "SOFT", "mean_seconds": 108.517, "n_laps": 5}, "FP3": {"compound": "SOFT", "mean_seconds": 104.345, "n_laps": 4}}, "one_lap_gaps": {"FP1": 0.4, "FP2": 0.827, "FP3": 0.0, "Q": 1.18}, "long_run_gaps": {"FP1": 2.019, "FP2": 0.0, "FP3": 0.0}}, {"code": "SAI", "name": "Carlos Sainz", "team": "Williams", "color": "#64C4FF", "grid": 9, "yours": false, "one_lap": {"FP1": {"seconds": 106.893, "compound": "SOFT", "tyre_life": 12.0}, "FP2": {"seconds": 106.221, "compound": "SOFT", "tyre_life": 3.0}, "FP3": {"seconds": 105.605, "compound": "SOFT", "tyre_life": 5.0}, "Q": {"seconds": 104.566, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP1": {"compound": "SOFT", "mean_seconds": 107.966, "n_laps": 5}, "FP2": {"compound": "MEDIUM", "mean_seconds": 109.916, "n_laps": 6}}, "one_lap_gaps": {"FP1": 1.506, "FP2": 2.874, "FP3": 1.683, "Q": 2.04}, "long_run_gaps": {"FP1": 0.374, "FP2": 1.397}}, {"code": "COL", "name": "Franco Colapinto", "team": "Alpine", "color": "#FF87BC", "grid": 10, "yours": false, "one_lap": {"FP1": {"seconds": 107.523, "compound": "SOFT", "tyre_life": 4.0}, "FP2": {"seconds": 105.479, "compound": "SOFT", "tyre_life": 6.0}, "FP3": {"seconds": 105.592, "compound": "SOFT", "tyre_life": 6.0}, "Q": {"seconds": 104.683, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP1": {"compound": "MEDIUM", "mean_seconds": 111.322, "n_laps": 8}, "FP2": {"compound": "HARD", "mean_seconds": 109.633, "n_laps": 5}}, "one_lap_gaps": {"FP1": 2.136, "FP2": 2.132, "FP3": 1.67, "Q": 2.157}, "long_run_gaps": {"FP1": 2.281, "FP2": 0.0}}, {"code": "BEA", "name": "Oliver Bearman", "team": "Haas F1 Team", "color": "#B6BABD", "grid": 11, "yours": true, "one_lap": {"FP1": {"seconds": 106.994, "compound": "SOFT", "tyre_life": 6.0}, "FP2": {"seconds": 106.801, "compound": "UNKNOWN", "tyre_life": 8.0}, "FP3": {"seconds": 105.692, "compound": "SOFT", "tyre_life": 6.0}, "Q": {"seconds": 104.775, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP3": {"compound": "SOFT", "mean_seconds": 107.425, "n_laps": 5}}, "one_lap_gaps": {"FP1": 1.607, "FP2": 3.454, "FP3": 1.77, "Q": 2.249}, "long_run_gaps": {"FP3": 3.08}}, {"code": "LAW", "name": "Liam Lawson", "team": "Racing Bulls", "color": "#6692FF", "grid": 12, "yours": false, "one_lap": {"FP1": {"seconds": 106.44, "compound": "MEDIUM", "tyre_life": 4.0}, "FP2": {"seconds": 105.681, "compound": "SOFT", "tyre_life": 4.0}, "FP3": {"seconds": 106.222, "compound": "SOFT", "tyre_life": 7.0}, "Q": {"seconds": 104.86, "compound": "SOFT", "tyre_life": 7.0}}, "long_run": {"FP1": {"compound": "MEDIUM", "mean_seconds": 109.041, "n_laps": 7}, "FP2": {"compound": "MEDIUM", "mean_seconds": 110.558, "n_laps": 7}, "FP3": {"compound": "SOFT", "mean_seconds": 107.228, "n_laps": 4}}, "one_lap_gaps": {"FP1": 1.053, "FP2": 2.334, "FP3": 2.3, "Q": 2.334}, "long_run_gaps": {"FP1": 0.0, "FP2": 2.039, "FP3": 2.883}}, {"code": "ALB", "name": "Alexander Albon", "team": "Williams", "color": "#64C4FF", "grid": 13, "yours": true, "one_lap": {"FP1": {"seconds": 106.939, "compound": "SOFT", "tyre_life": 6.0}, "FP2": {"seconds": 106.123, "compound": "SOFT", "tyre_life": 2.0}, "FP3": {"seconds": 106.076, "compound": "SOFT", "tyre_life": 7.0}, "Q": {"seconds": 105.001, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP1": {"compound": "SOFT", "mean_seconds": 107.592, "n_laps": 5}, "FP2": {"compound": "SOFT", "mean_seconds": 110.019, "n_laps": 7}}, "one_lap_gaps": {"FP1": 1.552, "FP2": 2.776, "FP3": 2.154, "Q": 2.475}, "long_run_gaps": {"FP1": 0.0, "FP2": 1.502}}, {"code": "OCO", "name": "Esteban Ocon", "team": "Haas F1 Team", "color": "#B6BABD", "grid": 14, "yours": false, "one_lap": {"FP1": {"seconds": 106.624, "compound": "SOFT", "tyre_life": 4.0}, "FP2": {"seconds": 105.29, "compound": "SOFT", "tyre_life": 4.0}, "FP3": {"seconds": 105.918, "compound": "SOFT", "tyre_life": 8.0}, "Q": {"seconds": 105.016, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP2": {"compound": "SOFT", "mean_seconds": 110.148, "n_laps": 5}, "FP3": {"compound": "MEDIUM", "mean_seconds": 107.707, "n_laps": 4}}, "one_lap_gaps": {"FP1": 1.237, "FP2": 1.943, "FP3": 1.996, "Q": 2.49}, "long_run_gaps": {"FP2": 1.631, "FP3": 0.277}}, {"code": "LIN", "name": "Arvid Lindblad", "team": "Racing Bulls", "color": "#6692FF", "grid": 15, "yours": false, "one_lap": {"FP1": {"seconds": 106.601, "compound": "MEDIUM", "tyre_life": 7.0}, "FP2": {"seconds": 106.391, "compound": "MEDIUM", "tyre_life": 2.0}, "FP3": {"seconds": 106.271, "compound": "SOFT", "tyre_life": 7.0}, "Q": {"seconds": 105.106, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP1": {"compound": "HARD", "mean_seconds": 108.412, "n_laps": 4}, "FP3": {"compound": "SOFT", "mean_seconds": 107.373, "n_laps": 4}}, "one_lap_gaps": {"FP1": 1.214, "FP2": 3.044, "FP3": 2.349, "Q": 2.58}, "long_run_gaps": {"FP1": 0.824, "FP3": 3.028}}, {"code": "ANT", "name": "Kimi Antonelli", "team": "Mercedes", "color": "#27F4D2", "grid": 16, "yours": true, "one_lap": {"FP1": {"seconds": 106.265, "compound": "HARD", "tyre_life": 7.0}, "FP2": {"seconds": 103.899, "compound": "SOFT", "tyre_life": 7.0}, "FP3": {"seconds": 104.273, "compound": "SOFT", "tyre_life": 5.0}, "Q": {"seconds": 105.504, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP2": {"compound": "MEDIUM", "mean_seconds": 108.519, "n_laps": 4}}, "one_lap_gaps": {"FP1": 0.878, "FP2": 0.552, "FP3": 0.351, "Q": 2.978}, "long_run_gaps": {"FP2": 0.0}}, {"code": "BOR", "name": "Gabriel Bortoleto", "team": "Audi", "color": "#00E701", "grid": 17, "yours": false, "one_lap": {"FP1": {"seconds": 106.688, "compound": "SOFT", "tyre_life": 6.0}, "FP2": {"seconds": 105.794, "compound": "SOFT", "tyre_life": 2.0}, "FP3": {"seconds": 105.854, "compound": "SOFT", "tyre_life": 5.0}, "Q": {"seconds": 105.799, "compound": "SOFT", "tyre_life": 5.0}}, "long_run": {"FP2": {"compound": "SOFT", "mean_seconds": 109.908, "n_laps": 5}}, "one_lap_gaps": {"FP1": 1.301, "FP2": 2.447, "FP3": 1.932, "Q": 3.273}, "long_run_gaps": {"FP2": 1.391}}, {"code": "HUL", "name": "Nico Hulkenberg", "team": "Audi", "color": "#00E701", "grid": 18, "yours": true, "one_lap": {"FP1": {"seconds": 106.871, "compound": "SOFT", "tyre_life": 4.0}, "FP2": {"seconds": 105.854, "compound": "SOFT", "tyre_life": 4.0}, "FP3": {"seconds": 105.998, "compound": "SOFT", "tyre_life": 3.0}, "Q": {"seconds": 105.92, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP1": {"compound": "SOFT", "mean_seconds": 110.651, "n_laps": 5}, "FP3": {"compound": "MEDIUM", "mean_seconds": 107.43, "n_laps": 4}}, "one_lap_gaps": {"FP1": 1.484, "FP2": 2.507, "FP3": 2.076, "Q": 3.394}, "long_run_gaps": {"FP1": 3.059, "FP3": 0.0}}, {"code": "ALO", "name": "Fernando Alonso", "team": "Aston Martin", "color": "#229971", "grid": 19, "yours": false, "one_lap": {"FP1": {"seconds": 107.835, "compound": "MEDIUM", "tyre_life": 7.0}, "FP2": {"seconds": 107.889, "compound": "SOFT", "tyre_life": 5.0}, "FP3": {"seconds": 106.512, "compound": "SOFT", "tyre_life": 8.0}, "Q": {"seconds": 106.593, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP1": {"compound": "HARD", "mean_seconds": 110.341, "n_laps": 4}, "FP3": {"compound": "SOFT", "mean_seconds": 106.927, "n_laps": 4}}, "one_lap_gaps": {"FP1": 2.448, "FP2": 4.542, "FP3": 2.59, "Q": 4.067}, "long_run_gaps": {"FP1": 2.753, "FP3": 2.582}}, {"code": "PER", "name": "Sergio Perez", "team": "Cadillac", "color": "#C9B074", "grid": 20, "yours": true, "one_lap": {"FP1": {"seconds": 107.253, "compound": "MEDIUM", "tyre_life": 10.0}, "FP2": {"seconds": 105.76, "compound": "SOFT", "tyre_life": 5.0}, "FP3": {"seconds": 106.004, "compound": "SOFT", "tyre_life": 6.0}, "Q": {"seconds": 106.658, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP2": {"compound": "SOFT", "mean_seconds": 110.534, "n_laps": 7}}, "one_lap_gaps": {"FP1": 1.866, "FP2": 2.413, "FP3": 2.082, "Q": 4.132}, "long_run_gaps": {"FP2": 2.017}}, {"code": "STR", "name": "Lance Stroll", "team": "Aston Martin", "color": "#229971", "grid": 21, "yours": false, "one_lap": {"FP1": {"seconds": 108.547, "compound": "MEDIUM", "tyre_life": 7.0}, "FP2": {"seconds": 107.403, "compound": "SOFT", "tyre_life": 5.0}, "FP3": {"seconds": 109.279, "compound": "SOFT", "tyre_life": 7.0}, "Q": {"seconds": 107.337, "compound": "SOFT", "tyre_life": 6.0}}, "long_run": {"FP2": {"compound": "SOFT", "mean_seconds": 113.799, "n_laps": 5}}, "one_lap_gaps": {"FP1": 3.16, "FP2": 4.056, "FP3": 5.357, "Q": 4.811}, "long_run_gaps": {"FP2": 5.282}}, {"code": "BOT", "name": "Valtteri Bottas", "team": "Cadillac", "color": "#C9B074", "grid": 22, "yours": false, "one_lap": {"FP1": {"seconds": 109.315, "compound": "MEDIUM", "tyre_life": 10.0}, "FP2": {"seconds": 106.737, "compound": "SOFT", "tyre_life": 5.0}, "FP3": {"seconds": 108.587, "compound": "SOFT", "tyre_life": 6.0}, "Q": {"seconds": 107.147, "compound": "SOFT", "tyre_life": 3.0}}, "long_run": {"FP1": {"compound": "MEDIUM", "mean_seconds": 113.556, "n_laps": 5}, "FP2": {"compound": "SOFT", "mean_seconds": 112.218, "n_laps": 7}}, "one_lap_gaps": {"FP1": 3.928, "FP2": 3.39, "FP3": 4.665, "Q": 4.621}, "long_run_gaps": {"FP1": 4.515, "FP2": 3.701}}]}</script>
+<script>
+(function () {
+  "use strict";
+  var data = JSON.parse(document.getElementById("payload").textContent);
+  var drivers = data.drivers;
+  var driversByCode = {};
+  drivers.forEach(function (d) { driversByCode[d.code] = d; });
+
+  var TYRE_COLOR = { SOFT: "var(--tyre-soft)", MEDIUM: "var(--tyre-medium)", HARD: "var(--tyre-hard)" };
+  var yourCodes = { HUL: 1, ALB: 1, NOR: 1, ANT: 1, BEA: 1, LEC: 1, PER: 1 };
+
+  var MODES = {
+    one_lap: {
+      sessions: data.all_sessions,
+      title: "Gap to session-fastest lap",
+      note: "Single best lap per session, any compound — lower is better",
+      yLabel: "gap to fastest lap",
+      getGap: function (d, s) { return d.one_lap_gaps[s]; },
+      getDetail: function (d, s) { return d.one_lap[s]; },
+      tooltipRow: function (d, s) {
+        var v = d.one_lap[s];
+        if (!v) return null;
+        var gap = d.one_lap_gaps[s];
+        return { time: fmtLap(v.seconds), gap: gap, compound: v.compound, sub: null };
+      },
+    },
+    long_run: {
+      sessions: data.practice_sessions,
+      title: "Gap to fastest long run (same compound)",
+      note: "Mean of the push laps in each driver's longest same-compound stint — gaps compare like-for-like tyre only",
+      yLabel: "gap to fastest long run",
+      getGap: function (d, s) { return d.long_run_gaps[s]; },
+      getDetail: function (d, s) { return d.long_run[s]; },
+      tooltipRow: function (d, s) {
+        var v = d.long_run[s];
+        if (!v) return { time: null, gap: null, compound: null, sub: "no qualifying long run" };
+        var gap = d.long_run_gaps[s];
+        return { time: fmtLap(v.mean_seconds), gap: gap, compound: v.compound, sub: v.n_laps + " push laps" };
+      },
+    },
+  };
+  var mode = "one_lap";
+  var activeFilter = "all";
+
+  function fmtLap(seconds) {
+    if (seconds === null || seconds === undefined) return "—";
+    var m = Math.floor(seconds / 60);
+    var s = (seconds - m * 60).toFixed(3);
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+  function ns(tag) { return document.createElementNS("http://www.w3.org/2000/svg", tag); }
+  function tyreDot(compound) {
+    return '<span class="tyre-dot" style="background:' + (TYRE_COLOR[compound] || "var(--ink-muted)") + '"></span>';
+  }
+
+  var svg = document.getElementById("chart");
+  var tooltip = document.getElementById("tooltip");
+  var chartWrap = document.querySelector(".chart-wrap");
+  var groupsByCode = {};
+
+  function renderChart() {
+    svg.innerHTML = "";
+    groupsByCode = {};
+    var cfg = MODES[mode];
+    var sessions = cfg.sessions;
+
+    var W = 1080, H = 620;
+    var padL = 46, padR = 118, padT = 20, padB = sessions.length === data.all_sessions.length ? 46 : 58;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+
+    var maxGap = 0;
+    drivers.forEach(function (d) {
+      sessions.forEach(function (s) {
+        var g = cfg.getGap(d, s);
+        if (g !== undefined && g !== null && g > maxGap) maxGap = g;
+      });
+    });
+    var yMax = Math.ceil((maxGap + 0.15) * 4) / 4;
+    if (yMax <= 0) yMax = 1;
+
+    function xFor(i) { return padL + (plotW * i) / (sessions.length - 1); }
+    function yFor(gap) { return padT + (gap / yMax) * plotH; }
+
+    var yStep = yMax > 2 ? 0.5 : 0.25;
+    for (var g = 0; g * yStep <= yMax + 0.001; g++) {
+      var gv = g * yStep, y = yFor(gv);
+      var line = ns("line");
+      line.setAttribute("x1", padL); line.setAttribute("x2", W - padR);
+      line.setAttribute("y1", y); line.setAttribute("y2", y);
+      line.setAttribute("stroke", "var(--grid)"); line.setAttribute("stroke-width", "1");
+      svg.appendChild(line);
+      var tick = ns("g"); tick.setAttribute("class", "y-tick");
+      var t = ns("text");
+      t.setAttribute("x", padL - 10); t.setAttribute("y", y + 4); t.setAttribute("text-anchor", "end");
+      t.textContent = (gv === 0 ? "0.0" : "+" + gv.toFixed(2).replace(/0$/, "")) + "s";
+      tick.appendChild(t); svg.appendChild(tick);
+    }
+    var baseline = ns("line");
+    baseline.setAttribute("x1", padL); baseline.setAttribute("x2", W - padR);
+    baseline.setAttribute("y1", yFor(0)); baseline.setAttribute("y2", yFor(0));
+    baseline.setAttribute("stroke", "var(--baseline)"); baseline.setAttribute("stroke-width", "1.5");
+    svg.appendChild(baseline);
+
+    var sessionTimes = { FP1: "Sept 24, 08:30 UTC", FP2: "Sept 24, 12:00 UTC", FP3: "Sept 25, 08:30 UTC", Q: "Sept 25, 12:00 UTC" };
+    sessions.forEach(function (s, i) {
+      var x = xFor(i);
+      var vline = ns("line");
+      vline.setAttribute("x1", x); vline.setAttribute("x2", x);
+      vline.setAttribute("y1", padT); vline.setAttribute("y2", H - padB + 6);
+      vline.setAttribute("stroke", "var(--grid)"); vline.setAttribute("stroke-width", "1");
+      svg.appendChild(vline);
+
+      var g1 = ns("g"); g1.setAttribute("class", "session-tick");
+      var t1 = ns("text");
+      t1.setAttribute("x", x); t1.setAttribute("y", H - padB + 24); t1.setAttribute("text-anchor", "middle");
+      t1.textContent = s;
+      g1.appendChild(t1); svg.appendChild(g1);
+
+      var g2 = ns("g"); g2.setAttribute("class", "session-time");
+      var t2 = ns("text");
+      t2.setAttribute("x", x); t2.setAttribute("y", H - padB + 38); t2.setAttribute("text-anchor", "middle");
+      t2.textContent = sessionTimes[s] || "";
+      g2.appendChild(t2); svg.appendChild(g2);
+
+      if (mode === "long_run") {
+        var covered = drivers.filter(function (d) { return cfg.getGap(d, s) !== undefined; }).length;
+        var g3 = ns("g"); g3.setAttribute("class", "session-coverage");
+        var t3 = ns("text");
+        t3.setAttribute("x", x); t3.setAttribute("y", H - padB + 52); t3.setAttribute("text-anchor", "middle");
+        t3.textContent = covered + " of 22 ran one";
+        g3.appendChild(t3); svg.appendChild(g3);
+      }
+    });
+
+    var endpoints = [];
+    drivers.forEach(function (d) {
+      var isYours = !!yourCodes[d.code];
+      var pts = sessions.map(function (s, i) {
+        var gap = cfg.getGap(d, s);
+        return (gap === undefined || gap === null) ? null : [xFor(i), yFor(gap)];
+      });
+
+      var group = ns("g");
+      group.setAttribute("data-code", d.code);
+
+      // Break the path at any missing session instead of interpolating
+      // across it -- a gap in the line means "didn't run one," not "ran a
+      // value between the neighbours."
+      var segments = [];
+      var current = [];
+      pts.forEach(function (p) {
+        if (p) { current.push(p); }
+        else if (current.length) { segments.push(current); current = []; }
+      });
+      if (current.length) segments.push(current);
+
+      segments.forEach(function (seg) {
+        var pathD = seg.map(function (p, i) { return (i === 0 ? "M" : "L") + p[0] + "," + p[1]; }).join(" ");
+        var path = ns("path");
+        path.setAttribute("d", pathD);
+        path.setAttribute("class", "driver-line" + (isYours ? " yours" : ""));
+        path.setAttribute("stroke", d.color);
+        group.appendChild(path);
+      });
+
+      pts.forEach(function (p, i) {
+        if (!p) return;
+        var detail = cfg.getDetail(d, sessions[i]);
+        var compound = mode === "long_run" ? (detail && detail.compound) : (detail && detail.compound);
+        var dot = ns("circle");
+        dot.setAttribute("cx", p[0]); dot.setAttribute("cy", p[1]);
+        dot.setAttribute("r", isYours ? 5 : 4);
+        if (mode === "long_run" && compound) {
+          dot.setAttribute("fill", TYRE_COLOR[compound] || "var(--surface)");
+          dot.setAttribute("stroke", d.color);
+          dot.setAttribute("stroke-width", isYours ? 3 : 2);
+        } else {
+          dot.setAttribute("fill", isYours ? d.color : "var(--surface)");
+          dot.setAttribute("stroke", d.color);
+          dot.setAttribute("stroke-width", "2");
+        }
+        dot.setAttribute("class", "driver-dot");
+        group.appendChild(dot);
+      });
+
+      var lastPt = null;
+      for (var i = pts.length - 1; i >= 0; i--) { if (pts[i]) { lastPt = pts[i]; break; } }
+      if (lastPt) endpoints.push({ code: d.code, color: d.color, isYours: isYours, x: lastPt[0], naturalY: lastPt[1] });
+
+      svg.appendChild(group);
+      groupsByCode[d.code] = group;
+
+      group.querySelectorAll(".driver-dot").forEach(function (el) {
+        el.addEventListener("mouseenter", function (evt) { highlight(d.code); showTooltip(d, evt); });
+        el.addEventListener("mousemove", function (evt) { positionTooltip(evt); });
+        el.addEventListener("mouseleave", function () { clearHighlight(); hideTooltip(); });
+      });
+    });
+
+    var minGap = 15;
+    endpoints.sort(function (a, b) { return a.naturalY - b.naturalY; });
+    var prevY = -Infinity;
+    endpoints.forEach(function (ep) { ep.y = Math.max(ep.naturalY, prevY + minGap); prevY = ep.y; });
+    endpoints.forEach(function (ep) {
+      var group = groupsByCode[ep.code];
+      var driver = driversByCode[ep.code];
+      if (Math.abs(ep.y - ep.naturalY) > 2) {
+        var leader = ns("line");
+        leader.setAttribute("x1", ep.x + 6); leader.setAttribute("y1", ep.naturalY);
+        leader.setAttribute("x2", ep.x + 10); leader.setAttribute("y2", ep.y);
+        leader.setAttribute("stroke", ep.color); leader.setAttribute("stroke-width", "1"); leader.setAttribute("stroke-opacity", "0.5");
+        leader.setAttribute("class", "driver-leader");
+        group.appendChild(leader);
+      }
+      var sw = ns("rect");
+      sw.setAttribute("x", ep.x + 10); sw.setAttribute("y", ep.y - 5);
+      sw.setAttribute("width", 8); sw.setAttribute("height", 8); sw.setAttribute("rx", 2);
+      sw.setAttribute("fill", ep.color); sw.setAttribute("class", "driver-swatch");
+      group.appendChild(sw);
+
+      var label = ns("text");
+      label.setAttribute("x", ep.x + 22); label.setAttribute("y", ep.y + 4);
+      label.setAttribute("class", "driver-label");
+      label.textContent = ep.code + (ep.isYours ? " ★" : "");
+      group.appendChild(label);
+
+      [sw, label].forEach(function (el) {
+        el.addEventListener("mouseenter", function (evt) { highlight(ep.code); showTooltip(driver, evt); });
+        el.addEventListener("mousemove", function (evt) { positionTooltip(evt); });
+        el.addEventListener("mouseleave", function () { clearHighlight(); hideTooltip(); });
+      });
+    });
+
+    document.getElementById("chart-title").textContent = cfg.title;
+    document.getElementById("chart-note").textContent = cfg.note;
+    applyFilter(activeFilter);
+    renderLegend();
+    renderTableHead();
+    renderTable(currentSort());
+  }
+
+  function highlight(code) {
+    Object.keys(groupsByCode).forEach(function (c) {
+      groupsByCode[c].classList.toggle("fade", c !== code);
+      groupsByCode[c].classList.toggle("lift", c === code);
+    });
+  }
+  function clearHighlight() { applyFilter(activeFilter); }
+
+  function showTooltip(d, evt) {
+    var cfg = MODES[mode];
+    var rows = cfg.sessions.map(function (s) {
+      var row = cfg.tooltipRow(d, s);
+      if (!row) return "";
+      if (row.time === null) {
+        return '<div class="tt-row empty"><span class="tt-lab">' + s + '</span><span>' + row.sub + "</span></div>";
+      }
+      var lab = row.compound ? '<span class="tt-lab">' + s + " " + tyreDot(row.compound) + "</span>" : '<span class="tt-lab">' + s + "</span>";
+      var valueText = row.time + "  (" + (row.gap === 0 ? "fastest" : "+" + row.gap.toFixed(3) + "s") + ")";
+      var subText = row.sub ? '<div class="cell-sub" style="margin:0 0 4px">' + row.sub + "</div>" : "";
+      return '<div class="tt-row' + (row.gap === 0 ? " hl" : "") + '">' + lab + "<span>" + valueText + "</span></div>" + subText;
+    }).join("");
+    tooltip.innerHTML = '<div class="tt-name">' + d.name + "</div>" + '<div class="tt-team">' + d.team + " &middot; grid P" + d.grid + "</div>" + rows;
+    tooltip.classList.add("show");
+    positionTooltip(evt);
+  }
+  function positionTooltip(evt) {
+    var rect = chartWrap.getBoundingClientRect();
+    var x = evt.clientX - rect.left + 16, y = evt.clientY - rect.top - 10;
+    if (x + 200 > rect.width) x = evt.clientX - rect.left - 210;
+    tooltip.style.left = x + "px"; tooltip.style.top = y + "px";
+  }
+  function hideTooltip() { tooltip.classList.remove("show"); }
+
+  function renderLegend() {
+    var legend = document.getElementById("legend");
+    legend.innerHTML = "";
+    var seenTeams = {};
+    drivers.slice().sort(function (a, b) { return a.grid - b.grid; }).forEach(function (d) {
+      if (seenTeams[d.team]) return;
+      seenTeams[d.team] = true;
+      var item = document.createElement("div");
+      item.className = "legend-item";
+      item.innerHTML = '<span class="legend-swatch" style="background:' + d.color + '"></span>' + d.team;
+      legend.appendChild(item);
+    });
+    if (mode === "long_run") {
+      var div = document.createElement("div"); div.className = "legend-divider"; legend.appendChild(div);
+      ["SOFT", "MEDIUM", "HARD"].forEach(function (c) {
+        var item = document.createElement("div");
+        item.className = "legend-item";
+        item.innerHTML = tyreDot(c) + " " + c.charAt(0) + c.slice(1).toLowerCase();
+        legend.appendChild(item);
+      });
+    }
+  }
+
+  function frontBackCodes() {
+    var sorted = drivers.slice().sort(function (a, b) { return a.grid - b.grid; });
+    var front = {}, back = {};
+    sorted.slice(0, 6).forEach(function (d) { front[d.code] = 1; });
+    sorted.slice(-6).forEach(function (d) { back[d.code] = 1; });
+    return { front: front, back: back };
+  }
+  function applyFilter(name) {
+    activeFilter = name;
+    var fb = frontBackCodes();
+    Object.keys(groupsByCode).forEach(function (code) {
+      var show = name === "all" || (name === "yours" && yourCodes[code]) || (name === "front" && fb.front[code]) || (name === "back" && fb.back[code]);
+      groupsByCode[code].classList.toggle("fade", !show);
+      groupsByCode[code].classList.remove("lift");
+    });
+  }
+  document.querySelectorAll(".filter-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".filter-btn").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      applyFilter(btn.getAttribute("data-filter"));
+    });
+  });
+  document.querySelectorAll("#mode-toggle button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.classList.contains("active")) return;
+      document.querySelectorAll("#mode-toggle button").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      mode = btn.getAttribute("data-mode");
+      sortState = { key: "grid", asc: true };
+      renderChart();
+    });
+  });
+
+  // ---- table ----
+  var sortState = { key: "grid", asc: true };
+  function currentSort() {
+    var cfg = MODES[mode];
+    var rows = drivers.slice();
+    var key = sortState.key, asc = sortState.asc;
+    rows.sort(function (a, b) {
+      var av = valueForSort(a, key, cfg), bv = valueForSort(b, key, cfg);
+      if (av === null) av = Infinity;
+      if (bv === null) bv = Infinity;
+      if (av < bv) return asc ? -1 : 1;
+      if (av > bv) return asc ? 1 : -1;
+      return 0;
+    });
+    return rows;
+  }
+  function valueForSort(d, key, cfg) {
+    if (key === "grid") return d.grid;
+    if (key === "code" || key === "team") return d[key];
+    var detail = cfg.getDetail(d, key);
+    if (!detail) return null;
+    return mode === "one_lap" ? detail.seconds : detail.mean_seconds;
+  }
+
+  function renderTableHead() {
+    var cfg = MODES[mode];
+    var thead = document.getElementById("table-head");
+    var cols = ["grid", "code", "team"].concat(cfg.sessions);
+    var labels = { grid: "Grid", code: "Driver", team: "Team" };
+    thead.innerHTML = "<tr>" + cols.map(function (c) {
+      return '<th data-key="' + c + '">' + (labels[c] || c) + '<span class="arrow"></span></th>';
+    }).join("") + "</tr>";
+    thead.querySelectorAll("th").forEach(function (th) {
+      th.addEventListener("click", function () {
+        var key = th.getAttribute("data-key");
+        sortState = { key: key, asc: sortState.key === key ? !sortState.asc : true };
+        renderTableHead();
+        renderTable(currentSort());
+      });
+      if (th.getAttribute("data-key") === sortState.key) {
+        th.classList.add("sorted");
+        th.querySelector(".arrow").textContent = sortState.asc ? "↑" : "↓";
+      }
+    });
+  }
+
+  function renderTable(rows) {
+    var cfg = MODES[mode];
+    var tbody = document.getElementById("table-body");
+    tbody.innerHTML = "";
+    rows.forEach(function (d) {
+      var isYours = !!yourCodes[d.code];
+      var tr = document.createElement("tr");
+      if (isYours) tr.className = "yours-row";
+      var cells = "<td>P" + d.grid + "</td>" +
+        '<td><span class="cell-driver">' +
+          '<span class="row-swatch" style="background:' + d.color + '"></span>' + d.code +
+          (isYours ? '<span class="pill-you">Yours</span>' : "") + "</span></td>" +
+        '<td class="cell-team">' + d.team + "</td>";
+      cfg.sessions.forEach(function (s) {
+        var row = cfg.tooltipRow(d, s);
+        if (!row || row.time === null) {
+          cells += '<td class="cell-empty">' + (row ? row.sub : "—") + "</td>";
+        } else {
+          var sub = mode === "one_lap"
+            ? tyreDot(row.compound) + " " + row.compound.charAt(0) + (row.gap === 0 ? "" : "  +" + row.gap.toFixed(3) + "s")
+            : tyreDot(row.compound) + " " + row.sub + (row.gap === 0 ? "" : "  +" + row.gap.toFixed(3) + "s");
+          cells += "<td>" + row.time + '<div class="cell-sub">' + sub + "</div></td>";
+        }
+      });
+      tr.innerHTML = cells;
+      tr.addEventListener("mouseenter", function () { highlight(d.code); });
+      tr.addEventListener("mouseleave", function () { clearHighlight(); });
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderFooter() {
+    document.getElementById("footer").innerHTML =
+      '<p><b>One-lap pace:</b> each driver’s single best lap in the session (FP1–FP3: any green-flag lap; Q: their best across Q1–Q3), tagged with the compound it was set on. Not fuel-corrected — FastF1 carries no fuel-load telemetry, so a lap set on a low-fuel run and one set mid-stint aren’t distinguishable from the lap time alone, only from the tyre life shown on hover.</p>' +
+      '<p><b>Long-run pace:</b> the mean of the "push" laps (within 5% of that stint’s own fastest, tyre life 2+ to drop the out-lap) in each driver’s longest same-compound stint of 4+ qualifying laps, per practice session. Baku’s drivers ran a push-lap/cooldown-lap pattern within most stints — this filters the cooldown laps out rather than averaging them in. Gaps compare only drivers who ran the <i>same compound</i> that session; a driver whose longest run was on a different tyre than the group isn’t forced into a false comparison. Not every driver ran a qualifying long run in every session — a missing point means that, not that they were slow. Still not fuel-corrected, for the same reason as above; long runs are conventionally closer to race fuel by how teams use practice, but the exact load isn’t public data.</p>' +
+      '<p><b>Your picks</b> across both teams: Hulkenberg, Albon, Norris, Antonelli, Bearman, Leclerc, Perez.</p>';
+  }
+
+  renderChart();
+  renderFooter();
+})();
+</script>

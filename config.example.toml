@@ -10,8 +10,9 @@ leagues = []
 # so their history accumulates, but they do not generate cards.
 # primary_league = 4321
 
-# Where reports are emailed for you to forward into the chat.
-email_to = ""
+# Where reports are emailed for you to forward into the chat is set via the
+# EMAIL_TO environment variable / repository secret, not here -- it's a
+# personal address, not a project choice, and this file may end up public.
 
 # Used to render session times in the preview card.
 timezone = "Europe/London"

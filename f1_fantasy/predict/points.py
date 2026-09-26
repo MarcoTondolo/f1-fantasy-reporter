@@ -235,6 +235,12 @@ class DriverPointsDistribution:
     #: Probability of qualifying in the top 10, which is what the
     #: constructor Q3 bonus keys on -- see CONSTRUCTOR_Q3_BONUS.
     p_q3: float = 0.0
+    #: 10th/90th percentile of the total-points draws -- the spread a mean
+    #: alone hides. A captain pick with a high mean but a p10 near zero
+    #: (e.g. a fast car starting mid-pack at a high-incident circuit) is a
+    #: different risk than one with the same mean and a tight p10-p90 band.
+    p10: float = 0.0
+    p90: float = 0.0
 
 
 def _negative_binomial_params(mean: float, variance: float) -> tuple[float, float]:
@@ -646,9 +652,20 @@ def sample_field(
     dnf_probabilities: dict[str, float],
     *,
     sprint: bool = False,
+    fixed_grid: dict[str, int] | None = None,
     rng: np.random.Generator,
 ) -> dict[str, PointsBreakdown]:
     """One joint Monte Carlo draw for the whole field.
+
+    *fixed_grid*, when given, replaces the simulated qualifying draw with a
+    real grid (e.g. from ``results.fetch_qualifying`` once qualifying has
+    actually happened) and must cover every driver in *strengths*. This is
+    what ``build_grid_conditioned_distributions`` uses to answer "given the
+    real grid, what does the race look like" instead of "what does a whole
+    weekend look like" -- the two questions diverge a lot for a fast car
+    that qualified badly, since the unconditioned draw simulates a *likely*
+    qualifying result from season form and mostly never puts that car at
+    the back in the first place.
 
     A Plackett-Luce qualifying permutation, independent per-constructor DNF
     draws, a Plackett-Luce race permutation restricted to survivors (DNFs
@@ -689,8 +706,14 @@ def sample_field(
     if not drivers:
         return {}
 
-    quali_order = plackett_luce_order(strengths, QUALI_NOISE_SCALE_2026, rng)
-    quali_position = {d: i + 1 for i, d in enumerate(quali_order)}
+    if fixed_grid is not None:
+        missing = [d for d in drivers if d not in fixed_grid]
+        if missing:
+            raise ValueError(f"fixed_grid is missing drivers: {missing}")
+        quali_position = dict(fixed_grid)
+    else:
+        quali_order = plackett_luce_order(strengths, QUALI_NOISE_SCALE_2026, rng)
+        quali_position = {d: i + 1 for i, d in enumerate(quali_order)}
     grid = dict(quali_position)
 
     dnf = {
@@ -739,6 +762,64 @@ def sample_field(
     return breakdowns
 
 
+#: The component fields every draw's ``PointsBreakdown`` carries, shared by
+#: both ``build_round_distributions`` and ``build_grid_conditioned_distributions``
+#: so the two aggregation loops can't quietly drift apart.
+_COMPONENT_FIELDS = ("position", "positions_gained", "overtakes", "fastest_lap", "driver_of_the_day", "dnf", "qualifying")
+
+
+def _run_and_summarise(
+    strengths: dict[str, float],
+    constructor_of: dict[str, str],
+    dnf_probabilities: dict[str, float],
+    *,
+    sprint: bool,
+    fixed_grid: dict[str, int] | None,
+    n_samples: int,
+    seed: int | None,
+) -> dict[str, DriverPointsDistribution]:
+    """Run ``n_samples`` draws of ``sample_field`` and reduce them to one
+    ``DriverPointsDistribution`` per driver. Shared by the unconditioned
+    (``fixed_grid=None``) and grid-conditioned builders so they can't
+    silently diverge in how a draw gets summarised.
+    """
+    rng = np.random.default_rng(seed)
+    totals: dict[str, list[float]] = {d: [] for d in strengths}
+    component_totals: dict[str, dict[str, list[float]]] = {d: {} for d in strengths}
+    dnf_counts: dict[str, int] = dict.fromkeys(strengths, 0)
+    q3_counts: dict[str, int] = dict.fromkeys(strengths, 0)
+
+    for _ in range(n_samples):
+        draw = sample_field(
+            strengths, constructor_of, dnf_probabilities, sprint=sprint, fixed_grid=fixed_grid, rng=rng
+        )
+        for d, breakdown in draw.items():
+            totals[d].append(breakdown.total)
+            if breakdown.dnf:
+                dnf_counts[d] += 1
+            # Only a top-10 qualifying classification scores, so a positive
+            # qualifying component is exactly "reached Q3" -- which is what
+            # the constructor Q3 bonus keys on.
+            if breakdown.qualifying > 0:
+                q3_counts[d] += 1
+            for name in _COMPONENT_FIELDS:
+                component_totals[d].setdefault(name, []).append(getattr(breakdown, name))
+
+    return {
+        d: DriverPointsDistribution(
+            driver=d,
+            constructor=constructor_of.get(d, ""),
+            mean=float(np.mean(totals[d])) if totals[d] else 0.0,
+            components={name: float(np.mean(values)) for name, values in component_totals[d].items()},
+            p_dnf=dnf_counts[d] / n_samples if n_samples else 0.0,
+            p_q3=q3_counts[d] / n_samples if n_samples else 0.0,
+            p10=float(np.percentile(totals[d], 10)) if totals[d] else 0.0,
+            p90=float(np.percentile(totals[d], 90)) if totals[d] else 0.0,
+        )
+        for d in strengths
+    }
+
+
 def build_round_distributions(
     season: int,
     train_rounds: list[int],
@@ -755,6 +836,15 @@ def build_round_distributions(
     this project's walk-forward predictors (form.py, race.py) but the
     strength/hazard inputs already come only from ``train_rounds`` -- it is
     never peeked at.
+
+    This simulates qualifying too, so it answers "what does a typical
+    weekend look like for this driver given their season form" -- not
+    "given the grid we now know, what does the race look like." Once real
+    qualifying results exist for ``target_round``, prefer
+    ``build_grid_conditioned_distributions`` instead: a fast car that
+    qualified badly is a materially different, wider-variance bet than this
+    function's unconditioned mean suggests, because this function mostly
+    never puts that car at the back to begin with.
     """
     strengths = rolling_form(season, train_rounds)
     if not strengths:
@@ -764,36 +854,67 @@ def build_round_distributions(
     history = constructor_history(season, train_rounds)
     dnf_probabilities = {constructor: dnf_probability(record) for constructor, record in history.items()}
 
-    rng = np.random.default_rng(seed)
-    totals: dict[str, list[float]] = {d: [] for d in strengths}
-    component_totals: dict[str, dict[str, list[float]]] = {d: {} for d in strengths}
-    dnf_counts: dict[str, int] = dict.fromkeys(strengths, 0)
-    q3_counts: dict[str, int] = dict.fromkeys(strengths, 0)
+    return _run_and_summarise(
+        strengths,
+        constructor_of,
+        dnf_probabilities,
+        sprint=sprint,
+        fixed_grid=None,
+        n_samples=n_samples,
+        seed=seed,
+    )
 
-    component_fields = ("position", "positions_gained", "overtakes", "fastest_lap", "driver_of_the_day", "dnf", "qualifying")
 
-    for _ in range(n_samples):
-        draw = sample_field(strengths, constructor_of, dnf_probabilities, sprint=sprint, rng=rng)
-        for d, breakdown in draw.items():
-            totals[d].append(breakdown.total)
-            if breakdown.dnf:
-                dnf_counts[d] += 1
-            # Only a top-10 qualifying classification scores, so a positive
-            # qualifying component is exactly "reached Q3" -- which is what
-            # the constructor Q3 bonus keys on.
-            if breakdown.qualifying > 0:
-                q3_counts[d] += 1
-            for name in component_fields:
-                component_totals[d].setdefault(name, []).append(getattr(breakdown, name))
+def build_grid_conditioned_distributions(
+    season: int,
+    train_rounds: list[int],
+    target_round: int,
+    *,
+    sprint: bool = False,
+    n_samples: int = N_POINT_ESTIMATE_SAMPLES,
+    seed: int | None = None,
+) -> dict[str, DriverPointsDistribution]:
+    """Same model as ``build_round_distributions``, but conditioned on the
+    real qualifying grid for ``target_round`` instead of simulating one.
 
-    return {
-        d: DriverPointsDistribution(
-            driver=d,
-            constructor=constructor_of.get(d, ""),
-            mean=float(np.mean(totals[d])) if totals[d] else 0.0,
-            components={name: float(np.mean(values)) for name, values in component_totals[d].items()},
-            p_dnf=dnf_counts[d] / n_samples if n_samples else 0.0,
-            p_q3=q3_counts[d] / n_samples if n_samples else 0.0,
+    Needs nothing beyond public data -- ``results.fetch_qualifying`` is
+    Jolpica-backed, same as everywhere else this project reads qualifying,
+    so this works with no F1 Fantasy token as soon as qualifying has
+    actually happened. Only drivers present in *both* the rolling-form
+    strengths and the real qualifying result are scored; a driver who
+    didn't set a time (DNQ, withdrew) is silently dropped rather than
+    guessed at.
+
+    Raises ``ValueError`` if qualifying for ``target_round`` hasn't
+    happened yet (empty result from ``fetch_qualifying``) -- there is no
+    real grid to condition on yet, and falling back to a simulated one
+    silently would defeat the entire point of this function existing
+    alongside ``build_round_distributions``.
+    """
+    strengths = rolling_form(season, train_rounds)
+    if not strengths:
+        return {}
+
+    constructor_of = {q.driver_code: q.constructor for q in fetch_qualifying(season, train_rounds[-1])}
+    history = constructor_history(season, train_rounds)
+    dnf_probabilities = {constructor: dnf_probability(record) for constructor, record in history.items()}
+
+    real_quali = fetch_qualifying(season, target_round)
+    if not real_quali:
+        raise ValueError(
+            f"no qualifying result yet for season {season} round {target_round} -- "
+            "use build_round_distributions until qualifying has happened"
         )
-        for d in strengths
-    }
+    real_grid = {q.driver_code: q.position for q in real_quali}
+    strengths = {d: s for d, s in strengths.items() if d in real_grid}
+    real_grid = {d: p for d, p in real_grid.items() if d in strengths}
+
+    return _run_and_summarise(
+        strengths,
+        constructor_of,
+        dnf_probabilities,
+        sprint=sprint,
+        fixed_grid=real_grid,
+        n_samples=n_samples,
+        seed=seed,
+    )

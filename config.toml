@@ -9,10 +9,8 @@ leagues = []
 # captured either way, so history keeps accumulating for the others too.
 primary_league = 4512504
 
-# Where reports are emailed for you to forward into the chat. Delivery needs
-# both this and the SMTP_USER/SMTP_PASS repository secrets -- with any of the
-# three unset every send is a silent no-op and the cards only reach disk.
-email_to = "kruegercr@gmail.com"
+# Delivery address is set via the EMAIL_TO repository secret, not here --
+# this file is committed (and, once GitHub Pages is live, public).
 
 # Used to render session times in the preview card.
 timezone = "Europe/London"
