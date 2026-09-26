@@ -97,12 +97,18 @@ jobs:
             ${{ inputs.race && format('--race {0}', inputs.race) || '' }} \
             ${{ inputs.dry_run && '--dry-run' || '' }}
 
+      # Regenerates docs/ from whatever out/ and data/pace/ now contain, so
+      # the published site never drifts from what the commit below records.
+      - name: Rebuild site
+        if: steps.plan.outputs.due != '' && !inputs.dry_run
+        run: python -m f1_fantasy build-site
+
       - name: Commit snapshots and cards
         if: steps.plan.outputs.due != ''
         run: |
           git config user.name "f1-fantasy-bot"
           git config user.email "actions@github.com"
-          git add snapshots data out state.json 2>/dev/null || true
+          git add snapshots data out docs state.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "nothing to commit"
           else
@@ -229,11 +235,16 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      # Upgrade tracking touches out/, so the site can drift here too even
+      # though this job never runs tick.
+      - name: Rebuild site
+        run: python -m f1_fantasy build-site
+
       - name: Commit news data
         run: |
           git config user.name "f1-fantasy-bot"
           git config user.email "actions@github.com"
-          git add data out 2>/dev/null || true
+          git add data out docs 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "nothing to commit"
           else
