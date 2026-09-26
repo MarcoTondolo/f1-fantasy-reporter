@@ -217,9 +217,32 @@ auto-posting adapter could be added later without touching report code.
 
 ## Privacy
 
-Snapshots and rendered cards contain your league members' real names.
-**Keep this repository private.** If it is ever made public, strip `snapshots/`
-and `out/` from history first.
+Snapshots and rendered cards contain your league members' real names. That
+used to mean "keep this repository private" unconditionally -- see "Going
+public" below for the decision to publish it, and what that does and doesn't
+change.
+
+## Going public
+
+This repository -- including `snapshots/`, `out/`, and the generated
+`docs/` site -- is public, and that was a deliberate choice, not an
+oversight: the whole point of `f1_fantasy/site.py` is a shareable, race-by-race
+record of this project's own analysis versus what actually happened, for
+every league it tracks, not just the account owner's teams. That means every
+tracked league's member names, teams, and standings are public too -- confirm
+every league in `config.toml` is one you're comfortable publishing before
+adding it.
+
+What is *not* public because of this: no credential ever lives in a committed
+file. `F1_FANTASY_TOKEN`, `F1_USER_GUID`, the SMTP secrets, and `EMAIL_TO`
+are all environment-only (`Credentials.from_env()`), sourced from GitHub
+Actions repository secrets -- never from `config.toml` or `config.example.toml`.
+If you fork this for a league you don't want public, keep the fork private;
+there's no per-league flag to publish some leagues and not others.
+
+GitHub Pages needs pointing at **`docs/`** on the default branch (Settings →
+Pages → Deploy from a branch → this branch → `/docs`) -- not the repository
+root, which serves this README via Jekyll instead of the generated site.
 
 ## Tests
 
