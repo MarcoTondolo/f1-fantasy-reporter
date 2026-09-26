@@ -2,6 +2,35 @@
   "season": 2026,
   "mentions": [
     {
+      "source": "https://www.formula1.com/en/latest/all.xml",
+      "title": "Bortoleto confused by 'weird' Baku form after Q1 exit",
+      "summary": "Audi brought a significant upgrade package to the Azerbaijan Grand Prix, but it's not produced the desired results so far as both drivers were eliminated in Q1.",
+      "link": "https://www.formula1.com/en/latest/article/bortoleto-confused-by-weird-baku-form-after-upgraded-audis-knocked-out-in-q1.33355x6gASG3ssFdSCz7IJ",
+      "published_at": null,
+      "matched_keywords": [
+        "upgrade",
+        "upgrade package"
+      ],
+      "constructors": [
+        "Audi"
+      ],
+      "attributed_round": null
+    },
+    {
+      "source": "https://www.autosport.com/rss/f1/news/",
+      "title": "Verstappen reveals why Red Bull's engine problem in Baku was different than it seemed",
+      "summary": "After setting the fastest time in final practice and feeling good about the upgrades, Verstappen hoped to pull off a surprise in Baku, but an engine problem threw a spanner in the works.<br />Initially, it appeared to be related to deployment issues and therefore problems on the electrical side of the power unit, but speaking to the (very small) group of Dutch media in the Baku paddock, Verstappen ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/max-verstappen-reveals-why-red-bulls-engine-problem-in-baku-was-different-than-it-seemed/10858986/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
+      "link": "https://www.autosport.com/f1/news/max-verstappen-reveals-why-red-bulls-engine-problem-in-baku-was-different-than-it-seemed/10858986/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
+      "published_at": "2026-09-25T15:38:42Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "Red Bull"
+      ],
+      "attributed_round": 15
+    },
+    {
       "source": "https://www.autosport.com/rss/f1/news/",
       "title": "Red Bull won't deliver any more major F1 car upgrades in 2026",
       "summary": "Red Bull has announced its Baku updates will be its final major Formula 1 car upgrade package as it shifts focus to 2027.<br />The Azerbaijan Grand Prix had already been circled in red for a long time as a venue for key upgrades to arrive, with Williams delivering a 'B-spec' car,\u00a0while McLaren has arrived with significantly revised sidepods, among other changes.<br />The\u00a0FIA\u2019s technical document ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/red-bull-wont-deliver-any-more-major-f1-car-upgrades-in-2026/10858535/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
@@ -53,6 +82,76 @@
     },
     {
       "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "How McLaren\u2019s major F1 upgrade has been working in Baku",
+      "summary": "After three pole positions in the last four rounds, qualifying for the Azerbaijan Grand Prix was underwhelming for the McLaren Formula 1 team, which has struggled all weekend.<br />The MCL40 was described as \u201cmiles off\u201d by Lando Norris following Thursday practice, which he ended 1.5s off the pace \u2013 a figure that was mostly representative as he aborted a quicker lap but wouldn\u2019t have gained ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/how-mclarens-major-f1-upgrade-has-been-working-in-baku/10859110/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/how-mclarens-major-f1-upgrade-has-been-working-in-baku/10859110/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-26T09:20:02Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "McLaren"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Lando Norris: \u2018I have to go for it or die trying\u2019 to win 2026 F1 title",
+      "summary": "Lando Norris believes he now must give it all to have the slightest chance of winning the 2026 Formula 1 world title \u2013 hence a driving error in qualifying for the Azerbaijan Grand Prix.<br />Norris has scored 83 points since McLaren introduced its most substantial upgrade of the season in Hungary, meaning he is now competing with George Russell and Lewis Hamilton for the runner-up spot in the ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/lando-norris-i-have-to-go-for-it-or-die-trying-to-win-2026-f1-title/10859120/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/lando-norris-i-have-to-go-for-it-or-die-trying-to-win-2026-f1-title/10859120/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-26T07:37:46Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "McLaren"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Fernando Alonso's only goal in no-hope Baku: Save parts for F1's triple-header",
+      "summary": "Despite a wretched campaign with Aston Martin and its new engine partner Honda, or perhaps because of it, Fernando\u00a0Alonso hasn't lost his biting sense of humour.<br />\"I pushed into Turn 15 and I locked up. So, a driver error there, and because of that we are not on pole.\"<br />After keeping its powder dry for a big upgrade in Hungary, Aston Martin finally appeared to be at least competing for ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/fernando-alonsos-only-baku-goal-save-parts-for-f1s-triple-header/10859064/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/fernando-alonsos-only-baku-goal-save-parts-for-f1s-triple-header/10859064/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-26T06:29:58Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "Aston Martin"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Williams\u2019 long-awaited F1 upgrade is delivering in Baku \u2013 but was Q3 an \u201coverachievement\u201d?",
+      "summary": "Williams\u2019 2026 car had infamously been overweight after Formula 1 switched to a new technical ruleset, but a brand-new chassis introduced at the Azerbaijan Grand Prix has provided substantial performance.<br />Carlos Sainz was consistently quick in Baku, finishing 11th in Q1, then ninth in the next two segments of qualifying. Williams had never done so well this year \u2013 its best results had been ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/williams-upgrade-delivering-baku-overachievement/10859048/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/williams-upgrade-delivering-baku-overachievement/10859048/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-25T18:36:43Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "Williams"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Max Verstappen reveals what really went wrong for Red Bull in Baku F1 qualifying",
+      "summary": "After setting the fastest time in final practice and feeling good about the upgrades, Verstappen hoped to pull off a surprise in Baku, but an engine problem threw a spanner in the works.<br />Initially, it appeared to be related to deployment issues and therefore problems on the electrical side of the power unit, but speaking to the (very small) group of Dutch media in the Baku paddock,\u00a0Verstappen ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/max-verstappen-reveals-why-red-bulls-engine-problem-in-baku-was-different-than-it-seemed/10858971/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/max-verstappen-reveals-why-red-bulls-engine-problem-in-baku-was-different-than-it-seemed/10858971/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-25T15:37:04Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "Red Bull"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
       "title": "Red Bull \"finally pinpointing\" mysterious car issue highlighted by Max Verstappen for years",
       "summary": "Red Bull has introduced its final significant upgrade package for the RB22 in Baku. After the opening practice sessions, technical director Wach\u00e9 concluded that the correlation is good and that the package \u2013 which includes a new floor and revised sidepods \u2013 is doing what was expected of it.<br />Behind the scenes, the focus has already been on the 2027 challenger for some time, partly because ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/red-bull-finally-pinpointing-mysterious-car-issue-highlighted-by-max-verstappen-for-years/10858772/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
       "link": "https://www.motorsport.com/f1/news/red-bull-finally-pinpointing-mysterious-car-issue-highlighted-by-max-verstappen-for-years/10858772/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
@@ -94,40 +193,6 @@
       ],
       "constructors": [
         "Mercedes"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Red Bull confirms final major F1 upgrade of 2026 for Max Verstappen and Isack Hadjar",
-      "summary": "Red Bull is one of the teams bringing a major upgrade package to the Baku City Circuit. At Williams, the Azerbaijan Grand Prix had already been circled in red for a long time, while McLaren has arrived with significantly revised sidepods, among other changes.<br />The\u00a0FIA\u2019s technical document also shows five upgrades for Red Bull. The most significant of these is a new floor \u201cwith subtle ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/red-bull-confirms-final-major-f1-upgrade-of-2026-for-max-verstappen-and-isack-hadjar/10858533/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/red-bull-confirms-final-major-f1-upgrade-of-2026-for-max-verstappen-and-isack-hadjar/10858533/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-24T12:23:20Z",
-      "matched_keywords": [
-        "upgrade",
-        "upgrade package",
-        "new floor",
-        "sidepod",
-        "major upgrade"
-      ],
-      "constructors": [
-        "McLaren",
-        "Red Bull",
-        "Williams"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Will the \"big swing\" Williams F1 car upgrade be a hit or a miss?",
-      "summary": "Williams is bringing a major update package to the Azerbaijan Grand Prix, one that team boss James Vowles promised earlier in the season would result in an \"almost completely new\" car.<br />What remains to be seen, at this late stage, is how useful it will be \u2013 both in terms of immediate performance uplift and the direction of 2027 development.<br />Alex Albon has described it as a \"big step\" but ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/will-the-big-swing-williams-f1-car-upgrade-be-a-hit-or-a-miss/10858406/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/will-the-big-swing-williams-f1-car-upgrade-be-a-hit-or-a-miss/10858406/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-24T07:28:38Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Williams"
       ],
       "attributed_round": 15
     }
