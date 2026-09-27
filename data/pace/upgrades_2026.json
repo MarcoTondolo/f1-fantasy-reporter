@@ -3,16 +3,15 @@
   "mentions": [
     {
       "source": "https://www.formula1.com/en/latest/all.xml",
-      "title": "Bortoleto confused by 'weird' Baku form after Q1 exit",
-      "summary": "Audi brought a significant upgrade package to the Azerbaijan Grand Prix, but it's not produced the desired results so far as both drivers were eliminated in Q1.",
-      "link": "https://www.formula1.com/en/latest/article/bortoleto-confused-by-weird-baku-form-after-upgraded-audis-knocked-out-in-q1.33355x6gASG3ssFdSCz7IJ",
+      "title": "Leclerc urges Ferrari to \u2018bring upgrades to close the gap\u2019",
+      "summary": "Charles Leclerc was left concerned by Ferrari\u2019s deficit to their rivals in the Azerbaijan Grand Prix.",
+      "link": "https://www.formula1.com/en/latest/article/we-were-quite-far-off-leclerc-urges-ferrari-to-bring-upgrades-to-close-the-gap-after-baku.6zFmpztQcYlGBeNtCK6CF9",
       "published_at": null,
       "matched_keywords": [
-        "upgrade",
-        "upgrade package"
+        "upgrade"
       ],
       "constructors": [
-        "Audi"
+        "Ferrari"
       ],
       "attributed_round": null
     },
@@ -82,6 +81,40 @@
     },
     {
       "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Charles Leclerc: \u201cMcLaren and Red Bull did a step forward that we didn\u2019t do\u201d",
+      "summary": "Red Bull now has a clear advantage over Ferrari in terms of chassis performance, with McLaren having also markedly improved, Charles Leclerc believes following the Formula 1 Azerbaijan Grand\u00a0Prix.<br />Both teams brought significant upgrade packages to Baku, focusing on the sidepods, floor and diffuser \u2013 McLaren\u2019s also included a revised engine cover, rear suspension and rear wing while Red ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/charles-leclerc-mclaren-and-red-bull-did-a-step-forward-that-we-didnt-do/10859495/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/charles-leclerc-mclaren-and-red-bull-did-a-step-forward-that-we-didnt-do/10859495/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-27T11:00:04Z",
+      "matched_keywords": [
+        "upgrade",
+        "upgrade package",
+        "sidepod"
+      ],
+      "constructors": [
+        "McLaren",
+        "Ferrari",
+        "Red Bull"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "James Vowles hails Williams factory effort after major Baku F1 upgrade",
+      "summary": "Williams team principal James Vowles has praised the Grove outfit's relentless factory effort to deliver a major upgrade package for the Azerbaijan Grand Prix, despite the team only walking away with one point from the weekend.<br />Williams arrived at the Baku City Circuit with a substantial update, which included two new chassis, an extensive weight-saving programme and a revised aerodynamic ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/james-vowles-hails-williams-factory-effort-after-major-baku-f1-upgrade/10859369/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/james-vowles-hails-williams-factory-effort-after-major-baku-f1-upgrade/10859369/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-26T16:18:51Z",
+      "matched_keywords": [
+        "upgrade",
+        "upgrade package",
+        "major upgrade"
+      ],
+      "constructors": [
+        "Williams"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
       "title": "How McLaren\u2019s major F1 upgrade has been working in Baku",
       "summary": "After three pole positions in the last four rounds, qualifying for the Azerbaijan Grand Prix was underwhelming for the McLaren Formula 1 team, which has struggled all weekend.<br />The MCL40 was described as \u201cmiles off\u201d by Lando Norris following Thursday practice, which he ended 1.5s off the pace \u2013 a figure that was mostly representative as he aborted a quicker lap but wouldn\u2019t have gained ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/how-mclarens-major-f1-upgrade-has-been-working-in-baku/10859110/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
       "link": "https://www.motorsport.com/f1/news/how-mclarens-major-f1-upgrade-has-been-working-in-baku/10859110/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
@@ -135,67 +168,50 @@
         "Williams"
       ],
       "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Max Verstappen reveals what really went wrong for Red Bull in Baku F1 qualifying",
-      "summary": "After setting the fastest time in final practice and feeling good about the upgrades, Verstappen hoped to pull off a surprise in Baku, but an engine problem threw a spanner in the works.<br />Initially, it appeared to be related to deployment issues and therefore problems on the electrical side of the power unit, but speaking to the (very small) group of Dutch media in the Baku paddock,\u00a0Verstappen ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/max-verstappen-reveals-why-red-bulls-engine-problem-in-baku-was-different-than-it-seemed/10858971/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/max-verstappen-reveals-why-red-bulls-engine-problem-in-baku-was-different-than-it-seemed/10858971/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-25T15:37:04Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Red Bull"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Red Bull \"finally pinpointing\" mysterious car issue highlighted by Max Verstappen for years",
-      "summary": "Red Bull has introduced its final significant upgrade package for the RB22 in Baku. After the opening practice sessions, technical director Wach\u00e9 concluded that the correlation is good and that the package \u2013 which includes a new floor and revised sidepods \u2013 is doing what was expected of it.<br />Behind the scenes, the focus has already been on the 2027 challenger for some time, partly because ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/red-bull-finally-pinpointing-mysterious-car-issue-highlighted-by-max-verstappen-for-years/10858772/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/red-bull-finally-pinpointing-mysterious-car-issue-highlighted-by-max-verstappen-for-years/10858772/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-25T08:15:59Z",
-      "matched_keywords": [
-        "upgrade",
-        "upgrade package",
-        "new floor",
-        "sidepod"
-      ],
-      "constructors": [
-        "Red Bull"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "David Coulthard warns \"heads will roll\" if Williams FW48 upgrade fails",
-      "summary": "Former Formula 1 driver David Coulthard has warned that \"heads will roll\" if Williams's upgraded FW48 fails to deliver an immediate step forward in performance.\u00a0<br />The Grove outfit has struggled all season with an overweight car. After 14 rounds, it sits ninth in the constructors' championship with 11 points: six points from\u00a0Carlos Sainz and five points from Alex Albon.<br />But it has now ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/david-coulthard-warns-heads-will-roll-if-williams-fw48-upgrade-fails/10858684/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/david-coulthard-warns-heads-will-roll-if-williams-fw48-upgrade-fails/10858684/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-24T17:10:05Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Williams"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Why Mercedes\u2019 huge Baku practice advantage may not be the real picture",
-      "summary": "Mercedes made a very strong statement during Thursday\u2019s practice sessions at the Baku City Circuit. George Russell topped the times\u00a0in both sessions, with the first non-Mercedes car almost a second adrift at the end of the day (Max Verstappen at 0.827s).Mercedes will introduce its long-awaited upgrade package for the W17 in Malaysia, but even without new parts on the car, rivals have been ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/out-of-reach-or-not-the-real-picture-why-mercedes-thinks-it-is-so-far-ahead-in-baku/10858680/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/out-of-reach-or-not-the-real-picture-why-mercedes-thinks-it-is-so-far-ahead-in-baku/10858680/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-24T17:07:24Z",
-      "matched_keywords": [
-        "upgrade",
-        "upgrade package"
-      ],
-      "constructors": [
-        "Mercedes"
-      ],
-      "attributed_round": 15
     }
   ],
-  "effects": []
+  "effects": [
+    {
+      "constructor": "Ferrari",
+      "upgrade_round": 14,
+      "before_rounds": [
+        13,
+        12,
+        11
+      ],
+      "after_rounds": [
+        15
+      ],
+      "constructor_before_mean": 0.3142759017675923,
+      "constructor_after_mean": 1.0577804654429035,
+      "field_before_mean": 1.898194455058618,
+      "field_after_mean": 2.3307613323804235,
+      "constructor_delta": 0.7435045636753113,
+      "field_delta": 0.43256687732180543,
+      "relative_delta": 0.3109376863535058,
+      "n_before": 3,
+      "n_after": 1
+    },
+    {
+      "constructor": "Mercedes",
+      "upgrade_round": 14,
+      "before_rounds": [
+        13,
+        12,
+        11
+      ],
+      "after_rounds": [
+        15
+      ],
+      "constructor_before_mean": 0.26492090643261096,
+      "constructor_after_mean": 1.4523145348496869,
+      "field_before_mean": 1.898194455058618,
+      "field_after_mean": 2.3307613323804235,
+      "constructor_delta": 1.1873936284170759,
+      "field_delta": 0.43256687732180543,
+      "relative_delta": 0.7548267510952704,
+      "n_before": 3,
+      "n_after": 1
+    }
+  ]
 }

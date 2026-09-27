@@ -1,0 +1,20 @@
+🏁 *Race picks* -- Bahrain Grand Prix in Malaysia
+Sepang International Circuit, Kuala Lumpur
+
+📊 Top expected points:
+  RUS: 27.4 (p10 2.0 / p90 47.0)
+  ANT: 26.0 (p10 -4.0 / p90 47.0)
+  LEC: 21.5 (p10 -7.0 / p90 41.1)
+  HAM: 21.4 (p10 -8.0 / p90 41.0)
+  NOR: 17.4 (p10 -11.0 / p90 39.0)
+
+🏗️ Captain suggestion: RUS (EV 54.7)
+
+📈 Likely price risers:
+  ANT: 100% (Δ+0.30M)
+  HUL: 100% (Δ+0.59M)
+  VER: 100% (Δ+0.23M)
+  LIN: 93% (Δ+0.41M)
+  RUS: 92% (Δ+0.19M)
+
+🧩 Optimal team: BOR, HUL, BOT, LIN, HAD + Mercedes, Ferrari (167.6 pts, $99.9M)

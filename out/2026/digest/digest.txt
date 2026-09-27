@@ -1,32 +1,31 @@
-F1 Fantasy daily digest -- 2026 round 15
-Generated 2026-09-26 12:14 UTC
+F1 Fantasy daily digest -- 2026 round 16
+Generated 2026-09-27 13:02 UTC
 
-CONFIRMED LINEUP CHANGES (from session data, not rumour):
-  - LAW moved from Red Bull to RB F1 Team
-  - TSU not entered this round (was RB F1 Team)
-  - HAD newly entered, driving for Red Bull
-  - BEA newly entered, driving for Haas F1 Team
-  - STR newly entered, driving for Aston Martin
+Confirmed lineup changes: no qualifying or practice session data yet for round 16 (FP1 R16 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
+  - The detail that impressed Red Bull the most about Hadjar's F1 return [Red Bull] (27 Sep) -- https://www.autosport.com/rss/f1/news/
   - Hadjar set to make Red Bull return at Azerbaijan GP after injury recovery [Red Bull, Racing Bulls] (22 Sep) -- https://www.autosport.com/rss/f1/news/
+  - The one detail that impresses Red Bull most about Isack Hadjar's "outstanding" F1 return [Red Bull] (27 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Isack Hadjar earns "team-mate points" after "exceptional comeback" in Baku, says Alex Brundle [McLaren, Red Bull] (26 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - Hadjar says Red Bull made clear performance gain with car during his absence | Formula 1 [Red Bull] (27 Sep) -- https://www.racefans.net/feed/
 
 UPGRADE PACKAGES:
-  - Bortoleto confused by 'weird' Baku form after Q1 exit [Audi] -- https://www.formula1.com/en/latest/all.xml
+  - Leclerc urges Ferrari to ‘bring upgrades to close the gap’ [Ferrari] -- https://www.formula1.com/en/latest/all.xml
   - Verstappen reveals why Red Bull's engine problem in Baku was different than it seemed [Red Bull] (25 Sep) -- https://www.autosport.com/rss/f1/news/
   - Red Bull won't deliver any more major F1 car upgrades in 2026 [McLaren, Red Bull, Williams] (24 Sep) -- https://www.autosport.com/rss/f1/news/
   - Will the "big swing" Williams F1 car upgrade be a hit or a miss? [Williams] (24 Sep) -- https://www.autosport.com/rss/f1/news/
   - Mercedes aims to end pole drought with upcoming Malaysia F1 upgrades [Ferrari, Mercedes] (19 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Charles Leclerc: “McLaren and Red Bull did a step forward that we didn’t do” [McLaren, Ferrari, Red Bull] (27 Sep) -- https://www.motorsport.com/rss/f1/news/
+  - James Vowles hails Williams factory effort after major Baku F1 upgrade [Williams] (26 Sep) -- https://www.motorsport.com/rss/f1/news/
   - How McLaren’s major F1 upgrade has been working in Baku [McLaren] (26 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Lando Norris: ‘I have to go for it or die trying’ to win 2026 F1 title [McLaren] (26 Sep) -- https://www.motorsport.com/rss/f1/news/
-  - Fernando Alonso's only goal in no-hope Baku: Save parts for F1's triple-header [Aston Martin] (26 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
-  - What the teams said – Qualifying in Azerbaijan -- https://www.formula1.com/en/latest/all.xml
+  - Alpine condemns abuse again following Colapinto's Azerbaijan GP crash [Alpine] (27 Sep) -- https://www.autosport.com/rss/f1/news/
+  - Colapinto handed Sepang penalty for causing Baku F1 pile-up [Alpine] (26 Sep) -- https://www.autosport.com/rss/f1/news/
   - Why Verstappen feels Baku was Red Bull's best chance to win in F1 2026 [Red Bull] (26 Sep) -- https://www.autosport.com/rss/f1/news/
   - Verstappen reveals why Red Bull's engine problem in Baku was different than it seemed [Red Bull] (25 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Azerbaijan GP: Verstappen beats Russell and Hamilton to top FP3 [Ferrari, Red Bull, Mercedes] (25 Sep) -- https://www.autosport.com/rss/f1/news/
   - Why "dangerous" Hamilton-Lawson incident in Azerbaijan GP practice hasn't led to change (25 Sep) -- https://www.autosport.com/rss/f1/news/
   - Cadillac makes three major tech hires including former Red Bull design chief [Red Bull, Alpine, Cadillac] (24 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Azerbaijan GP: Russell tops FP2 from Antonelli as Lindblad crashes [Mercedes] (24 Sep) -- https://www.autosport.com/rss/f1/news/
-  - F1 Azerbaijan GP: Russell fastest in first practice as Antonelli's Mercedes breaks down [Ferrari, Mercedes] (24 Sep) -- https://www.autosport.com/rss/f1/news/
