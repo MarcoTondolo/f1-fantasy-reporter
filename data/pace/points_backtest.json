@@ -1,13 +1,13 @@
 {
   "2026": {
     "season": 2026,
-    "rounds_evaluated": 13,
+    "rounds_evaluated": 14,
     "per_round": [
       {
         "round": 2,
         "n_drivers": 19,
-        "mae": 16.235052631578945,
-        "spearman": 0.5892720599959352,
+        "mae": 16.35957894736842,
+        "spearman": 0.5751998913990173,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 4,
@@ -16,18 +16,18 @@
       {
         "round": 3,
         "n_drivers": 22,
-        "mae": 7.742636363636365,
-        "spearman": 0.6275872990879356,
+        "mae": 8.03809090909091,
+        "spearman": 0.5550862392655026,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
-        "top_pick_actual_rank": 1,
-        "top_pick_in_top3": true
+        "top_pick_actual_rank": 4,
+        "top_pick_in_top3": false
       },
       {
         "round": 4,
         "n_drivers": 22,
-        "mae": 16.144545454545455,
-        "spearman": 0.3303172176131955,
+        "mae": 16.304909090909092,
+        "spearman": 0.26640309845173815,
         "projected_mae": 0.0,
         "projected_spearman": 0.9999999999999999,
         "top_pick_actual_rank": 4,
@@ -36,8 +36,8 @@
       {
         "round": 5,
         "n_drivers": 22,
-        "mae": 11.563,
-        "spearman": 0.5521335693877242,
+        "mae": 11.723545454545455,
+        "spearman": 0.5764342280199373,
         "projected_mae": 0.0,
         "projected_spearman": 0.9999999999999999,
         "top_pick_actual_rank": 1,
@@ -46,8 +46,8 @@
       {
         "round": 6,
         "n_drivers": 22,
-        "mae": 13.933,
-        "spearman": 0.253744086647992,
+        "mae": 14.103909090909092,
+        "spearman": 0.2706980345309313,
         "projected_mae": 0.0,
         "projected_spearman": 0.9999999999999999,
         "top_pick_actual_rank": 1,
@@ -56,8 +56,8 @@
       {
         "round": 7,
         "n_drivers": 22,
-        "mae": 11.103545454545456,
-        "spearman": 0.6336917560434598,
+        "mae": 11.095,
+        "spearman": 0.6568687069781447,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 17,
@@ -66,8 +66,8 @@
       {
         "round": 8,
         "n_drivers": 22,
-        "mae": 8.028454545454547,
-        "spearman": 0.7869471883941928,
+        "mae": 8.115545454545453,
+        "spearman": 0.823879727921718,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 3,
@@ -76,8 +76,8 @@
       {
         "round": 9,
         "n_drivers": 22,
-        "mae": 12.630454545454542,
-        "spearman": 0.7128726847826363,
+        "mae": 12.359909090909088,
+        "spearman": 0.729280071972078,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 6,
@@ -86,8 +86,8 @@
       {
         "round": 10,
         "n_drivers": 22,
-        "mae": 9.486909090909093,
-        "spearman": 0.5911063059703675,
+        "mae": 9.546090909090909,
+        "spearman": 0.5994932637731831,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 20,
@@ -96,8 +96,8 @@
       {
         "round": 11,
         "n_drivers": 22,
-        "mae": 8.559272727272726,
-        "spearman": 0.6014156062888432,
+        "mae": 8.675363636363636,
+        "spearman": 0.5923632547360477,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 4,
@@ -106,8 +106,8 @@
       {
         "round": 12,
         "n_drivers": 22,
-        "mae": 10.722454545454546,
-        "spearman": 0.5015554912446445,
+        "mae": 10.904818181818179,
+        "spearman": 0.504382748805212,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 3,
@@ -116,8 +116,8 @@
       {
         "round": 13,
         "n_drivers": 23,
-        "mae": 13.02991304347826,
-        "spearman": 0.5530525077632786,
+        "mae": 13.03095652173913,
+        "spearman": 0.5555370203767704,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 1,
@@ -126,23 +126,33 @@
       {
         "round": 14,
         "n_drivers": 23,
-        "mae": 8.857826086956521,
-        "spearman": 0.6143576401494802,
+        "mae": 8.846782608695651,
+        "spearman": 0.6029714792119798,
         "projected_mae": 0.0,
         "projected_spearman": 1.0,
         "top_pick_actual_rank": 2,
         "top_pick_in_top3": true
+      },
+      {
+        "round": 15,
+        "n_drivers": 23,
+        "mae": 12.574782608695653,
+        "spearman": 0.49814434142518166,
+        "projected_mae": 0.0,
+        "projected_spearman": 1.0,
+        "top_pick_actual_rank": 3,
+        "top_pick_in_top3": true
       }
     ],
     "summary": {
-      "mean_mae": 11.387466499175881,
-      "mean_spearman": 0.5652348779515143,
+      "mean_mae": 11.548520178905763,
+      "mean_spearman": 0.5576244362048173,
       "benchmark_projected_mean_mae": 0.0,
       "benchmark_projected_mean_spearman": 1.0,
-      "top_pick_top3_hit_rate": 0.5384615384615384
+      "top_pick_top3_hit_rate": 0.5
     },
     "optimiser_backtest": {
-      "rounds_evaluated": 13,
+      "rounds_evaluated": 14,
       "per_round": [
         {
           "round": 2,
@@ -162,8 +172,8 @@
         {
           "round": 3,
           "optimised": [
-            178.0,
-            2.399999999999995
+            187.0,
+            3.599999999999996
           ],
           "naive_baseline": [
             179.0,
@@ -192,8 +202,8 @@
         {
           "round": 5,
           "optimised": [
-            236.0,
-            -1.100000000000001
+            186.0,
+            -0.399999999999999
           ],
           "naive_baseline": [
             147.0,
@@ -237,8 +247,8 @@
         {
           "round": 8,
           "optimised": [
-            177.0,
-            1.999999999999993
+            181.0,
+            2.7999999999999927
           ],
           "naive_baseline": [
             120.0,
@@ -252,8 +262,8 @@
         {
           "round": 9,
           "optimised": [
-            263.0,
-            2.600000000000004
+            268.0,
+            2.2000000000000037
           ],
           "naive_baseline": [
             236.0,
@@ -282,8 +292,8 @@
         {
           "round": 11,
           "optimised": [
-            186.0,
-            2.1999999999999975
+            182.0,
+            1.4999999999999991
           ],
           "naive_baseline": [
             175.0,
@@ -297,8 +307,8 @@
         {
           "round": 12,
           "optimised": [
-            199.0,
-            0.9000000000000012
+            160.0,
+            2.0000000000000036
           ],
           "naive_baseline": [
             82.0,
@@ -312,8 +322,8 @@
         {
           "round": 13,
           "optimised": [
-            204.0,
-            -0.20000000000000506
+            207.0,
+            -0.20000000000000684
           ],
           "naive_baseline": [
             227.0,
@@ -338,15 +348,30 @@
             110.0,
             0.4000000000000057
           ]
+        },
+        {
+          "round": 15,
+          "optimised": [
+            171.0,
+            1.1999999999999957
+          ],
+          "naive_baseline": [
+            -13.0,
+            0.1999999999999984
+          ],
+          "season_points_baseline": [
+            163.0,
+            0.1999999999999975
+          ]
         }
       ],
       "summary": {
-        "optimised_mean_points": 193.23076923076923,
-        "optimised_mean_delta_budget": 1.2846153846153843,
-        "naive_baseline_mean_points": 146.23076923076923,
-        "naive_baseline_mean_delta_budget": 0.246153846153846,
-        "season_points_baseline_mean_points": 187.15384615384616,
-        "season_points_baseline_mean_delta_budget": 1.6999999999999997
+        "optimised_mean_points": 186.5,
+        "optimised_mean_delta_budget": 1.4714285714285713,
+        "naive_baseline_mean_points": 134.85714285714286,
+        "naive_baseline_mean_delta_budget": 0.2428571428571426,
+        "season_points_baseline_mean_points": 185.42857142857142,
+        "season_points_baseline_mean_delta_budget": 1.5928571428571427
       }
     }
   }

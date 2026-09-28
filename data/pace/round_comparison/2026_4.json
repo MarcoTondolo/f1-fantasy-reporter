@@ -1,0 +1,556 @@
+{
+  "season": 2026,
+  "round": 4,
+  "drivers": [
+    {
+      "driver": "VER",
+      "constructor": "Red Bull",
+      "predicted_total": 8.7,
+      "predicted_p10": -10.0,
+      "predicted_p90": 27.100000000000023,
+      "actual_total": 46.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 4.62875,
+        "positions_gained": -3.9575,
+        "overtakes_and_dotd": 4.578749999999999,
+        "fastest_lap": 0.1,
+        "dnf": -5.65,
+        "qualifying": 9.0
+      },
+      "actual_components": {
+        "position": 10.0,
+        "positions_gained": -3.0,
+        "overtakes_and_dotd": 30.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 9.0
+      }
+    },
+    {
+      "driver": "ANT",
+      "constructor": "Mercedes",
+      "predicted_total": 31.615,
+      "predicted_p10": 4.800000000000011,
+      "predicted_p90": 49.0,
+      "actual_total": 41.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 14.7875,
+        "positions_gained": -1.78625,
+        "overtakes_and_dotd": 6.85125,
+        "fastest_lap": 3.7875,
+        "dnf": -2.025,
+        "qualifying": 10.0
+      },
+      "actual_components": {
+        "position": 25.0,
+        "positions_gained": 0.0,
+        "overtakes_and_dotd": 6.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 10.0
+      }
+    },
+    {
+      "driver": "NOR",
+      "constructor": "McLaren",
+      "predicted_total": 10.4125,
+      "predicted_p10": -12.0,
+      "predicted_p90": 35.0,
+      "actual_total": 41.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 6.405,
+        "positions_gained": -0.82625,
+        "overtakes_and_dotd": 5.4087499999999995,
+        "fastest_lap": 0.35,
+        "dnf": -7.925,
+        "qualifying": 7.0
+      },
+      "actual_components": {
+        "position": 18.0,
+        "positions_gained": 2.0,
+        "overtakes_and_dotd": 4.0,
+        "fastest_lap": 10.0,
+        "dnf": 0.0,
+        "qualifying": 7.0
+      }
+    },
+    {
+      "driver": "RUS",
+      "constructor": "Mercedes",
+      "predicted_total": 31.6125,
+      "predicted_p10": 3.0,
+      "predicted_p90": 53.0,
+      "actual_total": 32.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 14.245,
+        "positions_gained": 1.58625,
+        "overtakes_and_dotd": 8.20625,
+        "fastest_lap": 3.55,
+        "dnf": -1.975,
+        "qualifying": 6.0
+      },
+      "actual_components": {
+        "position": 12.0,
+        "positions_gained": 1.0,
+        "overtakes_and_dotd": 13.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 6.0
+      }
+    },
+    {
+      "driver": "PIA",
+      "constructor": "McLaren",
+      "predicted_total": 10.79,
+      "predicted_p10": -15.0,
+      "predicted_p90": 37.0,
+      "actual_total": 32.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 7.08,
+        "positions_gained": 1.24625,
+        "overtakes_and_dotd": 5.63875,
+        "fastest_lap": 0.475,
+        "dnf": -7.65,
+        "qualifying": 4.0
+      },
+      "actual_components": {
+        "position": 15.0,
+        "positions_gained": 4.0,
+        "overtakes_and_dotd": 9.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 4.0
+      }
+    },
+    {
+      "driver": "LEC",
+      "constructor": "Ferrari",
+      "predicted_total": 22.8125,
+      "predicted_p10": 3.0,
+      "predicted_p90": 39.10000000000002,
+      "actual_total": 19.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 10.92375,
+        "positions_gained": -1.45625,
+        "overtakes_and_dotd": 6.2075,
+        "fastest_lap": 0.9875,
+        "dnf": -1.85,
+        "qualifying": 8.0
+      },
+      "actual_components": {
+        "position": 4.0,
+        "positions_gained": -5.0,
+        "overtakes_and_dotd": 12.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 8.0
+      }
+    },
+    {
+      "driver": "BOR",
+      "constructor": "Audi",
+      "predicted_total": 16.37,
+      "predicted_p10": -16.0,
+      "predicted_p90": 39.0,
+      "actual_total": 17.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 3.34125,
+        "positions_gained": 8.955,
+        "overtakes_and_dotd": 9.36125,
+        "fastest_lap": 0.0375,
+        "dnf": -5.325,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 9.0,
+        "overtakes_and_dotd": 8.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "HAM",
+      "constructor": "Ferrari",
+      "predicted_total": 18.75375,
+      "predicted_p10": -0.09999999999999432,
+      "predicted_p90": 37.0,
+      "actual_total": 16.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 9.4825,
+        "positions_gained": 0.64625,
+        "overtakes_and_dotd": 5.4125000000000005,
+        "fastest_lap": 0.3625,
+        "dnf": -2.15,
+        "qualifying": 5.0
+      },
+      "actual_components": {
+        "position": 8.0,
+        "positions_gained": 0.0,
+        "overtakes_and_dotd": 3.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 5.0
+      }
+    },
+    {
+      "driver": "ALB",
+      "constructor": "Williams",
+      "predicted_total": 2.86,
+      "predicted_p10": -17.0,
+      "predicted_p90": 16.0,
+      "actual_total": 15.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 0.79625,
+        "positions_gained": 1.475,
+        "overtakes_and_dotd": 4.26375,
+        "fastest_lap": 0.0,
+        "dnf": -3.675,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 1.0,
+        "positions_gained": 5.0,
+        "overtakes_and_dotd": 9.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "COL",
+      "constructor": "Alpine F1 Team",
+      "predicted_total": 3.84125,
+      "predicted_p10": -10.0,
+      "predicted_p90": 19.0,
+      "actual_total": 15.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 1.8025,
+        "positions_gained": -2.92,
+        "overtakes_and_dotd": 4.38375,
+        "fastest_lap": 0.0,
+        "dnf": -2.425,
+        "qualifying": 3.0
+      },
+      "actual_components": {
+        "position": 6.0,
+        "positions_gained": 1.0,
+        "overtakes_and_dotd": 5.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 3.0
+      }
+    },
+    {
+      "driver": "PER",
+      "constructor": "Cadillac F1 Team",
+      "predicted_total": 3.3825,
+      "predicted_p10": -18.0,
+      "predicted_p90": 15.0,
+      "actual_total": 15.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 0.0575,
+        "positions_gained": 2.85375,
+        "overtakes_and_dotd": 4.29625,
+        "fastest_lap": 0.0,
+        "dnf": -3.825,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 4.0,
+        "overtakes_and_dotd": 11.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "SAI",
+      "constructor": "Williams",
+      "predicted_total": 2.7325,
+      "predicted_p10": -18.0,
+      "predicted_p90": 17.100000000000023,
+      "actual_total": 15.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 1.26375,
+        "positions_gained": 0.875,
+        "overtakes_and_dotd": 4.45625,
+        "fastest_lap": 0.0125,
+        "dnf": -3.875,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 2.0,
+        "positions_gained": 4.0,
+        "overtakes_and_dotd": 9.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "ALO",
+      "constructor": "Aston Martin",
+      "predicted_total": -6.72625,
+      "predicted_p10": -20.0,
+      "predicted_p90": 8.0,
+      "actual_total": 10.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 0.05875,
+        "positions_gained": 0.55875,
+        "overtakes_and_dotd": 4.10625,
+        "fastest_lap": 0.0,
+        "dnf": -11.45,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 2.0,
+        "overtakes_and_dotd": 8.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "STR",
+      "constructor": "Aston Martin",
+      "predicted_total": -6.47375,
+      "predicted_p10": -20.0,
+      "predicted_p90": 8.0,
+      "actual_total": 7.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 0.0075,
+        "positions_gained": 0.68125,
+        "overtakes_and_dotd": 4.1625,
+        "fastest_lap": 0.0,
+        "dnf": -11.325,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 1.0,
+        "overtakes_and_dotd": 6.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "LIN",
+      "constructor": "RB F1 Team",
+      "predicted_total": 15.3275,
+      "predicted_p10": 2.0,
+      "predicted_p90": 33.0,
+      "actual_total": 6.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 3.74125,
+        "positions_gained": 6.28125,
+        "overtakes_and_dotd": 7.08,
+        "fastest_lap": 0.025,
+        "dnf": -1.8,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 2.0,
+        "overtakes_and_dotd": 4.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "OCO",
+      "constructor": "Haas F1 Team",
+      "predicted_total": 8.06875,
+      "predicted_p10": -16.0,
+      "predicted_p90": 26.0,
+      "actual_total": 5.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 2.63125,
+        "positions_gained": 3.3,
+        "overtakes_and_dotd": 5.8,
+        "fastest_lap": 0.0125,
+        "dnf": -3.675,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 1.0,
+        "overtakes_and_dotd": 4.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "BEA",
+      "constructor": "Haas F1 Team",
+      "predicted_total": 4.33125,
+      "predicted_p10": -16.0,
+      "predicted_p90": 20.0,
+      "actual_total": 3.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 2.075,
+        "positions_gained": 1.1825,
+        "overtakes_and_dotd": 4.99875,
+        "fastest_lap": 0.0,
+        "dnf": -3.925,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 1.0,
+        "overtakes_and_dotd": 2.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "BOT",
+      "constructor": "Cadillac F1 Team",
+      "predicted_total": 2.455,
+      "predicted_p10": -17.099999999999994,
+      "predicted_p90": 13.0,
+      "actual_total": 3.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 0.0575,
+        "positions_gained": 2.2125,
+        "overtakes_and_dotd": 4.285,
+        "fastest_lap": 0.0,
+        "dnf": -4.1,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 1.0,
+        "overtakes_and_dotd": 2.0,
+        "fastest_lap": 0.0,
+        "dnf": 0.0,
+        "qualifying": 0.0
+      }
+    },
+    {
+      "driver": "GAS",
+      "constructor": "Alpine F1 Team",
+      "predicted_total": 11.63375,
+      "predicted_p10": -4.099999999999994,
+      "predicted_p90": 31.0,
+      "actual_total": -13.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 5.445,
+        "positions_gained": 1.07875,
+        "overtakes_and_dotd": 5.16,
+        "fastest_lap": 0.075,
+        "dnf": -2.125,
+        "qualifying": 2.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 0.0,
+        "overtakes_and_dotd": 5.0,
+        "fastest_lap": 0.0,
+        "dnf": -20.0,
+        "qualifying": 2.0
+      }
+    },
+    {
+      "driver": "HAD",
+      "constructor": "Red Bull",
+      "predicted_total": 26.39625,
+      "predicted_p10": -13.0,
+      "predicted_p90": 54.0,
+      "actual_total": -19.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 6.4,
+        "positions_gained": 11.845,
+        "overtakes_and_dotd": 12.863750000000001,
+        "fastest_lap": 0.1375,
+        "dnf": -4.85,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 0.0,
+        "overtakes_and_dotd": 6.0,
+        "fastest_lap": 0.0,
+        "dnf": -20.0,
+        "qualifying": -5.0
+      }
+    },
+    {
+      "driver": "HUL",
+      "constructor": "Audi",
+      "predicted_total": 3.525,
+      "predicted_p10": -18.0,
+      "predicted_p90": 23.100000000000023,
+      "actual_total": -19.0,
+      "residual_confident": true,
+      "predicted_components": {
+        "position": 2.85,
+        "positions_gained": 0.39625,
+        "overtakes_and_dotd": 5.09125,
+        "fastest_lap": 0.0375,
+        "dnf": -5.85,
+        "qualifying": 1.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 0.0,
+        "overtakes_and_dotd": 0.0,
+        "fastest_lap": 0.0,
+        "dnf": -20.0,
+        "qualifying": 1.0
+      }
+    },
+    {
+      "driver": "LAW",
+      "constructor": "RB F1 Team",
+      "predicted_total": 7.155,
+      "predicted_p10": -5.0,
+      "predicted_p90": 23.0,
+      "actual_total": -20.0,
+      "residual_confident": false,
+      "predicted_components": {
+        "position": 2.92,
+        "positions_gained": 1.08375,
+        "overtakes_and_dotd": 5.126250000000001,
+        "fastest_lap": 0.05,
+        "dnf": -2.025,
+        "qualifying": 0.0
+      },
+      "actual_components": {
+        "position": 0.0,
+        "positions_gained": 0.0,
+        "overtakes_and_dotd": 0.0,
+        "fastest_lap": 0.0,
+        "dnf": -20.0,
+        "qualifying": 0.0
+      }
+    }
+  ]
+}

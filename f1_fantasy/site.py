@@ -26,6 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from f1_fantasy.calendar import fetch_calendar
+from f1_fantasy.site_comparison import load_round_comparison, render_comparison_page
 from f1_fantasy.site_leagues import (
     SECONDARY_VISUAL_LEAGUES,
     backfill_primary_league_cards,
@@ -82,6 +83,9 @@ class RoundPage:
     cards: list[CardFile]
     league_groups: list[LeagueCardGroup]
     model_vs_actual: dict | None
+    #: Relative href (from docs/rounds/) to the driver-by-driver drill-down
+    #: page, when data/pace/round_comparison/ has this round cached.
+    comparison_href: str | None
     extras: list[tuple[str, str]]  # (label, relative href) for hand-built deep dives
 
 
@@ -264,6 +268,7 @@ def build_round_pages(
     out_dir: Path = Path("out"),
     snapshot_dir: Path = Path("snapshots"),
     backtest_path: Path = Path("data/pace/points_backtest.json"),
+    comparison_dir: Path = Path("data/pace/round_comparison"),
     extras_dir: Path = Path("site_extras"),
     dest_root: Path = Path("docs"),
 ) -> list[RoundPage]:
@@ -307,7 +312,8 @@ def build_round_pages(
             league_names=league_names,
             model_cards=all_cards,
         )
-        if not model_cards and not league_groups:
+        comparison_payload = load_round_comparison(season, round_number, comparison_dir)
+        if not model_cards and not league_groups and not comparison_payload:
             continue
         keys = {c.key for c in all_cards} | {c.key for group in league_groups for c in group.cards}
         # Card-key matching alone misses rounds where the race has happened
@@ -322,6 +328,20 @@ def build_round_pages(
             status = "upcoming"
         else:
             status = "no data"
+
+        comparison_href = None
+        if comparison_payload and comparison_payload.get("drivers"):
+            (dest_root / "rounds").mkdir(parents=True, exist_ok=True)
+            comparison_html = render_comparison_page(
+                comparison_payload,
+                event_name=event.name if event else f"Round {round_number}",
+                round_number=round_number,
+                season=season,
+            )
+            comparison_path = dest_root / "rounds" / f"round-{round_number}-comparison.html"
+            comparison_path.write_text(comparison_html, encoding="utf-8")
+            comparison_href = f"round-{round_number}-comparison.html"
+
         pages.append(
             RoundPage(
                 round_number=round_number,
@@ -331,6 +351,7 @@ def build_round_pages(
                 cards=model_cards,
                 league_groups=league_groups,
                 model_vs_actual=_model_vs_actual_for_round(season, round_number, backtest_path),
+                comparison_href=comparison_href,
                 extras=_extras_for_round(round_number, extras_dir, dest_root),
             )
         )
@@ -725,9 +746,15 @@ def render_index_html(pages: list[RoundPage], *, season: int, league_name: str) 
     return _HEAD.format(title=f"{league_name} — {season}", description=f"Race-by-race fantasy analysis and results for the {season} season.", css=_BASE_CSS) + body
 
 
-def _model_vs_actual_html(row: dict | None) -> str:
+def _model_vs_actual_html(row: dict | None, comparison_href: str | None) -> str:
+    drill_down = (
+        f'<div class="extras-list"><a href="{comparison_href}">Driver-by-driver breakdown &rarr;</a></div>'
+        if comparison_href
+        else ""
+    )
     if row is None:
-        return '<div class="empty-note">Not in the walk-forward backtest yet -- run <code>f1-fantasy points-backtest</code> to add this round once it has raced.</div>'
+        empty = '<div class="empty-note">Not in the walk-forward backtest yet -- run <code>f1-fantasy points-backtest</code> to add this round once it has raced.</div>'
+        return empty + drill_down
     mae = row.get("mae")
     spearman = row.get("spearman")
     rank = row.get("top_pick_actual_rank")
@@ -740,6 +767,7 @@ def _model_vs_actual_html(row: dict | None) -> str:
   <div class="metric"><div class="metric-label">Top pick actually finished</div><div class="metric-value {hit_class}">P{rank}</div></div>
 </div>
 <div class="empty-note">MAE is how far the model's mean points prediction was from each driver's real score, averaged across {row.get('n_drivers', '?')} drivers. Rank correlation (Spearman) is whether it got the *order* right even when the numbers were off. "Top pick actually finished" checks whether the model's #1 projected driver landed in the top 3 on the day.</div>
+{drill_down}
 """
 
 
@@ -773,8 +801,8 @@ def render_round_html(page: RoundPage, *, league_name: str, season: int) -> str:
         if not has_post_race_league_cards and page.status == "upcoming":
             sections.append('<div class="empty-note">Recap, winners &amp; losers, and hindsight fill in here once each league\'s round is scored.</div>')
 
-    if has_post_race_league_cards:
-        sections.append('<div class="section-title">Model vs. actuals</div>' + _model_vs_actual_html(page.model_vs_actual))
+    if has_post_race_league_cards or page.comparison_href:
+        sections.append('<div class="section-title">Model vs. actuals</div>' + _model_vs_actual_html(page.model_vs_actual, page.comparison_href))
     if other_cards:
         sections.append('<div class="section-title">Other</div><div class="card-grid">' + "".join(card_html(c) for c in other_cards) + "</div>")
 
@@ -803,6 +831,7 @@ def build_site(
     out_dir: Path = Path("out"),
     snapshot_dir: Path = Path("snapshots"),
     backtest_path: Path = Path("data/pace/points_backtest.json"),
+    comparison_dir: Path = Path("data/pace/round_comparison"),
     extras_dir: Path = Path("site_extras"),
     dest_root: Path = Path("docs"),
 ) -> list[RoundPage]:
@@ -816,6 +845,7 @@ def build_site(
         out_dir=out_dir,
         snapshot_dir=snapshot_dir,
         backtest_path=backtest_path,
+        comparison_dir=comparison_dir,
         extras_dir=extras_dir,
         dest_root=dest_root,
     )

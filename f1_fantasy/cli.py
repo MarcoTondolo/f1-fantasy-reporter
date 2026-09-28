@@ -808,6 +808,67 @@ def cmd_daily_digest(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_round_comparison(args: argparse.Namespace) -> int:
+    """Cache predicted-vs-actual, per-component fantasy points for one or
+    every already-raced round -- the data behind the site's drill-down
+    "Model vs. actuals" visual. Needs only public data (Jolpica, the public
+    driver feed), same as points-backtest -- no F1 Fantasy token.
+
+    Cached rather than computed at every `build-site` run: each round needs
+    a Monte Carlo draw plus several network calls, and build-site already
+    runs on every tick/news CI job -- redoing this every time would hammer
+    the public feed for no benefit, since a raced round's result never
+    changes. Safe to re-run: each round's file is fully regenerated, never
+    appended to.
+    """
+    import json
+
+    from f1_fantasy.predict.round_comparison import build_round_comparison
+
+    config = Config.load(args.config)
+    out_dir = Path(args.out) if args.out else Path("data/pace/round_comparison")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    rounds = [args.round] if args.round else list(range(2, DEFAULT_SEASON_ROUNDS.get(config.season, 24) + 1))
+    written = 0
+    for target_round in rounds:
+        train_rounds = list(range(1, target_round))
+        try:
+            comparisons = build_round_comparison(
+                config.season, train_rounds, target_round, n_samples=args.n_samples, seed=0
+            )
+        except Exception as exc:  # noqa: BLE001 -- an unraced or not-yet-public round shouldn't abort a sweep
+            print(f"round {target_round}: skipped ({exc})")
+            continue
+        if not comparisons:
+            print(f"round {target_round}: no data")
+            continue
+        payload = {
+            "season": config.season,
+            "round": target_round,
+            "drivers": [
+                {
+                    "driver": c.driver,
+                    "constructor": c.constructor,
+                    "predicted_total": c.predicted_total,
+                    "predicted_p10": c.predicted_p10,
+                    "predicted_p90": c.predicted_p90,
+                    "actual_total": c.actual_total,
+                    "residual_confident": c.residual_confident,
+                    "predicted_components": c.predicted_components,
+                    "actual_components": c.actual_components,
+                }
+                for c in comparisons
+            ],
+        }
+        path = out_dir / f"{config.season}_{target_round}.json"
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        print(f"round {target_round}: wrote {path} ({len(comparisons)} drivers)")
+        written += 1
+    print(f"wrote {written} round(s)")
+    return 0
+
+
 def cmd_build_site(args: argparse.Namespace) -> int:
     """Rebuild the static site under docs/ from this repo's own committed
     out/, snapshots/, and data/pace/ -- an assembly step, not new analysis.
@@ -1208,7 +1269,7 @@ def cmd_race_backtest(args: argparse.Namespace) -> int:
 #: Default round count per season -- 2024 and 2025 both ran the full 24-race
 #: calendar; 2026 is backfilled only through the 12 rounds this project has
 #: covered elsewhere.
-DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 14}
+DEFAULT_SEASON_ROUNDS = {2024: 24, 2025: 24, 2026: 15}
 
 
 def cmd_points_backtest(args: argparse.Namespace) -> int:
@@ -1566,6 +1627,15 @@ def build_parser() -> argparse.ArgumentParser:
     daily_digest.add_argument("--round", type=int, help="round number (default: current/next in the calendar)")
     daily_digest.add_argument("--dry-run", action="store_true", help="write to disk only, never send email")
     daily_digest.set_defaults(func=cmd_daily_digest)
+
+    round_comparison = sub.add_parser(
+        "round-comparison",
+        help="cache predicted-vs-actual per-component fantasy points for the site's drill-down visual",
+    )
+    round_comparison.add_argument("--round", type=int, help="single round (default: every already-raced round)")
+    round_comparison.add_argument("--n-samples", type=int, default=800, help="Monte Carlo samples for the predicted side (default: 800)")
+    round_comparison.add_argument("--out", help="output directory (default: data/pace/round_comparison)")
+    round_comparison.set_defaults(func=cmd_round_comparison)
 
     build_site = sub.add_parser(
         "build-site",
