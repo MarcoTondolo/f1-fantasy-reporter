@@ -1,5 +1,8 @@
 {% extends "base.html.j2" %}
-{# Post-lockout: what everyone changed. No outcomes -- the race has not run. #}
+{# Post-lockout: what everyone changed. No outcomes at real lockout time --
+   the race has not run. When viewed later, once the race has a result
+   (has_points_impact), each mover also shows the real point impact of their
+   swap vs. their previous lineup -- see lockout.py's module docstring. #}
 
 {% block content %}
 
@@ -29,6 +32,11 @@
         {% if mover.value_change %}
         <span class="delta {{ 'pos' if mover.value_change > 0 else 'neg' }} mover-value">
           {{ mover.value_change | signed }}m
+        </span>
+        {% endif %}
+        {% if mover.points_impact is not none %}
+        <span class="delta {{ 'pos' if mover.points_impact > 0 else 'neg' }} mover-value">
+          {{ mover.points_impact | signed }} pts vs. old lineup
         </span>
         {% endif %}
       </div>

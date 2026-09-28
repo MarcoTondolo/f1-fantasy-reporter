@@ -51,10 +51,11 @@ _RECAP_SET = [
 ]
 
 
-def _render_set(cards, current, previous, race_label: str, dest: Path) -> None:
+def _render_set(cards, current, previous, race_label: str, dest: Path, *, extra_kwargs: dict[str, dict] | None = None) -> None:
+    extra_kwargs = extra_kwargs or {}
     dest.mkdir(parents=True, exist_ok=True)
     for name, build, caption_fn, template in cards:
-        context = build(current, previous, race_label=race_label)
+        context = build(current, previous, race_label=race_label, **extra_kwargs.get(name, {}))
         render_card(template, context, dest / f"{name}.png")
         (dest / f"{name}.txt").write_text(caption_fn(context) + "\n", encoding="utf-8")
 
@@ -94,7 +95,16 @@ def render_league_cards(
             cards = _needed(_LOCKOUT_SET)
             if cards:
                 current = store.read(season, league_id, race_id, Phase.LOCKED)
-                _render_set(cards, current, previous, race_label, dest)
+                # The site is viewed after the fact, often once the race (and
+                # its FINAL snapshot) already exists -- pass it to lockout so
+                # it can show each mover's real point impact vs their
+                # previous lineup, on top of the zero-information view a
+                # live post right after lockout is stuck with (lockout.py's
+                # own docstring explains why it can't invent that there).
+                extra_kwargs = {}
+                if store.exists(season, league_id, race_id, Phase.FINAL):
+                    extra_kwargs["lockout"] = {"final": store.read(season, league_id, race_id, Phase.FINAL)}
+                _render_set(cards, current, previous, race_label, dest, extra_kwargs=extra_kwargs)
         if store.exists(season, league_id, race_id, Phase.FINAL):
             cards = _needed(_RECAP_SET)
             if cards:

@@ -98,6 +98,10 @@ class TransferScore(Model):
     """Whether a member's changes paid off, once the race has been scored."""
 
     guid: str
+    #: See TeamChange.team_no -- an account can run more than one team in a
+    #: league, and a bare guid can't tell the two apart when this score is
+    #: looked up per-team (see team_key).
+    team_no: int = 1
     member_name: str
     team_name: str = ""
     players_in: list[ScoredPlayer] = []
@@ -319,6 +323,7 @@ def score_changes(
         scores.append(
             TransferScore(
                 guid=change.guid,
+                team_no=change.team_no,
                 member_name=change.member_name,
                 team_name=change.team_name,
                 players_in=players_in,

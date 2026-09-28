@@ -1,8 +1,18 @@
 """The post-lockout card: who changed what, before anyone knows if it worked.
 
-Deliberately says nothing about outcomes -- at lockout the race has not run, so
-the catalogue's points are all zero. Anything evaluative here would be invented.
-The recap card is where moves get judged.
+Deliberately says nothing about outcomes at real lockout time -- the race has
+not run yet, so the catalogue's points are all zero and anything evaluative
+would be invented. The recap card is where moves get judged.
+
+**`final`, however, lets a *later* viewing of this same card show the real
+point impact of each move, honestly.** The site is browsed after the fact --
+often once the race (and its FINAL snapshot) already exists -- so passing
+that snapshot in as `final` scores each mover's swap with
+`store.diff.score_changes`, the same real-points lookup `recap.py` uses, and
+attaches it to their row. This never touches the live post right after
+lockout (which has no FINAL snapshot to pass and so gets exactly the old,
+zero-information card); it only enriches the static site's rendering of the
+same card once the outcome is knowable.
 """
 
 from __future__ import annotations
@@ -11,7 +21,7 @@ from collections import Counter
 
 from f1_fantasy.api.models import CHIP_LABELS, LeagueSnapshot, team_key
 from f1_fantasy.render.teams import team_color
-from f1_fantasy.store.diff import TeamChange, chip_activations, diff_teams
+from f1_fantasy.store.diff import TeamChange, chip_activations, diff_teams, score_changes
 
 
 def _swap_lines(change: TeamChange) -> list[dict]:
@@ -40,6 +50,7 @@ def build_lockout(
     *,
     race_label: str = "",
     you_guid: str | None = None,
+    final: LeagueSnapshot | None = None,
 ) -> dict:
     changes = diff_teams(previous, current)
     # Keyed by (guid, team_no), not guid alone -- an account can run more than
@@ -49,9 +60,18 @@ def build_lockout(
     # dropped and its member row falsely reports the survivor's status twice.
     by_member = {team_key(c.guid, c.team_no): c for c in changes}
 
+    # Real point impact per move, only when *final* (the post-race snapshot)
+    # was supplied -- see module docstring. score_changes reads points off
+    # whichever snapshot it's given, so this is the exact recap.py convention,
+    # just optionally reused here.
+    points_by_member = {}
+    if final is not None:
+        points_by_member = {team_key(s.guid, s.team_no): s.delta for s in score_changes(changes, final)}
+
     movers, held = [], []
     for member in current.members:
-        change = by_member.get(team_key(member.guid, member.team_no))
+        key = team_key(member.guid, member.team_no)
+        change = by_member.get(key)
         if change is None:
             continue
         if change.unchanged:
@@ -68,6 +88,7 @@ def build_lockout(
                 "chips": [CHIP_LABELS[chip] for chip in change.chips_activated],
                 "value_change": change.value_change,
                 "is_you": you_guid is not None and change.guid == you_guid,
+                "points_impact": points_by_member.get(key) if final is not None else None,
             }
         )
 
@@ -99,6 +120,7 @@ def build_lockout(
         "most_backed": [{"name": n, "count": c} for n, c in incoming.most_common(4) if c > 1],
         "most_dropped": [{"name": n, "count": c} for n, c in outgoing.most_common(4) if c > 1],
         "chips_played": chips_played,
+        "has_points_impact": final is not None,
         "caveat": _caveat(current, previous),
     }
 
@@ -137,6 +159,14 @@ def caption(context: dict) -> str:
 
     if context["held"]:
         lines.append(f"\U0001f9ca Held firm: {', '.join(context['held'])}")
+
+    scored_movers = [m for m in context["movers"] if m.get("points_impact") is not None]
+    if scored_movers:
+        best = max(scored_movers, key=lambda m: m["points_impact"])
+        worst = min(scored_movers, key=lambda m: m["points_impact"])
+        lines.append(f"\U0001f4c8 Best call: {best['name']} ({best['points_impact']:+g})")
+        if worst["name"] != best["name"]:
+            lines.append(f"\U0001f4c9 Worst call: {worst['name']} ({worst['points_impact']:+g})")
 
     lines.append("")
     lines.append("Good luck \U0001f3ce️")

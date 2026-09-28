@@ -222,7 +222,14 @@ def _load_league_groups(
         LeagueCardGroup(
             league_id=league_id,
             league_name=primary_league_name if league_id == primary_league_id else league_names.get(league_id, f"League {league_id}"),
-            cards=sorted(cards, key=card_sort_key),
+            # Each group's own cards, looked up by *its* league_id -- not the
+            # bare name `cards`, which after the for-loop above has ended
+            # only holds whichever league was processed *last* (a real bug:
+            # every group in this comprehension was silently getting that
+            # one league's card list, since a list comprehension's own loop
+            # variable is `league_id`, not `cards`, so `cards` fell through
+            # to the outer for-loop's final value instead of raising).
+            cards=sorted(groups[league_id], key=card_sort_key),
         )
         for league_id in sorted(groups, key=league_sort_key)
         if groups[league_id]

@@ -186,3 +186,50 @@ def test_build_lockout_reports_each_teams_own_status_not_the_last_ones():
     mover_teams = {m["team_name"] for m in context["movers"]}
     assert mover_teams == {"Squad A"}, "Squad A's real transfer must not be dropped"
     assert context["held"] == ["Chris"], "only Squad B actually held firm -- not printed twice"
+
+
+def test_build_lockout_points_impact_matches_each_teams_own_swap_not_the_other_teams():
+    """With *final* supplied, each team's points_impact must come from
+    scoring *that team's own* swap -- the same (guid, team_no) collision
+    class already fixed for TeamChange (see team_key) applies to
+    TransferScore too, since score_changes is keyed the same way.
+    """
+    previous = _snapshot(
+        {"player_ids": ["1", "101"], "team_name": "Squad A"},
+        {"player_ids": ["2", "102"], "team_name": "Squad B"},
+    )
+    current = _snapshot(
+        {"player_ids": ["4", "101"], "team_name": "Squad A"},  # swapped 1 -> 4
+        {"player_ids": ["5", "102"], "team_name": "Squad B"},  # swapped 2 -> 5
+    )
+    final = _snapshot(
+        {"player_ids": ["4", "101"], "team_name": "Squad A"},
+        {"player_ids": ["5", "102"], "team_name": "Squad B"},
+    )
+    final = final.model_copy(update={"players": make_players(points={"1": 5.0, "4": 20.0, "2": 8.0, "5": 3.0})})
+
+    context = build_lockout(current, previous, final=final)
+    impact_by_team = {m["team_name"]: m["points_impact"] for m in context["movers"]}
+
+    assert impact_by_team["Squad A"] == pytest.approx(20.0 - 5.0)
+    assert impact_by_team["Squad B"] == pytest.approx(3.0 - 8.0)
+    assert context["has_points_impact"] is True
+
+
+def test_build_lockout_omits_points_impact_when_final_is_not_supplied():
+    """The real-time post right after lockout has no FINAL snapshot to pass
+    -- points_impact must stay None rather than invent zero, and the card
+    must say has_points_impact is False."""
+    previous = _snapshot(
+        {"player_ids": ["1", "101"], "team_name": "Squad A"},
+        {"player_ids": ["2", "102"], "team_name": "Squad B"},
+    )
+    current = _snapshot(
+        {"player_ids": ["4", "101"], "team_name": "Squad A"},
+        {"player_ids": ["2", "102"], "team_name": "Squad B"},
+    )
+
+    context = build_lockout(current, previous)
+
+    assert all(m["points_impact"] is None for m in context["movers"])
+    assert context["has_points_impact"] is False
