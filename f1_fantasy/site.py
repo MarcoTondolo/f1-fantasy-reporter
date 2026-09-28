@@ -26,7 +26,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from f1_fantasy.calendar import fetch_calendar
-from f1_fantasy.site_leagues import SECONDARY_VISUAL_LEAGUES, render_secondary_league_cards
+from f1_fantasy.site_leagues import (
+    SECONDARY_VISUAL_LEAGUES,
+    backfill_primary_league_cards,
+    render_secondary_league_cards,
+)
 
 #: Where the feedback widget (see `_FEEDBACK_WIDGET_HTML`) files new issues.
 GITHUB_REPO = "tiptoptopher/f1-fantasy-reporter"
@@ -278,12 +282,13 @@ def build_round_pages(
     # pipeline already; every other league this project tracks standings for
     # only gets a card if rendered here, from snapshots already committed --
     # no live API access needed, see f1_fantasy.site_leagues.
-    render_secondary_league_cards(
-        season,
-        {r: e.name for r, e in events.items()},
-        snapshot_dir=snapshot_dir,
-        out_dir=out_dir,
-    )
+    race_labels = {r: e.name for r, e in events.items()}
+    render_secondary_league_cards(season, race_labels, snapshot_dir=snapshot_dir, out_dir=out_dir)
+    # Backfills any gap the live pipeline itself left for the primary league
+    # (a round captured before a card type existed, a missed tick) -- never
+    # touches a card the live pipeline already rendered.
+    if primary_league_id is not None:
+        backfill_primary_league_cards(season, race_labels, primary_league_id, snapshot_dir=snapshot_dir, out_dir=out_dir)
     league_names = _league_names(season, snapshot_dir)
 
     pages = []

@@ -80,6 +80,24 @@ def _pick_team(teams: list[Team], member: Member) -> Team | None:
     A user may hold several teams while a league entry refers to exactly one, so
     matching on team number matters -- otherwise a member's second team gets
     diffed against their first and every report shows phantom transfers.
+
+    TODO(unverified -- needs a live session to confirm): the ``teams[0]``
+    fallback looks capable of the same silent-duplicate class of bug already
+    fixed for the account's own team (see the comment on
+    ``api.try_teams``/``try_opponent_teams`` below), but for *other*
+    members' non-primary teams. Observed in already-committed round 12 data
+    (league 4512504, season 2026): several 3-team members (Paul Brown,
+    Derek Blais, Marie Lunny, Jacob Vander Zanden) have a ``team_no=3`` (or
+    2) snapshot.teams entry that is byte-identical in team_name/budget_cap
+    to their ``team_no=1`` entry -- exactly the shape of "the requested
+    team_no wasn't in what came back, so this fell back to teams[0]". Not
+    fixed here: confirming it needs a live ``try_opponent_teams`` call for a
+    known multi-team guid with more than one team, which this repo's dev
+    sandbox cannot make (no F1_FANTASY_TOKEN). If confirmed, the fix is
+    likely to return None here instead of falling back, so a genuinely
+    unrecoverable team_no is skipped (an honest gap, like a failed fetch --
+    see collect_league's own "team could not be read" handling) rather than
+    silently mislabelled with another team's data.
     """
     if not teams:
         return None
