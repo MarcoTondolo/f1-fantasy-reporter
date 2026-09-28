@@ -1,0 +1,234 @@
+<meta charset="utf-8">
+<title>Sepang pre-race deep dive</title>
+<meta name="description" content="Why the Bahrain GP is at Sepang, what Pirelli's tyre call means, and what this project can and can't say yet for round 16.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --page: #0d0d0d; --surface: #1a1a19; --surface-raised: #232322;
+  --ink: #ffffff; --ink-secondary: #c3c2b7; --ink-muted: #898781;
+  --grid: #2c2c2a; --baseline: #383835; --hairline: rgba(255,255,255,0.10);
+  --pos: #0ca30c; --neg: #d03b3b; --accent: #e10600;
+  --status-upcoming: #fab219; --status-completed: #0ca30c;
+  --font-display: 'Barlow Condensed', 'Liberation Sans', system-ui, sans-serif;
+  --font-body: 'Inter', 'Liberation Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--page); color: var(--ink); font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased; margin: 0; padding: 20px 16px 48px;
+  display: flex; justify-content: center;
+}
+.page { width: 100%; max-width: 1080px; display: flex; flex-direction: column; gap: 22px; }
+a { color: inherit; }
+.eyebrow {
+  font-family: var(--font-display); font-weight: 700; font-size: 13px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+}
+header.site-header { border-bottom: 2px solid var(--accent); padding-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
+h1 {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5.5vw, 44px);
+  line-height: 0.98; letter-spacing: -0.01em; text-transform: uppercase; margin: 0; text-wrap: balance;
+}
+.subtitle { color: var(--ink-secondary); font-size: 14px; max-width: 700px; }
+.nav-back { font-size: 13px; color: var(--ink-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.nav-back:hover { color: var(--ink); }
+
+.section-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-muted); border-bottom: 1px solid var(--hairline); padding-bottom: 8px; margin: 6px 0 -4px;
+}
+.card {
+  background: var(--surface); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
+}
+.card-caption { font-size: 13px; line-height: 1.6; color: var(--ink-secondary); }
+
+.metric-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.metric {
+  background: var(--surface-raised); border-radius: 4px; padding: 12px 16px; min-width: 130px; flex: 1;
+}
+.metric-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px; }
+.metric-value { font-family: var(--font-display); font-weight: 700; font-size: 24px; font-variant-numeric: tabular-nums; }
+.metric-value.warn { color: var(--status-upcoming); }
+
+footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6; padding-top: 8px; border-top: 1px solid var(--hairline); }
+
+@media (max-width: 560px) { .card { padding: 14px; } }
+
+.fb-btn {
+  position: fixed; right: 18px; bottom: 18px; z-index: 1000;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff; border: none; border-radius: 999px;
+  padding: 12px 18px; font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.fb-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+.fb-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.fb-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001;
+  display: none; align-items: center; justify-content: center; padding: 16px;
+}
+.fb-overlay.open { display: flex; }
+.fb-modal {
+  background: var(--surface); border-radius: 6px; padding: 22px; width: 100%; max-width: 440px;
+  border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 14px;
+  max-height: 90vh; overflow-y: auto;
+}
+.fb-modal-title { font-family: var(--font-display); font-weight: 700; font-size: 18px; text-transform: uppercase; }
+.fb-modal-context { font-size: 11px; color: var(--ink-muted); background: var(--surface-raised); border-radius: 4px; padding: 8px 10px; word-break: break-word; }
+.fb-type-row { display: flex; gap: 8px; }
+.fb-type-btn {
+  flex: 1; padding: 8px; border-radius: 4px; border: 1px solid var(--hairline); background: var(--surface-raised);
+  color: var(--ink-secondary); font-family: var(--font-body); font-weight: 600; font-size: 13px; cursor: pointer;
+}
+.fb-type-btn.active { border-color: var(--accent); color: var(--ink); background: rgba(225,6,0,0.14); }
+.fb-modal textarea {
+  width: 100%; min-height: 110px; resize: vertical; background: var(--surface-raised); color: var(--ink);
+  border: 1px solid var(--hairline); border-radius: 4px; padding: 10px; font-family: var(--font-body); font-size: 13px;
+  box-sizing: border-box;
+}
+.fb-modal-note { font-size: 11px; color: var(--ink-muted); line-height: 1.5; }
+.fb-modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.fb-modal-actions button { font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 9px 16px; border-radius: 999px; cursor: pointer; border: none; }
+.fb-cancel { background: transparent; color: var(--ink-secondary); }
+.fb-cancel:hover { color: var(--ink); }
+.fb-submit { background: var(--accent); color: #fff; }
+.fb-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+@media (max-width: 560px) { .fb-btn span.fb-btn-label { display: none; } .fb-btn { padding: 14px; } }
+
+</style>
+
+<div class="page">
+  <a class="nav-back" href="../../rounds/round-16.html">&larr; Round 16</a>
+  <header class="site-header">
+    <div class="eyebrow">Round 16 &middot; Pre-race deep dive</div>
+    <h1>Sepang: why the Bahrain GP is in Malaysia, and what we can and can't say yet</h1>
+    <div class="subtitle">Bahrain Grand Prix in Malaysia &mdash; written race week, before Friday practice has run.</div>
+  </header>
+
+  <div class="section-title">Why this race is where it is</div>
+  <div class="card"><div class="card-caption" style="font-size:14px">
+    F1 and the FIA cancelled the original April Bahrain and Saudi Arabian rounds outright because of the 2026
+    Iran war, cutting the season to 22 races. Bahrain's round was later reinstated for 4 October &mdash; not at
+    Sakhir, but at the Sepang International Circuit in Malaysia, with Bahrain still footing the bill and the
+    event still officially named the Bahrain Grand Prix. Saudi Arabia's round has not been rescheduled. This is
+    Sepang's first F1 race since the 2017 Malaysian Grand Prix.
+  </div></div>
+
+  <div class="section-title">Track character</div>
+  <div class="card"><div class="card-caption" style="font-size:14px">
+    5.543km, run clockwise, 15 corners and 8 straights (two of them long, high-speed) on an unusually wide
+    track (16&ndash;22m) designed by Hermann Tilke &mdash; sweeping, wide-radius corners rather than a tight
+    street-circuit layout, closer in character to Baku's straights than to its walls. The asphalt is genuinely
+    abrasive and, per Pirelli, <b>has not been resurfaced since that 2017 race</b> &mdash; a real, verified
+    factor for tyre wear this weekend, not a guess.
+    <br><br>
+    <b>What this project can't say yet:</b> the clipping-severity and year-on-year pace numbers on the Baku
+    deep-dive two rounds ago came from this project's own telemetry analysis (<code>pace/track_profile.py</code>),
+    which needs a recent, modern lap of the circuit to work from. FastF1's telemetry/lap API doesn't cover
+    Sepang's last F1 visit (2017 predates it), and this weekend's own practice hasn't run yet &mdash; so there is
+    no real lap to build that number from. It'll be possible once FP1 or FP2 laps exist.
+  </div></div>
+
+  <div class="section-title">Tyre strategy</div>
+  <div class="card"><div class="card-caption" style="font-size:14px">
+    Pirelli has nominated the <b>C2 / C3 / C4</b> compounds &mdash; the mid-range trio, not the softest set it
+    used for the last street-circuit rounds. Pirelli's own stated reasoning: Sepang sits at medium tyre stress
+    on their cross-track scale, but that worn, abrasive, un-resurfaced asphalt pushes wear up regardless, and
+    avoiding the hardest compounds keeps a one-stop and a two-stop race close enough in lap time to leave
+    strategy genuinely open, rather than the race being decided by pit wall math alone.
+  </div></div>
+
+  <div class="section-title">Weather</div>
+  <div class="card"><div class="card-caption" style="font-size:14px">
+    Sepang's tropical climate was a recurring theme across its 1999&ndash;2017 F1 history &mdash; sudden
+    afternoon storms strong enough to red-flag a session were common enough to become part of the circuit's
+    reputation. That's long-run climate context, not a specific forecast for this race weekend, and this
+    project doesn't have a weather feed to make it one.
+  </div></div>
+
+  <div class="section-title">What the model can say right now</div>
+  <div class="card"><div class="card-caption" style="font-size:14px">
+    The picks card's projections are unconditioned season-form estimates (no real grid to condition on yet,
+    unlike the Baku deep-dive's grid-conditioned Antonelli call) &mdash; right now that's <b>Russell</b> top of
+    the field (27.3 mean, captain EV 54.5) with Antonelli close behind (26.2), and <b>Alonso, Hamilton, Leclerc,
+    Gasly and Norris</b> flagged as likely budget losers this round (94&ndash;100% probability) if you're
+    weighing who to protect your cap against. See the <a href="../../rounds/round-16.html">picks card</a> for
+    the full breakdown; it'll update once real practice and qualifying data exists to condition on.
+  </div></div>
+
+  <footer class="site-footer">Track/tyre facts from Pirelli's official compound announcement and public circuit references (Wikipedia, Driver61); calendar history from Formula1.com and Sky Sports reporting on the Bahrain/Saudi cancellations. Model figures from this repository's own picks card, generated race week. See the round page for the underlying cards.</footer>
+</div>
+<button type="button" class="fb-btn" id="fbOpenBtn" aria-haspopup="dialog">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9V7a3 3 0 0 1 6 0v2"/><rect x="5" y="9" width="14" height="11" rx="4"/><path d="M2 13h3M19 13h3M9 3l1.5 2M15 3l-1.5 2M9 20v-4M15 20v-4"/></svg>
+  <span class="fb-btn-label">Bug / Feature</span>
+</button>
+<div class="fb-overlay" id="fbOverlay">
+  <div class="fb-modal" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+    <div class="fb-modal-title" id="fbTitle">Report a bug or request a change</div>
+    <div class="fb-modal-context" id="fbContext"></div>
+    <div class="fb-type-row">
+      <button type="button" class="fb-type-btn active" data-type="Bug" id="fbTypeBug">Bug</button>
+      <button type="button" class="fb-type-btn" data-type="Feature" id="fbTypeFeature">Feature</button>
+    </div>
+    <textarea id="fbText" placeholder="What's wrong, or what would you like changed?"></textarea>
+    <div class="fb-modal-note">Opens a pre-filled GitHub issue with this page's title and URL attached, so Claude has the context -- you'll just need to hit "Submit new issue" on GitHub to send it.</div>
+    <div class="fb-modal-actions">
+      <button type="button" class="fb-cancel" id="fbCancel">Cancel</button>
+      <button type="button" class="fb-submit" id="fbSubmit">Open issue</button>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var GITHUB_REPO = "tiptoptopher/f1-fantasy-reporter";
+  var openBtn = document.getElementById('fbOpenBtn');
+  var overlay = document.getElementById('fbOverlay');
+  var cancelBtn = document.getElementById('fbCancel');
+  var submitBtn = document.getElementById('fbSubmit');
+  var textEl = document.getElementById('fbText');
+  var contextEl = document.getElementById('fbContext');
+  var typeBtns = [document.getElementById('fbTypeBug'), document.getElementById('fbTypeFeature')];
+  var currentType = 'Bug';
+
+  function openModal() {
+    contextEl.textContent = document.title + ' — ' + window.location.href;
+    overlay.classList.add('open');
+    textEl.focus();
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+  }
+  openBtn.addEventListener('click', openModal);
+  cancelBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  typeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentType = btn.getAttribute('data-type');
+      typeBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+    });
+  });
+
+  submitBtn.addEventListener('click', function () {
+    var text = textEl.value.trim();
+    if (!text) { textEl.focus(); return; }
+    var title = '[' + currentType + '] ' + text.split('\n')[0].slice(0, 80);
+    var body = '**Type:** ' + currentType + '\n' +
+      '**Page:** ' + document.title + '\n' +
+      '**URL:** ' + window.location.href + '\n\n' +
+      text;
+    var url = 'https://github.com/' + GITHUB_REPO + '/issues/new'
+      + '?title=' + encodeURIComponent(title)
+      + '&body=' + encodeURIComponent(body)
+      + '&labels=' + encodeURIComponent('site-feedback');
+    window.open(url, '_blank', 'noopener');
+    textEl.value = '';
+    closeModal();
+  });
+})();
+</script>
