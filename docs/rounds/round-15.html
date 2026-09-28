@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Azerbaijan Grand Prix — Round 15</title>
 <meta name="description" content="Pre-race analysis and post-race results for the 2026 Azerbaijan Grand Prix.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,6 +84,48 @@ h1 {
 footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6; padding-top: 8px; border-top: 1px solid var(--hairline); }
 
 @media (max-width: 560px) { .card, .round-card { padding: 14px; } }
+
+.fb-btn {
+  position: fixed; right: 18px; bottom: 18px; z-index: 1000;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff; border: none; border-radius: 999px;
+  padding: 12px 18px; font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.fb-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+.fb-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.fb-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001;
+  display: none; align-items: center; justify-content: center; padding: 16px;
+}
+.fb-overlay.open { display: flex; }
+.fb-modal {
+  background: var(--surface); border-radius: 6px; padding: 22px; width: 100%; max-width: 440px;
+  border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 14px;
+  max-height: 90vh; overflow-y: auto;
+}
+.fb-modal-title { font-family: var(--font-display); font-weight: 700; font-size: 18px; text-transform: uppercase; }
+.fb-modal-context { font-size: 11px; color: var(--ink-muted); background: var(--surface-raised); border-radius: 4px; padding: 8px 10px; word-break: break-word; }
+.fb-type-row { display: flex; gap: 8px; }
+.fb-type-btn {
+  flex: 1; padding: 8px; border-radius: 4px; border: 1px solid var(--hairline); background: var(--surface-raised);
+  color: var(--ink-secondary); font-family: var(--font-body); font-weight: 600; font-size: 13px; cursor: pointer;
+}
+.fb-type-btn.active { border-color: var(--accent); color: var(--ink); background: rgba(225,6,0,0.14); }
+.fb-modal textarea {
+  width: 100%; min-height: 110px; resize: vertical; background: var(--surface-raised); color: var(--ink);
+  border: 1px solid var(--hairline); border-radius: 4px; padding: 10px; font-family: var(--font-body); font-size: 13px;
+  box-sizing: border-box;
+}
+.fb-modal-note { font-size: 11px; color: var(--ink-muted); line-height: 1.5; }
+.fb-modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.fb-modal-actions button { font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 9px 16px; border-radius: 999px; cursor: pointer; border: none; }
+.fb-cancel { background: transparent; color: var(--ink-secondary); }
+.fb-cancel:hover { color: var(--ink); }
+.fb-submit { background: var(--accent); color: #fff; }
+.fb-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+@media (max-width: 560px) { .fb-btn span.fb-btn-label { display: none; } .fb-btn { padding: 14px; } }
 </style>
 
 <div class="page">
@@ -95,3 +138,75 @@ footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6;
   <div class="section-title">Deep dives</div><div class="extras-list"><a href="../extras/round-15/pace-ladder.html">Pace Ladder</a><a href="../extras/round-15/prerace-analysis.html">Prerace Analysis</a></div><div class="section-title">Pre-race</div><div class="card-grid"><div class="card"><div class="card-title">Teams locked</div><img src="../assets/2026/15/lockout.png" alt="Teams locked" loading="lazy"><div class="card-caption">🔒 <strong>Teams are locked</strong> -- Azerbaijan Grand Prix<br><br>2 transfers across 26 teams.<br>🧊 Held firm: Chris Krueger, Derek Blais, Paul Brown, Chris Krueger, sydkav2, Sylvester Sawala, Paul Brown, Marie Lunny, Jacob Vander Zanden, Paul Gosse, Marie Lunny, Daniel Frank, Derek Blais, Jacob Vander Zanden, Matthew Bielawski, Matthew Bielawski, Daniel Frank, sydkav2, Paul Gosse<br><br>Good luck 🏎️<br></div></div><div class="card"><div class="card-title">Picks</div><img src="../assets/2026/15/picks.png" alt="Picks" loading="lazy"><div class="card-caption">🏁 <strong>Race picks</strong> -- Azerbaijan Grand Prix<br>Baku City Circuit, Baku<br><br>📊 Top expected points:<br>  ANT: 28.9 (p10 -2.0 / p90 49.0)<br>  RUS: 25.7 (p10 -3.0 / p90 45.0)<br>  HAM: 21.3 (p10 -8.0 / p90 42.0)<br>  LEC: 21.0 (p10 -8.0 / p90 40.0)<br>  NOR: 18.9 (p10 -10.0 / p90 41.0)<br><br>🏗️ Captain suggestion: ANT (EV 57.9)<br><br>📈 Likely price risers:<br>  ANT: 100% (Δ+0.30M)<br>  NOR: 100% (Δ+0.23M)<br>  HUL: 89% (Δ+0.48M)<br>  RUS: 86% (Δ+0.10M)<br>  ALB: 71% (Δ+0.18M)<br><br>🧩 Optimal team: STR, HUL, PER, BOT, ANT + Mercedes, Ferrari (186.8 pts, $99.9M)<br></div></div><div class="card"><div class="card-title">Chip watch</div><img src="../assets/2026/15/chips.png" alt="Chip watch" loading="lazy"><div class="card-caption">🎴 <strong>Chip Watch</strong> -- Azerbaijan Grand Prix<br><br>🧊 Nobody&#x27;s played: Final Fix<br></div></div><div class="card"><div class="card-title">Ownership</div><img src="../assets/2026/15/ownership.png" alt="Ownership" loading="lazy"><div class="card-caption">👥 <strong>Ownership</strong> -- Azerbaijan Grand Prix<br><br>Most owned: <strong>K. Antonelli</strong> (9/15 teams)<br>💎 Differentials: C. Sainz, I. Hadjar, L. Lawson, McLaren<br></div></div><div class="card"><div class="card-title">Budget cap</div><img src="../assets/2026/15/budget.png" alt="Budget cap" loading="lazy"><div class="card-caption">💰 <strong>Budget Cap</strong> -- Azerbaijan Grand Prix<br><br>Biggest budget: <strong>Chris Krueger</strong> ($132.1M)<br>Tightest squeeze: <strong>Paul Gosse</strong> ($98.0M)<br></div></div></div><div class="section-title">Post-race</div><div class="card-grid"><div class="card"><div class="card-title">Recap</div><img src="../assets/2026/15/recap.png" alt="Recap" loading="lazy"><div class="card-caption">🏁 <strong>Azerbaijan Grand Prix</strong> -- Ciao Squadra 2026<br>🥇 Round winner: <strong>Daniel Frank</strong> with 235 pts<br><br><strong>Top 3</strong><br>1. Chris Krueger — 3751<br>2. Derek Blais — 3535<br>3. Paul Brown — 3469<br></div></div><div class="card"><div class="card-title">Winners &amp; losers</div><img src="../assets/2026/15/winners_losers.png" alt="Winners &amp; losers" loading="lazy"><div class="card-caption">🏆 <strong>Winners &amp; Losers</strong> -- Azerbaijan Grand Prix<br><br>🥇 Best race: <strong>Daniel Frank</strong> (+235 pts)<br>📉 Roughest race: <strong>Paul Gosse</strong> (+5 pts)<br>💀 Worst move: Chris Krueger (-38) — 2 out, 2 in (O. Bearman, L. Norris)<br>🏗️ Best armband: Jacob Vander Zanden on G. Russell (+45)<br></div></div><div class="card"><div class="card-title">Hindsight</div><img src="../assets/2026/15/hindsight.png" alt="Hindsight" loading="lazy"><div class="card-caption">🔮 <strong>Hindsight</strong> -- Azerbaijan Grand Prix<br><br>Optimal team scored 218 pts (captain: HAD)<br>Closest to perfect: Derek Blais (204 pts, -14)<br>Furthest from perfect: Paul Gosse (5 pts, -213)<br>League average gap to optimal: 98.1 pts<br></div></div></div><div class="section-title">Model vs. actuals</div><div class="empty-note">Not in the walk-forward backtest yet -- run <code>f1-fantasy points-backtest</code> to add this round once it has raced.</div>
   <footer class="site-footer">Ciao Squadra 2026 &middot; generated from this repository's committed cards and snapshots.</footer>
 </div>
+
+<button type="button" class="fb-btn" id="fbOpenBtn" aria-haspopup="dialog">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9V7a3 3 0 0 1 6 0v2"/><rect x="5" y="9" width="14" height="11" rx="4"/><path d="M2 13h3M19 13h3M9 3l1.5 2M15 3l-1.5 2M9 20v-4M15 20v-4"/></svg>
+  <span class="fb-btn-label">Bug / Feature</span>
+</button>
+<div class="fb-overlay" id="fbOverlay">
+  <div class="fb-modal" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+    <div class="fb-modal-title" id="fbTitle">Report a bug or request a change</div>
+    <div class="fb-modal-context" id="fbContext"></div>
+    <div class="fb-type-row">
+      <button type="button" class="fb-type-btn active" data-type="Bug" id="fbTypeBug">Bug</button>
+      <button type="button" class="fb-type-btn" data-type="Feature" id="fbTypeFeature">Feature</button>
+    </div>
+    <textarea id="fbText" placeholder="What's wrong, or what would you like changed?"></textarea>
+    <div class="fb-modal-note">Opens a pre-filled GitHub issue with this page's title and URL attached, so Claude has the context -- you'll just need to hit "Submit new issue" on GitHub to send it.</div>
+    <div class="fb-modal-actions">
+      <button type="button" class="fb-cancel" id="fbCancel">Cancel</button>
+      <button type="button" class="fb-submit" id="fbSubmit">Open issue</button>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var GITHUB_REPO = "tiptoptopher/f1-fantasy-reporter";
+  var openBtn = document.getElementById('fbOpenBtn');
+  var overlay = document.getElementById('fbOverlay');
+  var cancelBtn = document.getElementById('fbCancel');
+  var submitBtn = document.getElementById('fbSubmit');
+  var textEl = document.getElementById('fbText');
+  var contextEl = document.getElementById('fbContext');
+  var typeBtns = [document.getElementById('fbTypeBug'), document.getElementById('fbTypeFeature')];
+  var currentType = 'Bug';
+
+  function openModal() {
+    contextEl.textContent = document.title + ' \u2014 ' + window.location.href;
+    overlay.classList.add('open');
+    textEl.focus();
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+  }
+  openBtn.addEventListener('click', openModal);
+  cancelBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  typeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentType = btn.getAttribute('data-type');
+      typeBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+    });
+  });
+
+  submitBtn.addEventListener('click', function () {
+    var text = textEl.value.trim();
+    if (!text) { textEl.focus(); return; }
+    var title = '[' + currentType + '] ' + text.split('\n')[0].slice(0, 80);
+    var body = '**Type:** ' + currentType + '\n' +
+      '**Page:** ' + document.title + '\n' +
+      '**URL:** ' + window.location.href + '\n\n' +
+      text;
+    var url = 'https://github.com/' + GITHUB_REPO + '/issues/new'
+      + '?title=' + encodeURIComponent(title)
+      + '&body=' + encodeURIComponent(body)
+      + '&labels=' + encodeURIComponent('site-feedback');
+    window.open(url, '_blank', 'noopener');
+    textEl.value = '';
+    closeModal();
+  });
+})();
+</script>
+

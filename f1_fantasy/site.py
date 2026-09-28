@@ -27,6 +27,9 @@ from pathlib import Path
 
 from f1_fantasy.calendar import fetch_calendar
 
+#: Where the feedback widget (see `_FEEDBACK_WIDGET_HTML`) files new issues.
+GITHUB_REPO = "tiptoptopher/f1-fantasy-reporter"
+
 CARD_TITLES = {
     "preview": "Preview",
     "lockout": "Teams locked",
@@ -301,9 +304,130 @@ h1 {
 footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6; padding-top: 8px; border-top: 1px solid var(--hairline); }
 
 @media (max-width: 560px) { .card, .round-card { padding: 14px; } }
+
+.fb-btn {
+  position: fixed; right: 18px; bottom: 18px; z-index: 1000;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff; border: none; border-radius: 999px;
+  padding: 12px 18px; font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.fb-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+.fb-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.fb-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001;
+  display: none; align-items: center; justify-content: center; padding: 16px;
+}
+.fb-overlay.open { display: flex; }
+.fb-modal {
+  background: var(--surface); border-radius: 6px; padding: 22px; width: 100%; max-width: 440px;
+  border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 14px;
+  max-height: 90vh; overflow-y: auto;
+}
+.fb-modal-title { font-family: var(--font-display); font-weight: 700; font-size: 18px; text-transform: uppercase; }
+.fb-modal-context { font-size: 11px; color: var(--ink-muted); background: var(--surface-raised); border-radius: 4px; padding: 8px 10px; word-break: break-word; }
+.fb-type-row { display: flex; gap: 8px; }
+.fb-type-btn {
+  flex: 1; padding: 8px; border-radius: 4px; border: 1px solid var(--hairline); background: var(--surface-raised);
+  color: var(--ink-secondary); font-family: var(--font-body); font-weight: 600; font-size: 13px; cursor: pointer;
+}
+.fb-type-btn.active { border-color: var(--accent); color: var(--ink); background: rgba(225,6,0,0.14); }
+.fb-modal textarea {
+  width: 100%; min-height: 110px; resize: vertical; background: var(--surface-raised); color: var(--ink);
+  border: 1px solid var(--hairline); border-radius: 4px; padding: 10px; font-family: var(--font-body); font-size: 13px;
+  box-sizing: border-box;
+}
+.fb-modal-note { font-size: 11px; color: var(--ink-muted); line-height: 1.5; }
+.fb-modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.fb-modal-actions button { font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 9px 16px; border-radius: 999px; cursor: pointer; border: none; }
+.fb-cancel { background: transparent; color: var(--ink-secondary); }
+.fb-cancel:hover { color: var(--ink); }
+.fb-submit { background: var(--accent); color: #fff; }
+.fb-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+@media (max-width: 560px) { .fb-btn span.fb-btn-label { display: none; } .fb-btn { padding: 14px; } }
 """
 
-_HEAD = """<title>{title}</title>
+#: A context-aware "report a bug / request a change" button, fixed bottom-right
+#: on every page. Filing an actual issue needs write access this static site
+#: can never safely hold client-side, so it pre-fills a GitHub "new issue" form
+#: (title, body with page title/URL, a `site-feedback` label) and lets the
+#: viewer's own GitHub session send it -- one extra click, no exposed token.
+_FEEDBACK_WIDGET_HTML = """
+<button type="button" class="fb-btn" id="fbOpenBtn" aria-haspopup="dialog">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9V7a3 3 0 0 1 6 0v2"/><rect x="5" y="9" width="14" height="11" rx="4"/><path d="M2 13h3M19 13h3M9 3l1.5 2M15 3l-1.5 2M9 20v-4M15 20v-4"/></svg>
+  <span class="fb-btn-label">Bug / Feature</span>
+</button>
+<div class="fb-overlay" id="fbOverlay">
+  <div class="fb-modal" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+    <div class="fb-modal-title" id="fbTitle">Report a bug or request a change</div>
+    <div class="fb-modal-context" id="fbContext"></div>
+    <div class="fb-type-row">
+      <button type="button" class="fb-type-btn active" data-type="Bug" id="fbTypeBug">Bug</button>
+      <button type="button" class="fb-type-btn" data-type="Feature" id="fbTypeFeature">Feature</button>
+    </div>
+    <textarea id="fbText" placeholder="What's wrong, or what would you like changed?"></textarea>
+    <div class="fb-modal-note">Opens a pre-filled GitHub issue with this page's title and URL attached, so Claude has the context -- you'll just need to hit "Submit new issue" on GitHub to send it.</div>
+    <div class="fb-modal-actions">
+      <button type="button" class="fb-cancel" id="fbCancel">Cancel</button>
+      <button type="button" class="fb-submit" id="fbSubmit">Open issue</button>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var GITHUB_REPO = "%(github_repo)s";
+  var openBtn = document.getElementById('fbOpenBtn');
+  var overlay = document.getElementById('fbOverlay');
+  var cancelBtn = document.getElementById('fbCancel');
+  var submitBtn = document.getElementById('fbSubmit');
+  var textEl = document.getElementById('fbText');
+  var contextEl = document.getElementById('fbContext');
+  var typeBtns = [document.getElementById('fbTypeBug'), document.getElementById('fbTypeFeature')];
+  var currentType = 'Bug';
+
+  function openModal() {
+    contextEl.textContent = document.title + ' \\u2014 ' + window.location.href;
+    overlay.classList.add('open');
+    textEl.focus();
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+  }
+  openBtn.addEventListener('click', openModal);
+  cancelBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  typeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentType = btn.getAttribute('data-type');
+      typeBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+    });
+  });
+
+  submitBtn.addEventListener('click', function () {
+    var text = textEl.value.trim();
+    if (!text) { textEl.focus(); return; }
+    var title = '[' + currentType + '] ' + text.split('\\n')[0].slice(0, 80);
+    var body = '**Type:** ' + currentType + '\\n' +
+      '**Page:** ' + document.title + '\\n' +
+      '**URL:** ' + window.location.href + '\\n\\n' +
+      text;
+    var url = 'https://github.com/' + GITHUB_REPO + '/issues/new'
+      + '?title=' + encodeURIComponent(title)
+      + '&body=' + encodeURIComponent(body)
+      + '&labels=' + encodeURIComponent('site-feedback');
+    window.open(url, '_blank', 'noopener');
+    textEl.value = '';
+    closeModal();
+  });
+})();
+</script>
+""" % {"github_repo": GITHUB_REPO}
+
+_HEAD = """<meta charset="utf-8">
+<title>{title}</title>
 <meta name="description" content="{description}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -337,8 +461,9 @@ def render_index_html(pages: list[RoundPage], *, season: int, league_name: str) 
   <div class="round-grid">
     {''.join(cards)}
   </div>
-  <footer class="site-footer">Generated from this repository's own committed snapshots and cards -- see <a href="https://github.com/tiptoptopher/f1-fantasy-reporter">the source</a> for how.</footer>
+  <footer class="site-footer">Generated from this repository's own committed snapshots and cards -- see <a href="https://github.com/{GITHUB_REPO}">the source</a> for how.</footer>
 </div>
+{_FEEDBACK_WIDGET_HTML}
 """
     return _HEAD.format(title=f"{league_name} — {season}", description=f"Race-by-race fantasy analysis and results for the {season} season.", css=_BASE_CSS) + body
 
@@ -398,6 +523,7 @@ def render_round_html(page: RoundPage, *, league_name: str, season: int) -> str:
   {''.join(sections)}
   <footer class="site-footer">{html.escape(league_name)} &middot; generated from this repository's committed cards and snapshots.</footer>
 </div>
+{_FEEDBACK_WIDGET_HTML}
 """
     return _HEAD.format(title=f"{page.event_name} — Round {page.round_number}", description=f"Pre-race analysis and post-race results for the {season} {page.event_name}.", css=_BASE_CSS) + body
 
