@@ -3,9 +3,25 @@
   "mentions": [
     {
       "source": "https://www.formula1.com/en/latest/all.xml",
-      "title": "Leclerc urges Ferrari to \u2018bring upgrades to close the gap\u2019",
-      "summary": "Charles Leclerc was left concerned by Ferrari\u2019s deficit to their rivals in the Azerbaijan Grand Prix.",
-      "link": "https://www.formula1.com/en/latest/article/we-were-quite-far-off-leclerc-urges-ferrari-to-bring-upgrades-to-close-the-gap-after-baku.6zFmpztQcYlGBeNtCK6CF9",
+      "title": "Sainz and Albon evaluate Williams\u2019 Baku upgrades",
+      "summary": "Carlos Sainz and Alex Albon have given their verdict on Williams\u2019 major upgrade package that debuted at the Azerbaijan Grand Prix.",
+      "link": "https://www.formula1.com/en/latest/article/were-going-to-need-more-if-we-want-to-fight-sainz-and-albon-evaluate-williams-baku-upgrades.3NtXUGpgq3CTGpopkeYtFe",
+      "published_at": null,
+      "matched_keywords": [
+        "upgrade",
+        "upgrade package",
+        "major upgrade"
+      ],
+      "constructors": [
+        "Williams"
+      ],
+      "attributed_round": null
+    },
+    {
+      "source": "https://www.formula1.com/en/latest/all.xml",
+      "title": "Vasseur offers Ferrari upgrade promise to frustrated Leclerc",
+      "summary": "Ferrari Team Principal Fred Vasseur has promised that the Maranello-based squad will bring developments to the SF-26 \u201csoon\u201d after Charles Leclerc cited a lack of recent development as a reason behind their poor form in Azerbaijan.",
+      "link": "https://www.formula1.com/en/latest/article/vasseur-promises-frustrated-leclerc-that-ferrari-will-bring-upgrades-soon.3zh1dESFZnVmBLkiBxgoOl",
       "published_at": null,
       "matched_keywords": [
         "upgrade"
@@ -14,6 +30,21 @@
         "Ferrari"
       ],
       "attributed_round": null
+    },
+    {
+      "source": "https://www.autosport.com/rss/f1/news/",
+      "title": "Why McLaren was so much slower than Mercedes on Baku's straights",
+      "summary": "For all the talk of rivals catching Mercedes, which has held fire on its more significant upgrades until next weekend's Formula 1 Bahrain Grand Prix in Malaysia, the Brackley team has been able to weather the storm by excelling on some of the most power sensitive circuits like Monza and Baku, vindicating its patience.\u00a0<br />But while Mercedes' dominant power unit package helps explain its gap to ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/why-mclaren-was-so-much-slower-than-mercedes-on-bakus-straights/10859723/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
+      "link": "https://www.autosport.com/f1/news/why-mclaren-was-so-much-slower-than-mercedes-on-bakus-straights/10859723/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
+      "published_at": "2026-09-28T08:34:17Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "McLaren",
+        "Mercedes"
+      ],
+      "attributed_round": 15
     },
     {
       "source": "https://www.autosport.com/rss/f1/news/",
@@ -81,6 +112,21 @@
     },
     {
       "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Why McLaren was so much slower than Mercedes on Baku's straights",
+      "summary": "For all the talk of rivals catching Mercedes, which has held fire on its more significant upgrades until next weekend's Formula 1 Bahrain Grand Prix in Malaysia, the Brackley team has been able to weather the storm by excelling on some of the most power sensitive circuits like Monza and Baku, vindicating its patience.\u00a0<br />But while Mercedes' dominant power unit package helps explain its gap to ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/why-mclaren-was-so-much-slower-than-mercedes-on-baku-straights/10859545/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/why-mclaren-was-so-much-slower-than-mercedes-on-baku-straights/10859545/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-28T08:24:05Z",
+      "matched_keywords": [
+        "upgrade"
+      ],
+      "constructors": [
+        "McLaren",
+        "Mercedes"
+      ],
+      "attributed_round": 15
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
       "title": "Charles Leclerc: \u201cMcLaren and Red Bull did a step forward that we didn\u2019t do\u201d",
       "summary": "Red Bull now has a clear advantage over Ferrari in terms of chassis performance, with McLaren having also markedly improved, Charles Leclerc believes following the Formula 1 Azerbaijan Grand\u00a0Prix.<br />Both teams brought significant upgrade packages to Baku, focusing on the sidepods, floor and diffuser \u2013 McLaren\u2019s also included a revised engine cover, rear suspension and rear wing while Red ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/charles-leclerc-mclaren-and-red-bull-did-a-step-forward-that-we-didnt-do/10859495/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
       "link": "https://www.motorsport.com/f1/news/charles-leclerc-mclaren-and-red-bull-did-a-step-forward-that-we-didnt-do/10859495/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
@@ -124,48 +170,6 @@
       ],
       "constructors": [
         "McLaren"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Lando Norris: \u2018I have to go for it or die trying\u2019 to win 2026 F1 title",
-      "summary": "Lando Norris believes he now must give it all to have the slightest chance of winning the 2026 Formula 1 world title \u2013 hence a driving error in qualifying for the Azerbaijan Grand Prix.<br />Norris has scored 83 points since McLaren introduced its most substantial upgrade of the season in Hungary, meaning he is now competing with George Russell and Lewis Hamilton for the runner-up spot in the ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/lando-norris-i-have-to-go-for-it-or-die-trying-to-win-2026-f1-title/10859120/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/lando-norris-i-have-to-go-for-it-or-die-trying-to-win-2026-f1-title/10859120/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-26T07:37:46Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "McLaren"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Fernando Alonso's only goal in no-hope Baku: Save parts for F1's triple-header",
-      "summary": "Despite a wretched campaign with Aston Martin and its new engine partner Honda, or perhaps because of it, Fernando\u00a0Alonso hasn't lost his biting sense of humour.<br />\"I pushed into Turn 15 and I locked up. So, a driver error there, and because of that we are not on pole.\"<br />After keeping its powder dry for a big upgrade in Hungary, Aston Martin finally appeared to be at least competing for ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/fernando-alonsos-only-baku-goal-save-parts-for-f1s-triple-header/10859064/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/fernando-alonsos-only-baku-goal-save-parts-for-f1s-triple-header/10859064/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-26T06:29:58Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Aston Martin"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Williams\u2019 long-awaited F1 upgrade is delivering in Baku \u2013 but was Q3 an \u201coverachievement\u201d?",
-      "summary": "Williams\u2019 2026 car had infamously been overweight after Formula 1 switched to a new technical ruleset, but a brand-new chassis introduced at the Azerbaijan Grand Prix has provided substantial performance.<br />Carlos Sainz was consistently quick in Baku, finishing 11th in Q1, then ninth in the next two segments of qualifying. Williams had never done so well this year \u2013 its best results had been ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/williams-upgrade-delivering-baku-overachievement/10859048/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/williams-upgrade-delivering-baku-overachievement/10859048/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-25T18:36:43Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Williams"
       ],
       "attributed_round": 15
     }
