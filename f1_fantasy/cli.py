@@ -826,7 +826,13 @@ def cmd_build_site(args: argparse.Namespace) -> int:
             league_name = json.loads(candidates[-1].read_text(encoding="utf-8")).get("league_name")
     league_name = league_name or "F1 Fantasy"
 
-    pages = build_site(config.season, league_name, out_dir=config.output_dir, snapshot_dir=config.snapshot_dir)
+    pages = build_site(
+        config.season,
+        league_name,
+        primary_league_id=config.primary_league,
+        out_dir=config.output_dir,
+        snapshot_dir=config.snapshot_dir,
+    )
     print(f"built {len(pages)} round page(s) under docs/ for {config.season} ({league_name})")
     return 0
 

@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Azerbaijan Grand Prix
+
+Optimal team scored 218 pts (captain: HAD)
+Closest to perfect: Hafeez Habib (276 pts, --58)
+Furthest from perfect: MTZS2021 (78 pts, -140)
+League average gap to optimal: 62.2 pts

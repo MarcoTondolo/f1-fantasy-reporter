@@ -26,6 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from f1_fantasy.calendar import fetch_calendar
+from f1_fantasy.site_leagues import SECONDARY_VISUAL_LEAGUES, render_secondary_league_cards
 
 #: Where the feedback widget (see `_FEEDBACK_WIDGET_HTML`) files new issues.
 GITHUB_REPO = "tiptoptopher/f1-fantasy-reporter"
@@ -46,6 +47,11 @@ CARD_TITLES = {
 CARD_ORDER = ["preview", "lockout", "picks", "chips", "ownership", "budget", "benchmarks", "recap", "winners_losers", "hindsight"]
 PRE_RACE_CARDS = {"preview", "lockout", "picks", "chips", "ownership", "budget", "benchmarks"}
 POST_RACE_CARDS = {"recap", "winners_losers", "hindsight"}
+#: Cards that are about one specific league's teams/standings, as opposed to
+#: the model's own predictions (preview, picks, benchmarks) -- these get
+#: pulled out of the generic Pre-race/Post-race grids and grouped per league
+#: instead, see `LeagueCardGroup`.
+LEAGUE_CARD_KEYS = {"lockout", "chips", "ownership", "budget", "recap", "winners_losers", "hindsight"}
 
 
 @dataclass
@@ -57,12 +63,20 @@ class CardFile:
 
 
 @dataclass
+class LeagueCardGroup:
+    league_id: int
+    league_name: str
+    cards: list[CardFile]
+
+
+@dataclass
 class RoundPage:
     round_number: int
     event_name: str
     circuit: str
     status: str  # "completed" | "upcoming" | "no data"
     cards: list[CardFile]
+    league_groups: list[LeagueCardGroup]
     model_vs_actual: dict | None
     extras: list[tuple[str, str]]  # (label, relative href) for hand-built deep dives
 
@@ -79,12 +93,10 @@ def _caption_to_html(text: str) -> str:
 def _load_round_cards(season: int, round_number: int, out_dir: Path, dest_assets: Path) -> list[CardFile]:
     round_dir = out_dir / str(season) / str(round_number)
     cards: list[CardFile] = []
-    seen = set()
 
     if round_dir.is_dir():
         for txt_path in sorted(round_dir.glob("*.txt")):
             key = txt_path.stem
-            seen.add(key)
             png_path = txt_path.with_suffix(".png")
             image_rel = None
             if png_path.exists():
@@ -100,34 +112,113 @@ def _load_round_cards(season: int, round_number: int, out_dir: Path, dest_assets
                 )
             )
 
-    # Legacy rounds (captured before the out/{season}/{round}/<action>.{txt,png}
-    # convention settled) kept their cards under a per-league subdirectory with
-    # no caption file. Still worth showing -- just without caption text.
-    for league_dir in sorted(round_dir.glob("league-*")) if round_dir.is_dir() else []:
-        for png_path in sorted(league_dir.glob("*.png")):
-            key = f"{png_path.stem}-{league_dir.name}"
-            if key in seen:
-                continue
-            seen.add(key)
-            dest_assets.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(png_path, dest_assets / f"{png_path.stem}_{league_dir.name}.png")
-            cards.append(
-                CardFile(
-                    key=key,
-                    title=f"{CARD_TITLES.get(png_path.stem, png_path.stem.title())} ({league_dir.name})",
-                    caption_html=None,
-                    image_rel=f"assets/{season}/{round_number}/{png_path.stem}_{league_dir.name}.png",
-                )
-            )
-
     def sort_key(card: CardFile) -> tuple[int, str]:
-        base = card.key.split("-")[0]
         try:
-            return (CARD_ORDER.index(base), card.key)
+            return (CARD_ORDER.index(card.key), card.key)
         except ValueError:
             return (len(CARD_ORDER), card.key)
 
     return sorted(cards, key=sort_key)
+
+
+def _league_names(season: int, snapshot_dir: Path) -> dict[int, str]:
+    """``league_id -> league_name``, read straight off whatever snapshot is
+    cheapest to find -- just enough to label a section heading, so this
+    doesn't validate through the full LeagueSnapshot model.
+    """
+    names: dict[int, str] = {}
+    season_dir = snapshot_dir / str(season)
+    if not season_dir.is_dir():
+        return names
+    for league_dir in sorted(season_dir.iterdir()):
+        if not league_dir.is_dir() or not league_dir.name.isdigit():
+            continue
+        league_id = int(league_dir.name)
+        for snapshot_path in sorted(league_dir.glob("*/*.json")):
+            try:
+                name = json.loads(snapshot_path.read_text(encoding="utf-8")).get("league_name")
+            except ValueError:
+                continue
+            if name:
+                names[league_id] = name
+                break
+    return names
+
+
+def _load_league_groups(
+    season: int,
+    round_number: int,
+    out_dir: Path,
+    dest_assets: Path,
+    *,
+    primary_league_id: int | None,
+    primary_league_name: str,
+    league_names: dict[int, str],
+    model_cards: list[CardFile],
+) -> list[LeagueCardGroup]:
+    """One group per league this round has team/standings cards for.
+
+    The primary league's cards are the flat ``out/{season}/{round}/*.png``
+    files already loaded by `_load_round_cards` (just the league-specific
+    subset of them, per `LEAGUE_CARD_KEYS`); every other league -- rendered
+    by `render_secondary_league_cards`, or a legacy round's own per-league
+    capture -- lives under its own ``out/{season}/{round}/league-{id}/``.
+    """
+    groups: dict[int, list[CardFile]] = {}
+
+    if primary_league_id is not None:
+        primary_cards = [c for c in model_cards if c.key in LEAGUE_CARD_KEYS]
+        if primary_cards:
+            groups[primary_league_id] = primary_cards
+
+    round_dir = out_dir / str(season) / str(round_number)
+    for league_dir in sorted(round_dir.glob("league-*")) if round_dir.is_dir() else []:
+        try:
+            league_id = int(league_dir.name.removeprefix("league-"))
+        except ValueError:
+            continue
+        cards = groups.setdefault(league_id, [])
+        seen = {c.key for c in cards}
+        dest = dest_assets / league_dir.name
+        for png_path in sorted(league_dir.glob("*.png")):
+            key = png_path.stem
+            if key in seen:
+                continue
+            seen.add(key)
+            dest.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(png_path, dest / png_path.name)
+            caption_path = png_path.with_suffix(".txt")
+            cards.append(
+                CardFile(
+                    key=key,
+                    title=CARD_TITLES.get(key, key.replace("_", " ").title()),
+                    caption_html=_caption_to_html(caption_path.read_text(encoding="utf-8")) if caption_path.exists() else None,
+                    image_rel=f"assets/{season}/{round_number}/{league_dir.name}/{png_path.name}",
+                )
+            )
+
+    def card_sort_key(card: CardFile) -> tuple[int, str]:
+        try:
+            return (CARD_ORDER.index(card.key), card.key)
+        except ValueError:
+            return (len(CARD_ORDER), card.key)
+
+    def league_sort_key(league_id: int) -> tuple[int, str]:
+        if league_id == primary_league_id:
+            return (0, "")
+        if league_id in SECONDARY_VISUAL_LEAGUES:
+            return (1, league_names.get(league_id, str(league_id)))
+        return (2, league_names.get(league_id, str(league_id)))
+
+    return [
+        LeagueCardGroup(
+            league_id=league_id,
+            league_name=primary_league_name if league_id == primary_league_id else league_names.get(league_id, f"League {league_id}"),
+            cards=sorted(cards, key=card_sort_key),
+        )
+        for league_id in sorted(groups, key=league_sort_key)
+        if groups[league_id]
+    ]
 
 
 def _model_vs_actual_for_round(season: int, round_number: int, backtest_path: Path) -> dict | None:
@@ -164,6 +255,8 @@ def _extras_for_round(round_number: int, extras_dir: Path, dest_root: Path) -> l
 def build_round_pages(
     season: int,
     *,
+    primary_league_id: int | None = None,
+    primary_league_name: str = "",
     out_dir: Path = Path("out"),
     snapshot_dir: Path = Path("snapshots"),
     backtest_path: Path = Path("data/pace/points_backtest.json"),
@@ -181,21 +274,42 @@ def build_round_pages(
         else set()
     )
 
+    # Ciao Squadra's (the primary league's) cards come from the live tick
+    # pipeline already; every other league this project tracks standings for
+    # only gets a card if rendered here, from snapshots already committed --
+    # no live API access needed, see f1_fantasy.site_leagues.
+    render_secondary_league_cards(
+        season,
+        {r: e.name for r, e in events.items()},
+        snapshot_dir=snapshot_dir,
+        out_dir=out_dir,
+    )
+    league_names = _league_names(season, snapshot_dir)
+
     pages = []
     for round_number in candidate_rounds:
         event = events.get(round_number)
         dest_assets = dest_root / "assets" / str(season) / str(round_number)
-        cards = _load_round_cards(season, round_number, out_dir, dest_assets)
-        if not cards:
+        all_cards = _load_round_cards(season, round_number, out_dir, dest_assets)
+        model_cards = [c for c in all_cards if c.key not in LEAGUE_CARD_KEYS]
+        league_groups = _load_league_groups(
+            season,
+            round_number,
+            out_dir,
+            dest_assets,
+            primary_league_id=primary_league_id,
+            primary_league_name=primary_league_name,
+            league_names=league_names,
+            model_cards=all_cards,
+        )
+        if not model_cards and not league_groups:
             continue
-        keys = {c.key.split("-")[0] for c in cards}
-        # Card-key matching alone misses legacy rounds (captured before the
-        # out/{season}/{round}/<action>.{txt,png} convention settled): their
-        # post-race cards live under a per-league subdirectory and get keys
-        # like "budget-league-4512504", whose base "budget" never lands in
-        # POST_RACE_CARDS. Falling back to the calendar date catches those --
-        # a round whose race has already happened is "completed" regardless
-        # of which card-naming convention captured it.
+        keys = {c.key for c in all_cards} | {c.key for group in league_groups for c in group.cards}
+        # Card-key matching alone misses rounds where the race has happened
+        # but, say, only the pre-race cards captured before a run failed --
+        # falling back to the calendar date catches those too: a round whose
+        # race has already happened is "completed" regardless of exactly
+        # which cards got captured for it.
         race_happened = event is not None and event.starts_at <= datetime.now(timezone.utc)
         if keys & POST_RACE_CARDS or race_happened:
             status = "completed"
@@ -209,7 +323,8 @@ def build_round_pages(
                 event_name=event.name if event else f"Round {round_number}",
                 circuit=event.circuit if event else "",
                 status=status,
-                cards=cards,
+                cards=model_cards,
+                league_groups=league_groups,
                 model_vs_actual=_model_vs_actual_for_round(season, round_number, backtest_path),
                 extras=_extras_for_round(round_number, extras_dir, dest_root),
             )
@@ -277,13 +392,45 @@ h1 {
   font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--ink-muted); border-bottom: 1px solid var(--hairline); padding-bottom: 8px; margin: 6px 0 -4px;
 }
+.league-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-secondary); margin: 8px 0 -4px;
+}
 .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .card {
   background: var(--surface); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
+  position: relative;
 }
 .card-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.02em; }
 .card-caption { font-size: 13px; line-height: 1.6; color: var(--ink-secondary); }
-.card img { max-width: 100%; border-radius: 3px; display: block; }
+.card img { max-width: 100%; border-radius: 3px; display: block; cursor: zoom-in; }
+.card-copy-btn {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  width: 30px; height: 30px; border-radius: 999px; border: none;
+  background: rgba(0,0,0,0.55); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-copy-btn:hover { background: var(--accent); }
+.card-copy-btn svg { width: 14px; height: 14px; }
+.card-toast {
+  position: absolute; top: 16px; right: 52px; z-index: 3;
+  background: rgba(0,0,0,0.8); color: #fff; font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 4px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap;
+}
+.card-toast.show { opacity: 1; }
+.lb-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1002;
+  display: none; flex-direction: column; align-items: center; padding: 16px;
+}
+.lb-overlay.open { display: flex; }
+.lb-toolbar { display: flex; justify-content: flex-end; gap: 8px; width: 100%; max-width: 1100px; margin-bottom: 10px; flex-shrink: 0; }
+.lb-toolbar button {
+  font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+  cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink);
+}
+.lb-toolbar .lb-copy { background: var(--accent); border-color: var(--accent); }
+.lb-body { flex: 1; width: 100%; max-width: 1100px; overflow: auto; text-align: center; }
+.lb-body img { max-width: 100%; border-radius: 4px; }
 
 .metric-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .metric {
@@ -426,6 +573,111 @@ _FEEDBACK_WIDGET_HTML = """
 </script>
 """ % {"github_repo": GITHUB_REPO}
 
+#: Every rendered card image gets a click-to-enlarge lightbox (the cards are
+#: fixed-width PNGs made for a chat thread, so on a phone they shrink to
+#: illegible before this) and a copy button, for pasting a visual straight
+#: into WhatsApp without a screenshot-and-crop round trip. Only wired into
+#: round pages, which are the only pages with card images.
+_LIGHTBOX_HTML = """
+<div class="lb-overlay" id="lbOverlay">
+  <div class="lb-toolbar">
+    <button type="button" class="lb-copy" id="lbCopyBtn">Copy image</button>
+    <button type="button" id="lbCloseBtn">Close</button>
+  </div>
+  <div class="lb-body"><img id="lbImg" src="" alt=""></div>
+</div>
+<script>
+(function () {
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var lbOverlay = document.getElementById('lbOverlay');
+  var lbImg = document.getElementById('lbImg');
+  var lbCopyBtn = document.getElementById('lbCopyBtn');
+  var lbCloseBtn = document.getElementById('lbCloseBtn');
+  var currentSrc = '';
+
+  function openLightbox(src, title) {
+    currentSrc = src;
+    lbImg.src = src;
+    lbImg.alt = title || '';
+    lbOverlay.classList.add('open');
+  }
+  function closeLightbox() {
+    lbOverlay.classList.remove('open');
+    lbImg.src = '';
+  }
+  lbCloseBtn.addEventListener('click', closeLightbox);
+  lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLightbox(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+
+  function showToast(cardEl, message) {
+    var toast = cardEl.querySelector('.card-toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(function () { toast.classList.remove('show'); }, 1800);
+  }
+
+  function copyImage(src, cardEl) {
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+      window.open(src, '_blank', 'noopener');
+      showToast(cardEl, 'Opened image \\u2014 long-press to save');
+      return;
+    }
+    var item = new ClipboardItem({
+      'image/png': fetch(src).then(function (r) { return r.blob(); })
+    });
+    navigator.clipboard.write([item]).then(function () {
+      showToast(cardEl, 'Copied!');
+    }).catch(function () {
+      window.open(src, '_blank', 'noopener');
+      showToast(cardEl, 'Copy failed \\u2014 opened image instead');
+    });
+  }
+
+  lbCopyBtn.addEventListener('click', function () {
+    if (!currentSrc) return;
+    var item = new ClipboardItem({
+      'image/png': fetch(currentSrc).then(function (r) { return r.blob(); })
+    });
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+      window.open(currentSrc, '_blank', 'noopener');
+      return;
+    }
+    navigator.clipboard.write([item]).then(function () {
+      lbCopyBtn.textContent = 'Copied!';
+      setTimeout(function () { lbCopyBtn.textContent = 'Copy image'; }, 1500);
+    }).catch(function () {
+      window.open(currentSrc, '_blank', 'noopener');
+    });
+  });
+
+  document.querySelectorAll('.card img').forEach(function (img) {
+    var card = img.closest('.card');
+    if (!card) return;
+
+    var toast = document.createElement('div');
+    toast.className = 'card-toast';
+    card.appendChild(toast);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'card-copy-btn';
+    btn.setAttribute('aria-label', 'Copy image');
+    btn.innerHTML = COPY_ICON;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      copyImage(img.src, card);
+    });
+    card.appendChild(btn);
+
+    img.addEventListener('click', function () {
+      openLightbox(img.src, card.getAttribute('data-lightbox-title') || img.alt);
+    });
+  });
+})();
+</script>
+"""
+
 _HEAD = """<meta charset="utf-8">
 <title>{title}</title>
 <meta name="description" content="{description}">
@@ -488,13 +740,12 @@ def _model_vs_actual_html(row: dict | None) -> str:
 
 def render_round_html(page: RoundPage, *, league_name: str, season: int) -> str:
     pre_cards = [c for c in page.cards if c.key.split("-")[0] in PRE_RACE_CARDS]
-    post_cards = [c for c in page.cards if c.key.split("-")[0] in POST_RACE_CARDS]
-    other_cards = [c for c in page.cards if c not in pre_cards and c not in post_cards]
+    other_cards = [c for c in page.cards if c not in pre_cards]
 
     def card_html(c: CardFile) -> str:
         img = f'<img src="../{c.image_rel}" alt="{html.escape(c.title)}" loading="lazy">' if c.image_rel else ""
         caption = f'<div class="card-caption">{c.caption_html}</div>' if c.caption_html else ""
-        return f'<div class="card"><div class="card-title">{html.escape(c.title)}</div>{img}{caption}</div>'
+        return f'<div class="card" data-lightbox-title="{html.escape(c.title)}"><div class="card-title">{html.escape(c.title)}</div>{img}{caption}</div>'
 
     extras_html = ""
     if page.extras:
@@ -504,13 +755,23 @@ def render_round_html(page: RoundPage, *, league_name: str, season: int) -> str:
     sections = [extras_html] if extras_html else []
     if pre_cards:
         sections.append('<div class="section-title">Pre-race</div><div class="card-grid">' + "".join(card_html(c) for c in pre_cards) + "</div>")
-    if post_cards:
-        sections.append('<div class="section-title">Post-race</div><div class="card-grid">' + "".join(card_html(c) for c in post_cards) + "</div>")
+
+    has_post_race_league_cards = any(c.key in POST_RACE_CARDS for group in page.league_groups for c in group.cards)
+    if page.league_groups:
+        league_html = "".join(
+            f'<div class="league-title">{html.escape(group.league_name)}</div><div class="card-grid">'
+            + "".join(card_html(c) for c in group.cards)
+            + "</div>"
+            for group in page.league_groups
+        )
+        sections.append('<div class="section-title">Fantasy league visuals</div>' + league_html)
+        if not has_post_race_league_cards and page.status == "upcoming":
+            sections.append('<div class="empty-note">Recap, winners &amp; losers, and hindsight fill in here once each league\'s round is scored.</div>')
+
+    if has_post_race_league_cards:
         sections.append('<div class="section-title">Model vs. actuals</div>' + _model_vs_actual_html(page.model_vs_actual))
     if other_cards:
         sections.append('<div class="section-title">Other</div><div class="card-grid">' + "".join(card_html(c) for c in other_cards) + "</div>")
-    if not post_cards and page.status == "upcoming":
-        sections.append('<div class="section-title">Post-race</div><div class="empty-note">Not raced yet -- this section fills in once the recap is captured.</div>')
 
     body = f"""
 <div class="page">
@@ -523,6 +784,7 @@ def render_round_html(page: RoundPage, *, league_name: str, season: int) -> str:
   {''.join(sections)}
   <footer class="site-footer">{html.escape(league_name)} &middot; generated from this repository's committed cards and snapshots.</footer>
 </div>
+{_LIGHTBOX_HTML}
 {_FEEDBACK_WIDGET_HTML}
 """
     return _HEAD.format(title=f"{page.event_name} — Round {page.round_number}", description=f"Pre-race analysis and post-race results for the {season} {page.event_name}.", css=_BASE_CSS) + body
@@ -532,6 +794,7 @@ def build_site(
     season: int,
     league_name: str,
     *,
+    primary_league_id: int | None = None,
     out_dir: Path = Path("out"),
     snapshot_dir: Path = Path("snapshots"),
     backtest_path: Path = Path("data/pace/points_backtest.json"),
@@ -542,7 +805,14 @@ def build_site(
     (dest_root / "rounds").mkdir(exist_ok=True)
 
     pages = build_round_pages(
-        season, out_dir=out_dir, snapshot_dir=snapshot_dir, backtest_path=backtest_path, extras_dir=extras_dir, dest_root=dest_root
+        season,
+        primary_league_id=primary_league_id,
+        primary_league_name=league_name,
+        out_dir=out_dir,
+        snapshot_dir=snapshot_dir,
+        backtest_path=backtest_path,
+        extras_dir=extras_dir,
+        dest_root=dest_root,
     )
     (dest_root / "index.html").write_text(render_index_html(pages, season=season, league_name=league_name), encoding="utf-8")
     for page in pages:

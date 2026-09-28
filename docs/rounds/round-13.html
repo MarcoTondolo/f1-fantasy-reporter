@@ -57,13 +57,45 @@ h1 {
   font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--ink-muted); border-bottom: 1px solid var(--hairline); padding-bottom: 8px; margin: 6px 0 -4px;
 }
+.league-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-secondary); margin: 8px 0 -4px;
+}
 .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .card {
   background: var(--surface); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
+  position: relative;
 }
 .card-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.02em; }
 .card-caption { font-size: 13px; line-height: 1.6; color: var(--ink-secondary); }
-.card img { max-width: 100%; border-radius: 3px; display: block; }
+.card img { max-width: 100%; border-radius: 3px; display: block; cursor: zoom-in; }
+.card-copy-btn {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  width: 30px; height: 30px; border-radius: 999px; border: none;
+  background: rgba(0,0,0,0.55); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-copy-btn:hover { background: var(--accent); }
+.card-copy-btn svg { width: 14px; height: 14px; }
+.card-toast {
+  position: absolute; top: 16px; right: 52px; z-index: 3;
+  background: rgba(0,0,0,0.8); color: #fff; font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 4px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap;
+}
+.card-toast.show { opacity: 1; }
+.lb-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1002;
+  display: none; flex-direction: column; align-items: center; padding: 16px;
+}
+.lb-overlay.open { display: flex; }
+.lb-toolbar { display: flex; justify-content: flex-end; gap: 8px; width: 100%; max-width: 1100px; margin-bottom: 10px; flex-shrink: 0; }
+.lb-toolbar button {
+  font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+  cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink);
+}
+.lb-toolbar .lb-copy { background: var(--accent); border-color: var(--accent); }
+.lb-body { flex: 1; width: 100%; max-width: 1100px; overflow: auto; text-align: center; }
+.lb-body img { max-width: 100%; border-radius: 4px; }
 
 .metric-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .metric {
@@ -135,7 +167,7 @@ footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6;
     <h1>Italian Grand Prix</h1>
     <div class="subtitle">Autodromo Nazionale di Monza</div>
   </header>
-  <div class="section-title">Pre-race</div><div class="card-grid"><div class="card"><div class="card-title">Preview</div><img src="../assets/2026/13/preview.png" alt="Preview" loading="lazy"><div class="card-caption">📅 <strong>Preview</strong> -- Italian Grand Prix<br>Autodromo Nazionale di Monza, Monza<br><br>⏰ Lockout: Saturday 15:00 BST<br>  FP1: Fri 11:30<br>  FP2: Fri 15:00<br>  FP3: Sat 11:30<br>  Qualifying: Sat 15:00 (lockout)<br><br>📰 Worth knowing:<br>  Gasly hails Alpine progress as Colapinto rues ‘harsh’ penalty<br></div></div><div class="card"><div class="card-title">Teams locked</div><img src="../assets/2026/13/lockout.png" alt="Teams locked" loading="lazy"><div class="card-caption">🔒 <strong>Teams are locked</strong> -- Italian Grand Prix<br><br>23 transfers across 26 teams.<br>🎴 Chips: Extra DRS (sydkav2); Limitless (Jacob Vander Zanden, Jacob Vander Zanden)<br>📈 Most backed: C. Leclerc (×6), L. Norris (×3), A. Albon (×2), P. Gasly (×2)<br>🧊 Held firm: Derek Blais, Sylvester Sawala, Paul Brown, Daniel Frank, Matthew Bielawski, Paul Gosse<br><br>Good luck 🏎️<br></div></div><div class="card"><div class="card-title">Picks</div><img src="../assets/2026/13/picks.png" alt="Picks" loading="lazy"><div class="card-caption">🏁 <strong>Race picks</strong> -- Italian Grand Prix<br>Autodromo Nazionale di Monza, Monza<br><br>📊 Top expected points:<br>  ANT: 24.1 (p10 -7.0 / p90 42.0)<br>  RUS: 23.3 (p10 -5.0 / p90 42.0)<br>  HAM: 22.7 (p10 2.0 / p90 40.0)<br>  LEC: 21.8 (p10 -1.0 / p90 39.0)<br>  NOR: 16.5 (p10 -10.0 / p90 38.0)<br><br>🏗️ Captain suggestion: ANT (EV 48.3)<br><br>📈 Likely price risers:<br>  LEC: 100% (Δ+0.28M)<br>  NOR: 100% (Δ+0.28M)<br>  ALO: 100% (Δ+0.49M)<br>  ANT: 97% (Δ+0.23M)<br>  HAD: 84% (Δ+0.40M)<br><br>🧩 Optimal team: COL, BOR, HUL, TSU, LIN + Mercedes, Ferrari (132.5 pts, $99.5M)<br></div></div><div class="card"><div class="card-title">Chip watch</div><img src="../assets/2026/13/chips.png" alt="Chip watch" loading="lazy"><div class="card-caption">🎴 <strong>Chip Watch</strong> -- Spanish Grand Prix<br><br><strong>Played this race</strong><br>  Extra DRS: sydkav2<br>  Limitless: Jacob Vander Zanden, Jacob Vander Zanden<br><br>🧊 Nobody&#x27;s played: Final Fix<br></div></div><div class="card"><div class="card-title">Ownership</div><img src="../assets/2026/13/ownership.png" alt="Ownership" loading="lazy"><div class="card-caption">👥 <strong>Ownership</strong> -- Spanish Grand Prix<br><br>Most owned: <strong>C. Leclerc</strong> (7/15 teams)<br>💎 Differentials: C. Sainz, E. Ocon, I. Hadjar, L. Lawson<br></div></div><div class="card"><div class="card-title">Budget cap</div><img src="../assets/2026/13/budget.png" alt="Budget cap" loading="lazy"><div class="card-caption">💰 <strong>Budget Cap</strong> -- Spanish Grand Prix<br><br>Biggest budget: <strong>Chris Krueger</strong> ($127.5M)<br>Tightest squeeze: <strong>Paul Gosse</strong> ($100.0M)<br></div></div><div class="card"><div class="card-title">Model benchmarks</div><img src="../assets/2026/13/benchmarks.png" alt="Model benchmarks" loading="lazy"><div class="card-caption">📊 <strong>2026 round 13 benchmarks</strong><br>3 snapshot(s) captured<br><br>Our top picks:<br>  HAM: 16.5 (p10 -5.0 / p90 37.0)<br>  LEC: 15.4 (p10 -8.0 / p90 37.1)<br>  RUS: 15.2 (p10 -8.0 / p90 38.0)<br>  GAS: 15.1 (p10 -2.0 / p90 36.1)<br>  LIN: 14.6 (p10 -5.0 / p90 35.0)<br><br>official_projected (pre_FP1) (n=23):<br>  ALB: 0.0<br>  ALO: 0.0<br>  ANT: 0.0<br>  BEA: 0.0<br>  BOR: 0.0<br><br>crowd_consensus (ownership) (n=23):<br>  BEA: 51.0<br>  LIN: 45.0<br>  ANT: 36.0<br>  HUL: 36.0<br>  BOR: 35.0<br><br>ours (pre_FP1) (n=23):<br>  HAM: 15.3<br>  RUS: 15.2<br>  LEC: 14.9<br>  ANT: 14.9<br>  GAS: 14.2<br><br>Our backtested track record: MAE 13.2, Spearman 0.462<br></div></div></div><div class="section-title">Post-race</div><div class="card-grid"><div class="card"><div class="card-title">Recap</div><img src="../assets/2026/13/recap.png" alt="Recap" loading="lazy"><div class="card-caption">🏁 <strong>Italian Grand Prix</strong> -- Ciao Squadra 2026<br>🥇 Round winner: <strong>sydkav2</strong> with 519 pts<br><br><strong>Top 3</strong><br>1. Chris Krueger — 3437<br>2. Derek Blais — 3191<br>3. Paul Brown — 3084<br><br>📈 Best move: sydkav2 (+52) — 3 out, 3 in (G. Bortoleto, K. Antonelli, L. Norris)<br>📉 Worst move: Marie Lunny (-105) — 2 out, 2 in (C. Leclerc, P. Gasly)<br><br>🎴 Chips: Extra DRS (sydkav2); Limitless (Jacob Vander Zanden, Jacob Vander Zanden)<br></div></div><div class="card"><div class="card-title">Winners &amp; losers</div><img src="../assets/2026/13/winners_losers.png" alt="Winners &amp; losers" loading="lazy"><div class="card-caption">🏆 <strong>Winners &amp; Losers</strong> -- Italian Grand Prix<br><br>🥇 Best race: <strong>sydkav2</strong> (+519 pts)<br>📉 Roughest race: <strong>Jacob Vander Zanden</strong> (+98 pts)<br>📈 Best move: sydkav2 (+52) — 3 out, 3 in (G. Bortoleto, K. Antonelli…)<br>💀 Worst move: Marie Lunny (-105) — 2 out, 2 in (C. Leclerc, P. Gasly)<br>🏗️ Best armband: Chris Krueger on K. Antonelli (+93)<br></div></div><div class="card"><div class="card-title">Hindsight</div><img src="../assets/2026/13/hindsight.png" alt="Hindsight" loading="lazy"><div class="card-caption">🔮 <strong>Hindsight</strong> -- Italian Grand Prix<br><br>Optimal team scored 428 pts (captain: ANT)<br>Closest to perfect: sydkav2 (519 pts, --91)<br>Furthest from perfect: Caitlyn Landry (111 pts, -317)<br>League average gap to optimal: 182.1 pts<br></div></div></div><div class="section-title">Model vs. actuals</div>
+  <div class="section-title">Pre-race</div><div class="card-grid"><div class="card" data-lightbox-title="Preview"><div class="card-title">Preview</div><img src="../assets/2026/13/preview.png" alt="Preview" loading="lazy"><div class="card-caption">📅 <strong>Preview</strong> -- Italian Grand Prix<br>Autodromo Nazionale di Monza, Monza<br><br>⏰ Lockout: Saturday 15:00 BST<br>  FP1: Fri 11:30<br>  FP2: Fri 15:00<br>  FP3: Sat 11:30<br>  Qualifying: Sat 15:00 (lockout)<br><br>📰 Worth knowing:<br>  Gasly hails Alpine progress as Colapinto rues ‘harsh’ penalty<br></div></div><div class="card" data-lightbox-title="Picks"><div class="card-title">Picks</div><img src="../assets/2026/13/picks.png" alt="Picks" loading="lazy"><div class="card-caption">🏁 <strong>Race picks</strong> -- Italian Grand Prix<br>Autodromo Nazionale di Monza, Monza<br><br>📊 Top expected points:<br>  ANT: 24.1 (p10 -7.0 / p90 42.0)<br>  RUS: 23.3 (p10 -5.0 / p90 42.0)<br>  HAM: 22.7 (p10 2.0 / p90 40.0)<br>  LEC: 21.8 (p10 -1.0 / p90 39.0)<br>  NOR: 16.5 (p10 -10.0 / p90 38.0)<br><br>🏗️ Captain suggestion: ANT (EV 48.3)<br><br>📈 Likely price risers:<br>  LEC: 100% (Δ+0.28M)<br>  NOR: 100% (Δ+0.28M)<br>  ALO: 100% (Δ+0.49M)<br>  ANT: 97% (Δ+0.23M)<br>  HAD: 84% (Δ+0.40M)<br><br>🧩 Optimal team: COL, BOR, HUL, TSU, LIN + Mercedes, Ferrari (132.5 pts, $99.5M)<br></div></div><div class="card" data-lightbox-title="Model benchmarks"><div class="card-title">Model benchmarks</div><img src="../assets/2026/13/benchmarks.png" alt="Model benchmarks" loading="lazy"><div class="card-caption">📊 <strong>2026 round 13 benchmarks</strong><br>3 snapshot(s) captured<br><br>Our top picks:<br>  HAM: 16.5 (p10 -5.0 / p90 37.0)<br>  LEC: 15.4 (p10 -8.0 / p90 37.1)<br>  RUS: 15.2 (p10 -8.0 / p90 38.0)<br>  GAS: 15.1 (p10 -2.0 / p90 36.1)<br>  LIN: 14.6 (p10 -5.0 / p90 35.0)<br><br>official_projected (pre_FP1) (n=23):<br>  ALB: 0.0<br>  ALO: 0.0<br>  ANT: 0.0<br>  BEA: 0.0<br>  BOR: 0.0<br><br>crowd_consensus (ownership) (n=23):<br>  BEA: 51.0<br>  LIN: 45.0<br>  ANT: 36.0<br>  HUL: 36.0<br>  BOR: 35.0<br><br>ours (pre_FP1) (n=23):<br>  HAM: 15.3<br>  RUS: 15.2<br>  LEC: 14.9<br>  ANT: 14.9<br>  GAS: 14.2<br><br>Our backtested track record: MAE 13.2, Spearman 0.462<br></div></div></div><div class="section-title">Fantasy league visuals</div><div class="league-title">Ciao Squadra 2026</div><div class="card-grid"><div class="card" data-lightbox-title="Teams locked"><div class="card-title">Teams locked</div><img src="../assets/2026/13/league-2623604/lockout.png" alt="Teams locked" loading="lazy"><div class="card-caption">🔒 <strong>Teams are locked</strong> -- Italian Grand Prix<br><br>26 transfers across 20 teams.<br>🎴 Chips: Autopilot (Glenor Shiu); Final Fix (Sean Russell)<br>📈 Most backed: L. Stroll (×3), F. Alonso (×3), A. Albon (×2), C. Leclerc (×2)<br>🧊 Held firm: Aaron Besyk, Jeffrey Ricard, Andrea Sceviour<br><br>Good luck 🏎️<br></div></div><div class="card" data-lightbox-title="Chip watch"><div class="card-title">Chip watch</div><img src="../assets/2026/13/league-2623604/chips.png" alt="Chip watch" loading="lazy"><div class="card-caption">🎴 <strong>Chip Watch</strong> -- Italian Grand Prix<br><br><strong>Played this race</strong><br>  Autopilot: Glenor Shiu<br>  Final Fix: Sean Russell<br><br></div></div><div class="card" data-lightbox-title="Ownership"><div class="card-title">Ownership</div><img src="../assets/2026/13/league-2623604/ownership.png" alt="Ownership" loading="lazy"><div class="card-caption">👥 <strong>Ownership</strong> -- Italian Grand Prix<br><br>Most owned: <strong>N. Hulkenberg</strong> (13/15 teams)<br>💎 Differentials: I. Hadjar, O. Piastri, Red Bull Racing, S. Perez, V. Bottas, Y. Tsunoda<br></div></div><div class="card" data-lightbox-title="Budget cap"><div class="card-title">Budget cap</div><img src="../assets/2026/13/league-2623604/budget.png" alt="Budget cap" loading="lazy"><div class="card-caption">💰 <strong>Budget Cap</strong> -- Italian Grand Prix<br><br>Biggest budget: <strong>Chris Krueger</strong> ($127.5M)<br>Tightest squeeze: <strong>Luc Grieve</strong> ($105.2M)<br></div></div><div class="card" data-lightbox-title="Recap"><div class="card-title">Recap</div><img src="../assets/2026/13/league-2623604/recap.png" alt="Recap" loading="lazy"><div class="card-caption">🏁 <strong>Italian Grand Prix</strong> -- DTOUR 2026<br>🥇 Round winner: <strong>Brad Besyk</strong> with 402 pts<br><br><strong>Top 3</strong><br>1. Chris Krueger — 3437<br>2. Joe Kunkel — 3383<br>3. Christian Lausberg — 3322<br><br>📈 Best move: Brad Besyk (+123) — 3 out, 3 in (K. Antonelli, L. Lawson, Mercedes)<br>📉 Worst move: Glenor Shiu (-235) — 5 out, 5 in (G. Bortoleto, A. Lindblad, L. Stroll…)<br><br>🎴 Chips: Autopilot (Glenor Shiu); Final Fix (Sean Russell)<br></div></div><div class="card" data-lightbox-title="Winners &amp; losers"><div class="card-title">Winners &amp; losers</div><img src="../assets/2026/13/league-2623604/winners_losers.png" alt="Winners &amp; losers" loading="lazy"><div class="card-caption">🏆 <strong>Winners &amp; Losers</strong> -- Italian Grand Prix<br><br>🥇 Best race: <strong>Brad Besyk</strong> (+402 pts)<br>📉 Roughest race: <strong>Sean Macintyre</strong> (+103 pts)<br>📈 Best move: Brad Besyk (+123) — 3 out, 3 in (K. Antonelli, L. Lawson…)<br>💀 Worst move: Glenor Shiu (-235) — 5 out, 5 in (G. Bortoleto, A. Lindblad…)<br>🏗️ Best armband: Chris Krueger on K. Antonelli (+93)<br></div></div><div class="card" data-lightbox-title="Hindsight"><div class="card-title">Hindsight</div><img src="../assets/2026/13/league-2623604/hindsight.png" alt="Hindsight" loading="lazy"><div class="card-caption">🔮 <strong>Hindsight</strong> -- Italian Grand Prix<br><br>Optimal team scored 428 pts (captain: ANT)<br>Closest to perfect: Brad Besyk (402 pts, -26)<br>Furthest from perfect: Sean Macintyre (103 pts, -325)<br>League average gap to optimal: 146.9 pts<br></div></div></div><div class="league-title">DTOUR 2026</div><div class="card-grid"><div class="card" data-lightbox-title="Teams locked"><div class="card-title">Teams locked</div><img src="../assets/2026/13/league-2623604/lockout.png" alt="Teams locked" loading="lazy"><div class="card-caption">🔒 <strong>Teams are locked</strong> -- Italian Grand Prix<br><br>26 transfers across 20 teams.<br>🎴 Chips: Autopilot (Glenor Shiu); Final Fix (Sean Russell)<br>📈 Most backed: L. Stroll (×3), F. Alonso (×3), A. Albon (×2), C. Leclerc (×2)<br>🧊 Held firm: Aaron Besyk, Jeffrey Ricard, Andrea Sceviour<br><br>Good luck 🏎️<br></div></div><div class="card" data-lightbox-title="Chip watch"><div class="card-title">Chip watch</div><img src="../assets/2026/13/league-2623604/chips.png" alt="Chip watch" loading="lazy"><div class="card-caption">🎴 <strong>Chip Watch</strong> -- Italian Grand Prix<br><br><strong>Played this race</strong><br>  Autopilot: Glenor Shiu<br>  Final Fix: Sean Russell<br><br></div></div><div class="card" data-lightbox-title="Ownership"><div class="card-title">Ownership</div><img src="../assets/2026/13/league-2623604/ownership.png" alt="Ownership" loading="lazy"><div class="card-caption">👥 <strong>Ownership</strong> -- Italian Grand Prix<br><br>Most owned: <strong>N. Hulkenberg</strong> (13/15 teams)<br>💎 Differentials: I. Hadjar, O. Piastri, Red Bull Racing, S. Perez, V. Bottas, Y. Tsunoda<br></div></div><div class="card" data-lightbox-title="Budget cap"><div class="card-title">Budget cap</div><img src="../assets/2026/13/league-2623604/budget.png" alt="Budget cap" loading="lazy"><div class="card-caption">💰 <strong>Budget Cap</strong> -- Italian Grand Prix<br><br>Biggest budget: <strong>Chris Krueger</strong> ($127.5M)<br>Tightest squeeze: <strong>Luc Grieve</strong> ($105.2M)<br></div></div><div class="card" data-lightbox-title="Recap"><div class="card-title">Recap</div><img src="../assets/2026/13/league-2623604/recap.png" alt="Recap" loading="lazy"><div class="card-caption">🏁 <strong>Italian Grand Prix</strong> -- DTOUR 2026<br>🥇 Round winner: <strong>Brad Besyk</strong> with 402 pts<br><br><strong>Top 3</strong><br>1. Chris Krueger — 3437<br>2. Joe Kunkel — 3383<br>3. Christian Lausberg — 3322<br><br>📈 Best move: Brad Besyk (+123) — 3 out, 3 in (K. Antonelli, L. Lawson, Mercedes)<br>📉 Worst move: Glenor Shiu (-235) — 5 out, 5 in (G. Bortoleto, A. Lindblad, L. Stroll…)<br><br>🎴 Chips: Autopilot (Glenor Shiu); Final Fix (Sean Russell)<br></div></div><div class="card" data-lightbox-title="Winners &amp; losers"><div class="card-title">Winners &amp; losers</div><img src="../assets/2026/13/league-2623604/winners_losers.png" alt="Winners &amp; losers" loading="lazy"><div class="card-caption">🏆 <strong>Winners &amp; Losers</strong> -- Italian Grand Prix<br><br>🥇 Best race: <strong>Brad Besyk</strong> (+402 pts)<br>📉 Roughest race: <strong>Sean Macintyre</strong> (+103 pts)<br>📈 Best move: Brad Besyk (+123) — 3 out, 3 in (K. Antonelli, L. Lawson…)<br>💀 Worst move: Glenor Shiu (-235) — 5 out, 5 in (G. Bortoleto, A. Lindblad…)<br>🏗️ Best armband: Chris Krueger on K. Antonelli (+93)<br></div></div><div class="card" data-lightbox-title="Hindsight"><div class="card-title">Hindsight</div><img src="../assets/2026/13/league-2623604/hindsight.png" alt="Hindsight" loading="lazy"><div class="card-caption">🔮 <strong>Hindsight</strong> -- Italian Grand Prix<br><br>Optimal team scored 428 pts (captain: ANT)<br>Closest to perfect: Brad Besyk (402 pts, -26)<br>Furthest from perfect: Sean Macintyre (103 pts, -325)<br>League average gap to optimal: 146.9 pts<br></div></div></div><div class="section-title">Model vs. actuals</div>
 <div class="metric-row">
   <div class="metric"><div class="metric-label">Mean absolute error</div><div class="metric-value">13.0 pts</div></div>
   <div class="metric"><div class="metric-label">Rank correlation</div><div class="metric-value">0.55</div></div>
@@ -145,6 +177,105 @@ footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6;
 
   <footer class="site-footer">Ciao Squadra 2026 &middot; generated from this repository's committed cards and snapshots.</footer>
 </div>
+
+<div class="lb-overlay" id="lbOverlay">
+  <div class="lb-toolbar">
+    <button type="button" class="lb-copy" id="lbCopyBtn">Copy image</button>
+    <button type="button" id="lbCloseBtn">Close</button>
+  </div>
+  <div class="lb-body"><img id="lbImg" src="" alt=""></div>
+</div>
+<script>
+(function () {
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var lbOverlay = document.getElementById('lbOverlay');
+  var lbImg = document.getElementById('lbImg');
+  var lbCopyBtn = document.getElementById('lbCopyBtn');
+  var lbCloseBtn = document.getElementById('lbCloseBtn');
+  var currentSrc = '';
+
+  function openLightbox(src, title) {
+    currentSrc = src;
+    lbImg.src = src;
+    lbImg.alt = title || '';
+    lbOverlay.classList.add('open');
+  }
+  function closeLightbox() {
+    lbOverlay.classList.remove('open');
+    lbImg.src = '';
+  }
+  lbCloseBtn.addEventListener('click', closeLightbox);
+  lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLightbox(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+
+  function showToast(cardEl, message) {
+    var toast = cardEl.querySelector('.card-toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(function () { toast.classList.remove('show'); }, 1800);
+  }
+
+  function copyImage(src, cardEl) {
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+      window.open(src, '_blank', 'noopener');
+      showToast(cardEl, 'Opened image \u2014 long-press to save');
+      return;
+    }
+    var item = new ClipboardItem({
+      'image/png': fetch(src).then(function (r) { return r.blob(); })
+    });
+    navigator.clipboard.write([item]).then(function () {
+      showToast(cardEl, 'Copied!');
+    }).catch(function () {
+      window.open(src, '_blank', 'noopener');
+      showToast(cardEl, 'Copy failed \u2014 opened image instead');
+    });
+  }
+
+  lbCopyBtn.addEventListener('click', function () {
+    if (!currentSrc) return;
+    var item = new ClipboardItem({
+      'image/png': fetch(currentSrc).then(function (r) { return r.blob(); })
+    });
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+      window.open(currentSrc, '_blank', 'noopener');
+      return;
+    }
+    navigator.clipboard.write([item]).then(function () {
+      lbCopyBtn.textContent = 'Copied!';
+      setTimeout(function () { lbCopyBtn.textContent = 'Copy image'; }, 1500);
+    }).catch(function () {
+      window.open(currentSrc, '_blank', 'noopener');
+    });
+  });
+
+  document.querySelectorAll('.card img').forEach(function (img) {
+    var card = img.closest('.card');
+    if (!card) return;
+
+    var toast = document.createElement('div');
+    toast.className = 'card-toast';
+    card.appendChild(toast);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'card-copy-btn';
+    btn.setAttribute('aria-label', 'Copy image');
+    btn.innerHTML = COPY_ICON;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      copyImage(img.src, card);
+    });
+    card.appendChild(btn);
+
+    img.addEventListener('click', function () {
+      openLightbox(img.src, card.getAttribute('data-lightbox-title') || img.alt);
+    });
+  });
+})();
+</script>
+
 
 <button type="button" class="fb-btn" id="fbOpenBtn" aria-haspopup="dialog">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9V7a3 3 0 0 1 6 0v2"/><rect x="5" y="9" width="14" height="11" rx="4"/><path d="M2 13h3M19 13h3M9 3l1.5 2M15 3l-1.5 2M9 20v-4M15 20v-4"/></svg>

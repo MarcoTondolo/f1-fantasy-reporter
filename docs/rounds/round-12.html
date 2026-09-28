@@ -57,13 +57,45 @@ h1 {
   font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--ink-muted); border-bottom: 1px solid var(--hairline); padding-bottom: 8px; margin: 6px 0 -4px;
 }
+.league-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-secondary); margin: 8px 0 -4px;
+}
 .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .card {
   background: var(--surface); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
+  position: relative;
 }
 .card-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.02em; }
 .card-caption { font-size: 13px; line-height: 1.6; color: var(--ink-secondary); }
-.card img { max-width: 100%; border-radius: 3px; display: block; }
+.card img { max-width: 100%; border-radius: 3px; display: block; cursor: zoom-in; }
+.card-copy-btn {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  width: 30px; height: 30px; border-radius: 999px; border: none;
+  background: rgba(0,0,0,0.55); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-copy-btn:hover { background: var(--accent); }
+.card-copy-btn svg { width: 14px; height: 14px; }
+.card-toast {
+  position: absolute; top: 16px; right: 52px; z-index: 3;
+  background: rgba(0,0,0,0.8); color: #fff; font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 4px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap;
+}
+.card-toast.show { opacity: 1; }
+.lb-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1002;
+  display: none; flex-direction: column; align-items: center; padding: 16px;
+}
+.lb-overlay.open { display: flex; }
+.lb-toolbar { display: flex; justify-content: flex-end; gap: 8px; width: 100%; max-width: 1100px; margin-bottom: 10px; flex-shrink: 0; }
+.lb-toolbar button {
+  font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+  cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink);
+}
+.lb-toolbar .lb-copy { background: var(--accent); border-color: var(--accent); }
+.lb-body { flex: 1; width: 100%; max-width: 1100px; overflow: auto; text-align: center; }
+.lb-body img { max-width: 100%; border-radius: 4px; }
 
 .metric-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .metric {
@@ -135,9 +167,108 @@ footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6;
     <h1>Dutch Grand Prix</h1>
     <div class="subtitle">Circuit Park Zandvoort</div>
   </header>
-  <div class="section-title">Pre-race</div><div class="card-grid"><div class="card"><div class="card-title">Chip watch (league-2623604)</div><img src="../assets/2026/12/chips_league-2623604.png" alt="Chip watch (league-2623604)" loading="lazy"></div><div class="card"><div class="card-title">Chip watch (league-268105)</div><img src="../assets/2026/12/chips_league-268105.png" alt="Chip watch (league-268105)" loading="lazy"></div><div class="card"><div class="card-title">Chip watch (league-4512504)</div><img src="../assets/2026/12/chips_league-4512504.png" alt="Chip watch (league-4512504)" loading="lazy"></div><div class="card"><div class="card-title">Ownership (league-2623604)</div><img src="../assets/2026/12/ownership_league-2623604.png" alt="Ownership (league-2623604)" loading="lazy"></div><div class="card"><div class="card-title">Ownership (league-268105)</div><img src="../assets/2026/12/ownership_league-268105.png" alt="Ownership (league-268105)" loading="lazy"></div><div class="card"><div class="card-title">Ownership (league-4512504)</div><img src="../assets/2026/12/ownership_league-4512504.png" alt="Ownership (league-4512504)" loading="lazy"></div><div class="card"><div class="card-title">Budget cap (league-2623604)</div><img src="../assets/2026/12/budget_league-2623604.png" alt="Budget cap (league-2623604)" loading="lazy"></div><div class="card"><div class="card-title">Budget cap (league-268105)</div><img src="../assets/2026/12/budget_league-268105.png" alt="Budget cap (league-268105)" loading="lazy"></div><div class="card"><div class="card-title">Budget cap (league-4512504)</div><img src="../assets/2026/12/budget_league-4512504.png" alt="Budget cap (league-4512504)" loading="lazy"></div></div>
+  <div class="section-title">Fantasy league visuals</div><div class="league-title">Ciao Squadra 2026</div><div class="card-grid"><div class="card" data-lightbox-title="Chip watch"><div class="card-title">Chip watch</div><img src="../assets/2026/12/league-4512504/chips.png" alt="Chip watch" loading="lazy"></div><div class="card" data-lightbox-title="Ownership"><div class="card-title">Ownership</div><img src="../assets/2026/12/league-4512504/ownership.png" alt="Ownership" loading="lazy"></div><div class="card" data-lightbox-title="Budget cap"><div class="card-title">Budget cap</div><img src="../assets/2026/12/league-4512504/budget.png" alt="Budget cap" loading="lazy"></div></div><div class="league-title">DTOUR 2026</div><div class="card-grid"><div class="card" data-lightbox-title="Chip watch"><div class="card-title">Chip watch</div><img src="../assets/2026/12/league-4512504/chips.png" alt="Chip watch" loading="lazy"></div><div class="card" data-lightbox-title="Ownership"><div class="card-title">Ownership</div><img src="../assets/2026/12/league-4512504/ownership.png" alt="Ownership" loading="lazy"></div><div class="card" data-lightbox-title="Budget cap"><div class="card-title">Budget cap</div><img src="../assets/2026/12/league-4512504/budget.png" alt="Budget cap" loading="lazy"></div></div><div class="league-title">F1 Fantasy Tools Private</div><div class="card-grid"><div class="card" data-lightbox-title="Chip watch"><div class="card-title">Chip watch</div><img src="../assets/2026/12/league-4512504/chips.png" alt="Chip watch" loading="lazy"></div><div class="card" data-lightbox-title="Ownership"><div class="card-title">Ownership</div><img src="../assets/2026/12/league-4512504/ownership.png" alt="Ownership" loading="lazy"></div><div class="card" data-lightbox-title="Budget cap"><div class="card-title">Budget cap</div><img src="../assets/2026/12/league-4512504/budget.png" alt="Budget cap" loading="lazy"></div></div>
   <footer class="site-footer">Ciao Squadra 2026 &middot; generated from this repository's committed cards and snapshots.</footer>
 </div>
+
+<div class="lb-overlay" id="lbOverlay">
+  <div class="lb-toolbar">
+    <button type="button" class="lb-copy" id="lbCopyBtn">Copy image</button>
+    <button type="button" id="lbCloseBtn">Close</button>
+  </div>
+  <div class="lb-body"><img id="lbImg" src="" alt=""></div>
+</div>
+<script>
+(function () {
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var lbOverlay = document.getElementById('lbOverlay');
+  var lbImg = document.getElementById('lbImg');
+  var lbCopyBtn = document.getElementById('lbCopyBtn');
+  var lbCloseBtn = document.getElementById('lbCloseBtn');
+  var currentSrc = '';
+
+  function openLightbox(src, title) {
+    currentSrc = src;
+    lbImg.src = src;
+    lbImg.alt = title || '';
+    lbOverlay.classList.add('open');
+  }
+  function closeLightbox() {
+    lbOverlay.classList.remove('open');
+    lbImg.src = '';
+  }
+  lbCloseBtn.addEventListener('click', closeLightbox);
+  lbOverlay.addEventListener('click', function (e) { if (e.target === lbOverlay) closeLightbox(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+
+  function showToast(cardEl, message) {
+    var toast = cardEl.querySelector('.card-toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(function () { toast.classList.remove('show'); }, 1800);
+  }
+
+  function copyImage(src, cardEl) {
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+      window.open(src, '_blank', 'noopener');
+      showToast(cardEl, 'Opened image \u2014 long-press to save');
+      return;
+    }
+    var item = new ClipboardItem({
+      'image/png': fetch(src).then(function (r) { return r.blob(); })
+    });
+    navigator.clipboard.write([item]).then(function () {
+      showToast(cardEl, 'Copied!');
+    }).catch(function () {
+      window.open(src, '_blank', 'noopener');
+      showToast(cardEl, 'Copy failed \u2014 opened image instead');
+    });
+  }
+
+  lbCopyBtn.addEventListener('click', function () {
+    if (!currentSrc) return;
+    var item = new ClipboardItem({
+      'image/png': fetch(currentSrc).then(function (r) { return r.blob(); })
+    });
+    if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+      window.open(currentSrc, '_blank', 'noopener');
+      return;
+    }
+    navigator.clipboard.write([item]).then(function () {
+      lbCopyBtn.textContent = 'Copied!';
+      setTimeout(function () { lbCopyBtn.textContent = 'Copy image'; }, 1500);
+    }).catch(function () {
+      window.open(currentSrc, '_blank', 'noopener');
+    });
+  });
+
+  document.querySelectorAll('.card img').forEach(function (img) {
+    var card = img.closest('.card');
+    if (!card) return;
+
+    var toast = document.createElement('div');
+    toast.className = 'card-toast';
+    card.appendChild(toast);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'card-copy-btn';
+    btn.setAttribute('aria-label', 'Copy image');
+    btn.innerHTML = COPY_ICON;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      copyImage(img.src, card);
+    });
+    card.appendChild(btn);
+
+    img.addEventListener('click', function () {
+      openLightbox(img.src, card.getAttribute('data-lightbox-title') || img.alt);
+    });
+  });
+})();
+</script>
+
 
 <button type="button" class="fb-btn" id="fbOpenBtn" aria-haspopup="dialog">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9V7a3 3 0 0 1 6 0v2"/><rect x="5" y="9" width="14" height="11" rx="4"/><path d="M2 13h3M19 13h3M9 3l1.5 2M15 3l-1.5 2M9 20v-4M15 20v-4"/></svg>
