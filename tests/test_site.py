@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from f1_fantasy.site import CardFile, _load_league_groups
+from f1_fantasy.site import CardFile, LeagueCardGroup, RoundPage, _load_league_groups, render_round_html
 
 
 def _write_card(league_dir: Path, key: str) -> None:
@@ -91,3 +91,54 @@ def test_primary_leagues_flat_cards_are_not_duplicated_by_its_own_league_dir(tmp
     lockout_card = next(c for c in primary_group.cards if c.key == "lockout")
     assert lockout_card.image_rel == "assets/2026/12/lockout.png"  # the flat version, not the league dir's
     assert "chips" in keys
+
+
+def _page(league_groups: list[LeagueCardGroup]) -> RoundPage:
+    return RoundPage(
+        round_number=15,
+        event_name="Azerbaijan Grand Prix",
+        circuit="Baku City Circuit",
+        status="completed",
+        cards=[],
+        league_groups=league_groups,
+        model_vs_actual=None,
+        comparison_href=None,
+        extras=[],
+    )
+
+
+def test_a_switcher_tab_per_league_appears_once_there_is_more_than_one(tmp_path):
+    """Issue #6: a button to switch between leagues for all cards. One
+    league needs no switcher; more than one gets a tab row, one button per
+    league, the first marked active so the page is still right without JS.
+    """
+    card = CardFile(key="lockout", title="Teams locked", caption_html=None, image_rel="a.png")
+    groups = [
+        LeagueCardGroup(league_id=4512504, league_name="Ciao Squadra 2026", cards=[card]),
+        LeagueCardGroup(league_id=2623604, league_name="DTOUR 2026", cards=[card]),
+    ]
+
+    html_out = render_round_html(_page(groups), league_name="Ciao Squadra 2026", season=2026)
+
+    assert html_out.count("data-league-tab=") == 2
+    assert 'data-league-tab="4512504"' in html_out
+    assert 'data-league-tab="2623604"' in html_out
+    # The first league's tab and its matching card group both start active,
+    # so the page is still right even if the switcher script never runs.
+    first_tab_open_tag = html_out.split("<button", 2)[1]
+    assert 'data-league-tab="4512504"' in first_tab_open_tag
+    assert "active" in first_tab_open_tag
+    first_group_open_tag = html_out.split('<div class="league-group', 2)[1]
+    assert 'data-league-group="4512504"' in first_group_open_tag
+    assert first_group_open_tag.startswith(' active"')
+
+
+def test_no_switcher_tabs_for_a_single_league(tmp_path):
+    card = CardFile(key="lockout", title="Teams locked", caption_html=None, image_rel="a.png")
+    groups = [LeagueCardGroup(league_id=4512504, league_name="Ciao Squadra 2026", cards=[card])]
+
+    html_out = render_round_html(_page(groups), league_name="Ciao Squadra 2026", season=2026)
+
+    assert "data-league-tab=" not in html_out
+    assert 'data-league-group="4512504"' in html_out
+    assert "Ciao Squadra 2026" in html_out

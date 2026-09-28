@@ -61,6 +61,14 @@ h1 {
   font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--ink-secondary); margin: 8px 0 -4px;
 }
+.league-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 -2px; }
+.league-tab {
+  font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: 999px;
+  cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-secondary);
+}
+.league-tab.active { border-color: var(--accent); color: var(--ink); background: rgba(225,6,0,0.14); }
+.league-group { display: none; }
+.league-group.active { display: block; }
 .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .card {
   background: var(--surface); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
@@ -264,6 +272,25 @@ footer.site-footer { font-size: 11px; color: var(--ink-muted); line-height: 1.6;
 
     img.addEventListener('click', function () {
       openLightbox(img.src, card.getAttribute('data-lightbox-title') || img.alt);
+    });
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  document.querySelectorAll('.league-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-league-tab');
+      document.querySelectorAll('.league-tab').forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      document.querySelectorAll('.league-group').forEach(function (g) {
+        g.classList.toggle('active', g.getAttribute('data-league-group') === id);
+      });
     });
   });
 })();

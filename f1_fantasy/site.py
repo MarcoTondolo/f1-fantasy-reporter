@@ -429,6 +429,14 @@ h1 {
   font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--ink-secondary); margin: 8px 0 -4px;
 }
+.league-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 -2px; }
+.league-tab {
+  font-family: var(--font-body); font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: 999px;
+  cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-secondary);
+}
+.league-tab.active { border-color: var(--accent); color: var(--ink); background: rgba(225,6,0,0.14); }
+.league-group { display: none; }
+.league-group.active { display: block; }
 .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
 .card {
   background: var(--surface); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
@@ -711,6 +719,29 @@ _LIGHTBOX_HTML = """
 </script>
 """
 
+#: Click-to-switch between a round's league tabs (issue #6). A no-op when a
+#: page has none (querySelectorAll finds nothing), so this is safe to
+#: include on every round page rather than conditioning it on page content.
+_LEAGUE_TABS_JS = """
+<script>
+(function () {
+  document.querySelectorAll('.league-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-league-tab');
+      document.querySelectorAll('.league-tab').forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      document.querySelectorAll('.league-group').forEach(function (g) {
+        g.classList.toggle('active', g.getAttribute('data-league-group') === id);
+      });
+    });
+  });
+})();
+</script>
+"""
+
 _HEAD = """<meta charset="utf-8">
 <title>{title}</title>
 <meta name="description" content="{description}">
@@ -798,13 +829,34 @@ def render_round_html(page: RoundPage, *, league_name: str, season: int) -> str:
 
     has_post_race_league_cards = any(c.key in POST_RACE_CARDS for group in page.league_groups for c in group.cards)
     if page.league_groups:
-        league_html = "".join(
-            f'<div class="league-title">{html.escape(group.league_name)}</div><div class="card-grid">'
-            + "".join(card_html(c) for c in group.cards)
+        # A button per league to switch which one's cards show (issue #6) --
+        # only worth a tab row once there's more than one league to switch
+        # between; a single-league round just shows its cards directly, no
+        # toggle needed. The first league starts active both in the HTML
+        # (so it's still right if the switcher script never runs) and via
+        # _LEAGUE_TABS_JS's click handling.
+        show_tabs = len(page.league_groups) > 1
+        tabs_html = (
+            '<div class="league-tabs" role="tablist">'
+            + "".join(
+                f'<button type="button" class="league-tab{" active" if i == 0 else ""}" '
+                f'data-league-tab="{group.league_id}" role="tab" aria-selected="{"true" if i == 0 else "false"}">'
+                f"{html.escape(group.league_name)}</button>"
+                for i, group in enumerate(page.league_groups)
+            )
             + "</div>"
-            for group in page.league_groups
+            if show_tabs
+            else ""
         )
-        sections.append('<div class="section-title">Fantasy league visuals</div>' + league_html)
+        league_html = "".join(
+            f'<div class="league-group{" active" if i == 0 else ""}" data-league-group="{group.league_id}">'
+            + (f'<div class="league-title">{html.escape(group.league_name)}</div>' if not show_tabs else "")
+            + '<div class="card-grid">'
+            + "".join(card_html(c) for c in group.cards)
+            + "</div></div>"
+            for i, group in enumerate(page.league_groups)
+        )
+        sections.append('<div class="section-title">Fantasy league visuals</div>' + tabs_html + league_html)
         if not has_post_race_league_cards and page.status == "upcoming":
             sections.append('<div class="empty-note">Recap, winners &amp; losers, and hindsight fill in here once each league\'s round is scored.</div>')
 
@@ -825,6 +877,7 @@ def render_round_html(page: RoundPage, *, league_name: str, season: int) -> str:
   <footer class="site-footer">{html.escape(league_name)} &middot; generated from this repository's committed cards and snapshots.</footer>
 </div>
 {_LIGHTBOX_HTML}
+{_LEAGUE_TABS_JS}
 {_FEEDBACK_WIDGET_HTML}
 """
     return _HEAD.format(title=f"{page.event_name} — Round {page.round_number}", description=f"Pre-race analysis and post-race results for the {season} {page.event_name}.", css=_BASE_CSS) + body
