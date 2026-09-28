@@ -45,6 +45,12 @@ class TeamChange(Model):
     """What one member altered between two races."""
 
     guid: str
+    #: Together with ``guid`` this is the real identity -- see ``team_key``.
+    #: A bare ``guid`` collapses a multi-team account's teams onto each
+    #: other; this field exists so callers that need to key by member (e.g.
+    #: ``build_lockout``, matching each ``current.members`` row back to its
+    #: own change) can do so via ``team_key(guid, team_no)`` instead.
+    team_no: int = 1
     member_name: str
     team_name: str = ""
     drivers_in: list[ScoredPlayer] = []
@@ -212,6 +218,7 @@ def diff_team(
 
     return TeamChange(
         guid=current.guid,
+        team_no=current.team_no,
         member_name=member_name,
         team_name=current.team_name,
         drivers_in=drivers_in,

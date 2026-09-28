@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 import pytest
 
 from f1_fantasy.api.models import Chip, LeagueSnapshot, Member, Phase, team_key
+from f1_fantasy.report.lockout import build_lockout
 from f1_fantasy.store.diff import chip_status, diff_standings, diff_teams, ownership, score_captains
 from tests.conftest import make_players, make_team
 
@@ -161,3 +162,27 @@ def test_standings_movement_matches_each_team_to_its_own_previous_points():
 
     assert moves["sydkav1"].points_gained == pytest.approx(382.0)
     assert moves["sydkav2"].points_gained == pytest.approx(519.0)
+
+
+def test_build_lockout_reports_each_teams_own_status_not_the_last_ones():
+    """Found live: build_lockout's ``by_guid`` dict was keyed on guid alone,
+    so team_no 2's TeamChange silently overwrote team_no 1's in the lookup.
+    Both of a two-team account's member rows then reported team 2's status --
+    if team 2 happened to be unchanged, team 1's real transfer vanished from
+    the card entirely (never listed as a move) while the "held firm" line
+    printed the account's name twice for one actually-unchanged team.
+    """
+    previous = _snapshot(
+        {"player_ids": ["1", "101"], "team_name": "Squad A"},
+        {"player_ids": ["2", "102"], "team_name": "Squad B"},
+    )
+    current = _snapshot(
+        {"player_ids": ["4", "101"], "team_name": "Squad A"},  # swapped 1 -> 4
+        {"player_ids": ["2", "102"], "team_name": "Squad B"},  # unchanged
+    )
+
+    context = build_lockout(current, previous)
+
+    mover_teams = {m["team_name"] for m in context["movers"]}
+    assert mover_teams == {"Squad A"}, "Squad A's real transfer must not be dropped"
+    assert context["held"] == ["Chris"], "only Squad B actually held firm -- not printed twice"

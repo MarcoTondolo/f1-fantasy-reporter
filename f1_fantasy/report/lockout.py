@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections import Counter
 
-from f1_fantasy.api.models import CHIP_LABELS, LeagueSnapshot
+from f1_fantasy.api.models import CHIP_LABELS, LeagueSnapshot, team_key
 from f1_fantasy.render.teams import team_color
 from f1_fantasy.store.diff import TeamChange, chip_activations, diff_teams
 
@@ -42,11 +42,16 @@ def build_lockout(
     you_guid: str | None = None,
 ) -> dict:
     changes = diff_teams(previous, current)
-    by_guid = {c.guid: c for c in changes}
+    # Keyed by (guid, team_no), not guid alone -- an account can run more than
+    # one team in this league (see team_key), and a bare-guid key collapses
+    # both teams' TeamChange onto each other: whichever team's diff is built
+    # last wins the dict slot, so the other team's real transfer is silently
+    # dropped and its member row falsely reports the survivor's status twice.
+    by_member = {team_key(c.guid, c.team_no): c for c in changes}
 
     movers, held = [], []
     for member in current.members:
-        change = by_guid.get(member.guid)
+        change = by_member.get(team_key(member.guid, member.team_no))
         if change is None:
             continue
         if change.unchanged:
