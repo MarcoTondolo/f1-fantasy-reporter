@@ -15,8 +15,10 @@ EVENT = RaceEvent(
 )
 
 
-def _summary(driver, mean, p10, p90, price, p_price_rise=0.0, mean_delta_budget=0.0):
-    return SimulationSummary(driver, price, mean, p10, p90, p_price_rise, mean_delta_budget, n_samples=100)
+def _summary(driver, mean, p10, p90, price, p_price_rise=0.0, mean_delta_budget=0.0, p_price_fall=0.0):
+    return SimulationSummary(
+        driver, price, mean, p10, p90, p_price_rise, mean_delta_budget, n_samples=100, p_price_fall=p_price_fall
+    )
 
 
 def test_build_picks_ranks_top_picks_by_mean_descending():
@@ -41,6 +43,32 @@ def test_build_picks_excludes_drivers_with_zero_price_rise_probability():
     context = build_picks(EVENT, summaries, None)
 
     assert [row["driver"] for row in context["price_risers"]] == ["B"]
+
+
+def test_build_picks_excludes_drivers_with_zero_price_fall_probability():
+    """Issue #3: 'expected budget losers so I know who should not be on my
+    teams' -- the mirror of the risers test above."""
+    summaries = {
+        "A": _summary("A", 20.0, 10.0, 30.0, 10.0, p_price_fall=0.0),
+        "B": _summary("B", 10.0, 5.0, 15.0, 8.0, p_price_fall=0.7, mean_delta_budget=-0.3),
+    }
+
+    context = build_picks(EVENT, summaries, None)
+
+    assert [row["driver"] for row in context["price_fallers"]] == ["B"]
+    assert context["price_fallers"][0]["p_price_fall"] == 70
+    assert context["price_fallers"][0]["mean_delta_budget"] == -0.3
+
+
+def test_build_picks_ranks_fallers_by_probability_descending():
+    summaries = {
+        "A": _summary("A", 20.0, 10.0, 30.0, 10.0, p_price_fall=0.3),
+        "B": _summary("B", 10.0, 5.0, 15.0, 8.0, p_price_fall=0.9),
+    }
+
+    context = build_picks(EVENT, summaries, None)
+
+    assert [row["driver"] for row in context["price_fallers"]] == ["B", "A"]
 
 
 def test_build_picks_suggests_the_highest_ev_captain():
@@ -78,4 +106,14 @@ def test_caption_includes_the_headline_picks_and_captain():
     text = caption(context)
 
     assert "Test Grand Prix" in text
+    assert "A" in text
+
+
+def test_caption_includes_budget_losers_when_there_are_any():
+    summaries = {"A": _summary("A", 20.0, 10.0, 30.0, 10.0, p_price_fall=0.8, mean_delta_budget=-0.4)}
+    context = build_picks(EVENT, summaries, None)
+
+    text = caption(context)
+
+    assert "budget losers" in text.lower()
     assert "A" in text

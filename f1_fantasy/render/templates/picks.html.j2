@@ -57,6 +57,22 @@
 </section>
 {% endif %}
 
+{% if price_fallers %}
+<section>
+  <h2 class="section-title">Likely budget losers</h2>
+  <div class="standings">
+    {% for row in price_fallers %}
+    <div class="bet-row">
+      <span class="bet-name">{{ row.driver }}</span>
+      <span class="badge">{{ row.p_price_fall }}%</span>
+      <span class="delta neg bet-points">{{ row.mean_delta_budget | signed }}M</span>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="note">Who to think twice about backing this round, to preserve budget -- not necessarily who to drop, if their points are still worth it.</div>
+</section>
+{% endif %}
+
 {% if caveat %}
 <div class="note">{{ caveat }}</div>
 {% endif %}

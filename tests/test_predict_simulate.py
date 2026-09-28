@@ -42,6 +42,9 @@ def test_simulate_round_percentiles_are_ordered_and_mean_is_between_them(monkeyp
     for summary in result.values():
         assert summary.p10 <= summary.mean <= summary.p90
         assert 0.0 <= summary.p_price_rise <= 1.0
+        assert 0.0 <= summary.p_price_fall <= 1.0
+        # A sample is never counted as both a rise and a fall.
+        assert summary.p_price_rise + summary.p_price_fall <= 1.0
         assert summary.n_samples == 200
 
 
@@ -80,6 +83,40 @@ def test_simulate_round_gives_a_certain_winner_a_high_price_rise_probability(mon
     # A scoring more than double D's points moved that comparison by 0.004.
     assert result["A"].mean > 2 * result["D"].mean
     assert result["A"].p_price_rise > 0.7
+
+
+def test_simulate_round_gives_a_near_certain_dnf_a_high_price_fall_probability(monkeypatch):
+    """Mirror of the price-rise test above, but for a fall. Form alone
+    rarely drags a driver's *average* points low enough to fail even the
+    "terrible" PPM threshold -- qualifying and finishing points have a
+    fairly high floor -- but a near-certain DNF (scoring.DNF_POINTS = -20
+    on top of forfeiting the rest of the race) reliably does."""
+    from f1_fantasy.results import QualifyingResult
+
+    monkeypatch.setattr(simulate_module, "rolling_form", lambda season, rounds: {"WEAK": 1.0, "OK": 1.0})
+    monkeypatch.setattr(
+        simulate_module,
+        "fetch_qualifying",
+        lambda season, rnd: [
+            QualifyingResult(driver_code="WEAK", driver_name="WEAK", constructor="WeakTeam", position=1),
+            QualifyingResult(driver_code="OK", driver_name="OK", constructor="OkTeam", position=2),
+        ],
+    )
+    monkeypatch.setattr(simulate_module, "constructor_history", lambda season, rounds: {"WeakTeam": "unreliable", "OkTeam": "reliable"})
+    monkeypatch.setattr(simulate_module, "dnf_probability", lambda record: 1.0 if record == "unreliable" else 0.0)
+
+    result = simulate_round(
+        2026,
+        [1],
+        2,
+        price_before={"WEAK": 25.0, "OK": 25.0},  # both premium tier
+        recent_price_history={},
+        n_samples=500,
+        seed=1,
+    )
+
+    assert result["WEAK"].mean < result["OK"].mean
+    assert result["WEAK"].p_price_fall > 0.7
 
 
 def test_captaincy_ev_doubles_the_mean_and_ranks_best_first():

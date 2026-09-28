@@ -44,6 +44,15 @@ def _riser_row(summary: SimulationSummary) -> dict:
     }
 
 
+def _faller_row(summary: SimulationSummary) -> dict:
+    return {
+        "driver": summary.driver,
+        "price": round(summary.price, 1),
+        "p_price_fall": round(summary.p_price_fall * 100.0),
+        "mean_delta_budget": round(summary.mean_delta_budget, 2),
+    }
+
+
 def build_picks(
     event: RaceEvent,
     summaries: dict[str, SimulationSummary],
@@ -55,6 +64,13 @@ def build_picks(
     ranked_by_mean = sorted(summaries.values(), key=lambda s: -s.mean)[:top_n]
     risers = sorted(
         (s for s in summaries.values() if s.p_price_rise > 0), key=lambda s: -s.p_price_rise
+    )[:top_n]
+    # "Budget losers to watch out for" (issue #3): the mirror of price_risers,
+    # so a reader can see who's about to lose value, not just who's about to
+    # gain it -- the same p_price_fall the risers above already used mean_
+    # delta_budget for, just sorted and filtered the other way.
+    fallers = sorted(
+        (s for s in summaries.values() if s.p_price_fall > 0), key=lambda s: -s.p_price_fall
     )[:top_n]
 
     captain_ranked = captaincy_ev(summaries)
@@ -79,6 +95,7 @@ def build_picks(
         "footer_note": "",
         "top_picks": [_pick_row(s) for s in ranked_by_mean],
         "price_risers": [_riser_row(s) for s in risers],
+        "price_fallers": [_faller_row(s) for s in fallers],
         "captain_suggestion": captain_suggestion,
         "optimal_team": optimal_team,
         "caveat": MODEL_CAVEAT,
@@ -106,6 +123,12 @@ def caption(context: dict) -> str:
         lines.append("\U0001f4c8 Likely price risers:")
         for row in context["price_risers"][:5]:
             lines.append(f"  {row['driver']}: {row['p_price_rise']:.0f}% (Δ{row['mean_delta_budget']:+.2f}M)")
+
+    if context["price_fallers"]:
+        lines.append("")
+        lines.append("\U0001f4c9 Likely budget losers -- think twice before backing these:")
+        for row in context["price_fallers"][:5]:
+            lines.append(f"  {row['driver']}: {row['p_price_fall']:.0f}% (Δ{row['mean_delta_budget']:+.2f}M)")
 
     if context["optimal_team"]:
         team = context["optimal_team"]

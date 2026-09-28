@@ -45,6 +45,11 @@ class SimulationSummary:
     #: a Q3 bonus their drivers don't and exclude DOTD their drivers do.
     p_q3: float = 0.0
     mean_dotd_points: float = 0.0
+    #: Symmetric to p_price_rise -- P(delta < 0), not derived from it, since
+    #: a flat (delta == 0) sample is neither a rise nor a fall. Defaulted
+    #: (like p_q3/mean_dotd_points above) so existing direct constructions
+    #: of this dataclass don't all need updating for a field they don't use.
+    p_price_fall: float = 0.0
 
 
 def _recent_price_window(
@@ -93,6 +98,7 @@ def simulate_round(
     rng = np.random.default_rng(seed)
     totals: dict[str, list[float]] = {d: [] for d in strengths}
     price_rises: dict[str, list[bool]] = {d: [] for d in strengths}
+    price_falls: dict[str, list[bool]] = {d: [] for d in strengths}
     delta_budgets: dict[str, list[float]] = {d: [] for d in strengths}
     q3_counts: dict[str, int] = dict.fromkeys(strengths, 0)
     dotd_totals: dict[str, list[float]] = {d: [] for d in strengths}
@@ -112,6 +118,7 @@ def simulate_round(
                 avg_ppm = prices.average_ppm(recent_windows[d] + [(total, price)])
                 delta = prices.predict_price_delta(avg_ppm, price)
                 price_rises[d].append(delta > 0)
+                price_falls[d].append(delta < 0)
                 delta_budgets[d].append(delta)
 
     summaries = {}
@@ -124,6 +131,7 @@ def simulate_round(
             p10=float(np.percentile(values, 10)),
             p90=float(np.percentile(values, 90)),
             p_price_rise=float(np.mean(price_rises[d])) if price_rises[d] else 0.0,
+            p_price_fall=float(np.mean(price_falls[d])) if price_falls[d] else 0.0,
             mean_delta_budget=float(np.mean(delta_budgets[d])) if delta_budgets[d] else 0.0,
             n_samples=n_samples,
             p_q3=q3_counts[d] / n_samples if n_samples else 0.0,
