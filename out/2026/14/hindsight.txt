@@ -1,6 +1,6 @@
-🔮 *Hindsight* -- Italian Grand Prix
+🔮 *Hindsight* -- Spanish Grand Prix
 
-Optimal team scored 186 pts (captain: COL)
-Closest to perfect: Chris Krueger (182 pts, -4)
-Furthest from perfect: Paul Gosse (37 pts, -149)
-League average gap to optimal: 76.9 pts
+Optimal @ $100M scored 186 pts (captain: COL)
+Closest to their own optimal: Jacob Vander Zanden (174 pts, -27 off $107.2M)
+Furthest from their own optimal: Paul Gosse (37 pts, -149 off $99.4M)
+League average gap to (own-budget) optimal: 95.5 pts
