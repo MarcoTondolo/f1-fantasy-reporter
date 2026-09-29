@@ -1,10 +1,9 @@
 F1 Fantasy daily digest -- 2026 round 16
-Generated 2026-09-28 15:27 UTC
+Generated 2026-09-29 14:04 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 16 (FP1 R16 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
 LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
-  - Mekies praises Hadjar's 'outstanding' Baku podium on return [Red Bull] -- https://www.formula1.com/en/latest/all.xml
   - The detail that impressed Red Bull the most about Hadjar's F1 return [Red Bull] (27 Sep) -- https://www.autosport.com/rss/f1/news/
   - Hadjar set to make Red Bull return at Azerbaijan GP after injury recovery [Red Bull, Racing Bulls] (22 Sep) -- https://www.autosport.com/rss/f1/news/
   - The one detail that impresses Red Bull most about Isack Hadjar's "outstanding" F1 return [Red Bull] (27 Sep) -- https://www.motorsport.com/rss/f1/news/
@@ -13,15 +12,16 @@ LINEUP NEWS (rumoured/reported, not yet confirmed in session data):
 
 UPGRADE PACKAGES:
   - Sainz and Albon evaluate Williams’ Baku upgrades [Williams] -- https://www.formula1.com/en/latest/all.xml
-  - Vasseur offers Ferrari upgrade promise to frustrated Leclerc [Ferrari] -- https://www.formula1.com/en/latest/all.xml
+  - Azerbaijan GP was a step forward for upgraded Williams - but real test is still to come [Williams] (29 Sep) -- https://www.autosport.com/rss/f1/news/
   - Why McLaren was so much slower than Mercedes on Baku's straights [McLaren, Mercedes] (28 Sep) -- https://www.autosport.com/rss/f1/news/
   - Verstappen reveals why Red Bull's engine problem in Baku was different than it seemed [Red Bull] (25 Sep) -- https://www.autosport.com/rss/f1/news/
   - Red Bull won't deliver any more major F1 car upgrades in 2026 [McLaren, Red Bull, Williams] (24 Sep) -- https://www.autosport.com/rss/f1/news/
   - Will the "big swing" Williams F1 car upgrade be a hit or a miss? [Williams] (24 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Mercedes aims to end pole drought with upcoming Malaysia F1 upgrades [Ferrari, Mercedes] (19 Sep) -- https://www.autosport.com/rss/f1/news/
+  - What's next for Williams after Baku B-spec yields mixed fortunes [Williams] (29 Sep) -- https://www.motorsport.com/rss/f1/news/
   - Why McLaren was so much slower than Mercedes on Baku's straights [McLaren, Mercedes] (28 Sep) -- https://www.motorsport.com/rss/f1/news/
 
 PENALTIES / RELIABILITY:
+  - Azerbaijan GP was a step forward for upgraded Williams - but real test is still to come [Williams] (29 Sep) -- https://www.autosport.com/rss/f1/news/
   - What made Red Bull so fast in the Azerbaijan GP after Verstappen’s qualifying issue [Red Bull] (28 Sep) -- https://www.autosport.com/rss/f1/news/
   - Why McLaren was so much slower than Mercedes on Baku's straights [McLaren, Mercedes] (28 Sep) -- https://www.autosport.com/rss/f1/news/
   - Alpine condemns abuse again following Colapinto's Azerbaijan GP crash [Alpine] (27 Sep) -- https://www.autosport.com/rss/f1/news/
@@ -29,4 +29,3 @@ PENALTIES / RELIABILITY:
   - Why Verstappen feels Baku was Red Bull's best chance to win in F1 2026 [Red Bull] (26 Sep) -- https://www.autosport.com/rss/f1/news/
   - Verstappen reveals why Red Bull's engine problem in Baku was different than it seemed [Red Bull] (25 Sep) -- https://www.autosport.com/rss/f1/news/
   - F1 Azerbaijan GP: Verstappen beats Russell and Hamilton to top FP3 [Ferrari, Red Bull, Mercedes] (25 Sep) -- https://www.autosport.com/rss/f1/news/
-  - Why "dangerous" Hamilton-Lawson incident in Azerbaijan GP practice hasn't led to change (25 Sep) -- https://www.autosport.com/rss/f1/news/

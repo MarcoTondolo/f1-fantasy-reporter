@@ -18,18 +18,18 @@
       "attributed_round": null
     },
     {
-      "source": "https://www.formula1.com/en/latest/all.xml",
-      "title": "Vasseur offers Ferrari upgrade promise to frustrated Leclerc",
-      "summary": "Ferrari Team Principal Fred Vasseur has promised that the Maranello-based squad will bring developments to the SF-26 \u201csoon\u201d after Charles Leclerc cited a lack of recent development as a reason behind their poor form in Azerbaijan.",
-      "link": "https://www.formula1.com/en/latest/article/vasseur-promises-frustrated-leclerc-that-ferrari-will-bring-upgrades-soon.3zh1dESFZnVmBLkiBxgoOl",
-      "published_at": null,
+      "source": "https://www.autosport.com/rss/f1/news/",
+      "title": "Azerbaijan GP was a step forward for upgraded Williams - but real test is still to come",
+      "summary": "If there is a definition of a mixed bag, that's what the Baku weekend was to Williams. It progressed to Q3 for the first time in 2026, but didn't start there due to a grid penalty for Carlos Sainz. It scored points for the first time since Monaco, with some fortune, but also saw Alex Albon crash out.<br />Azerbaijan was a key weekend circled in red on Williams' calendar as it finally upgraded an ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/azerbaijan-gp-step-forward-for-wiliams-real-test-still-to-come/10860001/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
+      "link": "https://www.autosport.com/f1/news/azerbaijan-gp-step-forward-for-wiliams-real-test-still-to-come/10860001/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
+      "published_at": "2026-09-29T10:26:30Z",
       "matched_keywords": [
         "upgrade"
       ],
       "constructors": [
-        "Ferrari"
+        "Williams"
       ],
-      "attributed_round": null
+      "attributed_round": 15
     },
     {
       "source": "https://www.autosport.com/rss/f1/news/",
@@ -94,21 +94,19 @@
       "attributed_round": 15
     },
     {
-      "source": "https://www.autosport.com/rss/f1/news/",
-      "title": "Mercedes aims to end pole drought with upcoming Malaysia F1 upgrades",
-      "summary": "Mercedes has confirmed its next big Formula 1 car upgrade will arrive at the forthcoming grand prix in Malaysia, where it hopes to get back into contention for pole.<br />The Silver Arrows is the runaway leader of the 2026 championship with a 145-point advantage over second-placed Ferrari, despite its last major upgrade package being Montreal in May.<br />Mercedes has instead preferred to fit minor ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/mercedes-aims-to-end-pole-drought-with-upcoming-malaysia-f1-upgrades/10857058/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
-      "link": "https://www.autosport.com/f1/news/mercedes-aims-to-end-pole-drought-with-upcoming-malaysia-f1-upgrades/10857058/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
-      "published_at": "2026-09-19T08:05:18Z",
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "What's next for Williams after Baku B-spec yields mixed fortunes",
+      "summary": "If there is a definition of a mixed bag, that's what the Baku weekend was to Williams. It progressed to Q3 for the first time in 2026, but didn't start there due to a grid penalty for Carlos Sainz. It scored points for the first time since Monaco, with some fortune, but also saw Alex Albon crash out.<br />Azerbaijan was a key weekend circled in red on Williams' calendar as it finally upgraded an ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/whats-next-for-williams-after-baku-b-spec-yields-mixed-fortunes/10859882/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/whats-next-for-williams-after-baku-b-spec-yields-mixed-fortunes/10859882/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-09-29T10:22:20Z",
       "matched_keywords": [
         "upgrade",
-        "upgrade package",
-        "major upgrade"
+        "b-spec"
       ],
       "constructors": [
-        "Ferrari",
-        "Mercedes"
+        "Williams"
       ],
-      "attributed_round": 14
+      "attributed_round": 15
     },
     {
       "source": "https://www.motorsport.com/rss/f1/news/",
@@ -158,64 +156,7 @@
         "Williams"
       ],
       "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "How McLaren\u2019s major F1 upgrade has been working in Baku",
-      "summary": "After three pole positions in the last four rounds, qualifying for the Azerbaijan Grand Prix was underwhelming for the McLaren Formula 1 team, which has struggled all weekend.<br />The MCL40 was described as \u201cmiles off\u201d by Lando Norris following Thursday practice, which he ended 1.5s off the pace \u2013 a figure that was mostly representative as he aborted a quicker lap but wouldn\u2019t have gained ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/how-mclarens-major-f1-upgrade-has-been-working-in-baku/10859110/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/how-mclarens-major-f1-upgrade-has-been-working-in-baku/10859110/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-26T09:20:02Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "McLaren"
-      ],
-      "attributed_round": 15
     }
   ],
-  "effects": [
-    {
-      "constructor": "Ferrari",
-      "upgrade_round": 14,
-      "before_rounds": [
-        13,
-        12,
-        11
-      ],
-      "after_rounds": [
-        15
-      ],
-      "constructor_before_mean": 0.3142759017675923,
-      "constructor_after_mean": 1.0577804654429035,
-      "field_before_mean": 1.898194455058618,
-      "field_after_mean": 2.3307613323804235,
-      "constructor_delta": 0.7435045636753113,
-      "field_delta": 0.43256687732180543,
-      "relative_delta": 0.3109376863535058,
-      "n_before": 3,
-      "n_after": 1
-    },
-    {
-      "constructor": "Mercedes",
-      "upgrade_round": 14,
-      "before_rounds": [
-        13,
-        12,
-        11
-      ],
-      "after_rounds": [
-        15
-      ],
-      "constructor_before_mean": 0.26492090643261096,
-      "constructor_after_mean": 1.4523145348496869,
-      "field_before_mean": 1.898194455058618,
-      "field_after_mean": 2.3307613323804235,
-      "constructor_delta": 1.1873936284170759,
-      "field_delta": 0.43256687732180543,
-      "relative_delta": 0.7548267510952704,
-      "n_before": 3,
-      "n_after": 1
-    }
-  ]
+  "effects": []
 }
