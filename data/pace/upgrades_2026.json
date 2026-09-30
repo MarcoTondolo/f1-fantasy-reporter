@@ -2,22 +2,6 @@
   "season": 2026,
   "mentions": [
     {
-      "source": "https://www.formula1.com/en/latest/all.xml",
-      "title": "Sainz and Albon evaluate Williams\u2019 Baku upgrades",
-      "summary": "Carlos Sainz and Alex Albon have given their verdict on Williams\u2019 major upgrade package that debuted at the Azerbaijan Grand Prix.",
-      "link": "https://www.formula1.com/en/latest/article/were-going-to-need-more-if-we-want-to-fight-sainz-and-albon-evaluate-williams-baku-upgrades.3NtXUGpgq3CTGpopkeYtFe",
-      "published_at": null,
-      "matched_keywords": [
-        "upgrade",
-        "upgrade package",
-        "major upgrade"
-      ],
-      "constructors": [
-        "Williams"
-      ],
-      "attributed_round": null
-    },
-    {
       "source": "https://www.autosport.com/rss/f1/news/",
       "title": "Azerbaijan GP was a step forward for upgraded Williams - but real test is still to come",
       "summary": "If there is a definition of a mixed bag, that's what the Baku weekend was to Williams. It progressed to Q3 for the first time in 2026, but didn't start there due to a grid penalty for Carlos Sainz. It scored points for the first time since Monaco, with some fortune, but also saw Alex Albon crash out.<br />Azerbaijan was a key weekend circled in red on Williams' calendar as it finally upgraded an ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/azerbaijan-gp-step-forward-for-wiliams-real-test-still-to-come/10860001/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
@@ -138,22 +122,6 @@
         "McLaren",
         "Ferrari",
         "Red Bull"
-      ],
-      "attributed_round": 15
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "James Vowles hails Williams factory effort after major Baku F1 upgrade",
-      "summary": "Williams team principal James Vowles has praised the Grove outfit's relentless factory effort to deliver a major upgrade package for the Azerbaijan Grand Prix, despite the team only walking away with one point from the weekend.<br />Williams arrived at the Baku City Circuit with a substantial update, which included two new chassis, an extensive weight-saving programme and a revised aerodynamic ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/james-vowles-hails-williams-factory-effort-after-major-baku-f1-upgrade/10859369/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/james-vowles-hails-williams-factory-effort-after-major-baku-f1-upgrade/10859369/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-09-26T16:18:51Z",
-      "matched_keywords": [
-        "upgrade",
-        "upgrade package",
-        "major upgrade"
-      ],
-      "constructors": [
-        "Williams"
       ],
       "attributed_round": 15
     }
