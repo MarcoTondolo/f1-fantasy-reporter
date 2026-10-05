@@ -1,0 +1,81 @@
+📊 *2026 round 17 benchmarks*
+197 snapshot(s) captured
+
+Our top picks:
+  RUS: 19.8 (p10 4.0 / p90 34.0)
+  ANT: 18.7 (p10 3.0 / p90 33.0)
+  HAM: 17.0 (p10 2.0 / p90 30.0)
+  LEC: 16.4 (p10 2.0 / p90 29.0)
+  NOR: 14.6 (p10 -1.0 / p90 29.0)
+
+official_projected (pre_FP1) (n=23):
+  ALB: 0.0
+  ALO: 0.0
+  ANT: 0.0
+  BEA: 0.0
+  BOR: 0.0
+
+crowd_consensus (ownership) (n=23):
+  BEA: 51.0
+  LIN: 45.0
+  ANT: 38.0
+  HUL: 37.0
+  BOR: 32.0
+
+ours (pre_FP1) (n=23):
+  HAM: 15.3
+  RUS: 15.2
+  LEC: 14.9
+  ANT: 14.9
+  GAS: 14.2
+
+official_projected (n=23):
+  ALB: 0.0
+  ALO: 0.0
+  ANT: 0.0
+  BEA: 0.0
+  BOR: 0.0
+
+ours (n=23):
+  RUS: 27.5
+  ANT: 26.2
+  HAM: 22.1
+  LEC: 22.1
+  NOR: 18.6
+
+f1fantasytools (n=17):
+  LEC: 55.0
+  NOR: 35.0
+  HAM: 33.0
+  SAI: 27.0
+  VER: 23.0
+
+f1fantasytools_team_calculator (n=22):
+  VER: 29.7
+  ANT: 29.2
+  RUS: 28.7
+  LEC: 23.6
+  HAM: 23.1
+
+f1fantasytools_statistics (n=23):
+  ANT: 41.5
+  RUS: 27.5
+  HAM: 26.3
+  VER: 25.1
+  LEC: 23.4
+
+f1fantasytools_elite_data (n=23):
+  HUL: 98.8
+  ANT: 93.3
+  ALB: 60.9
+  RUS: 54.8
+  PER: 52.4
+
+f1fantasytools_budget_builder (n=22):
+  HAD: 90.0
+  LAW: 78.0
+  LEC: 58.0
+  HAM: 55.0
+  STR: 41.0
+
+Our backtested track record: MAE 11.5, Spearman 0.558

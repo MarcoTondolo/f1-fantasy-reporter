@@ -7,13 +7,13 @@ leagues = []
 
 # The league whose reports get a rendered/emailed card. All three are
 # captured either way, so history keeps accumulating for the others too.
-primary_league = 4512504
+primary_league = 383704
 
 # Delivery address is set via the EMAIL_TO repository secret, not here --
 # this file is committed (and, once GitHub Pages is live, public).
 
 # Used to render session times in the preview card.
-timezone = "Europe/London"
+timezone = "Europe/Rome"
 
 [reports]
 preview = true

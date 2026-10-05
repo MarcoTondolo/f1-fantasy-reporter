@@ -1,0 +1,1645 @@
+{
+  "captured_at": "2026-10-01T10:37:15.500198Z",
+  "league_id": 383704,
+  "league_name": "Formula Locale",
+  "members": [
+    {
+      "guid": "4a80de80-11a4-11f1-bd50-f12b35c615d5-0-231782919",
+      "is_admin": false,
+      "points": 3327.0,
+      "rank": 1,
+      "team_id": 442630410,
+      "team_name": "Must be theeee...water",
+      "team_no": 1,
+      "trend": 2,
+      "user_name": "Miriana Tota"
+    },
+    {
+      "guid": "61340bae-117a-11f1-813b-35115d49f57d-0-156161074",
+      "is_admin": false,
+      "points": 3302.0,
+      "rank": 2,
+      "team_id": 273010305,
+      "team_name": "Piloti Parastatali",
+      "team_no": 1,
+      "trend": 3,
+      "user_name": "Gianfranco Salvemini"
+    },
+    {
+      "guid": "38073a84-1176-11f1-ab76-5d5c886f6f39-0-136797047",
+      "is_admin": false,
+      "points": 3271.0,
+      "rank": 3,
+      "team_id": 231630408,
+      "team_name": "Problemi problemii",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Francesco Novia"
+    },
+    {
+      "guid": "56a7c1ea-1174-11f1-82b5-b37f1d54e5d0-0-203609872",
+      "is_admin": true,
+      "points": 3261.0,
+      "rank": 4,
+      "team_id": 207820103,
+      "team_name": "Scuseria Ferracci",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Marco Tondolo"
+    },
+    {
+      "guid": "6643c4a4-117f-11f1-be13-5557416cc632-0-211786406",
+      "is_admin": false,
+      "points": 3162.0,
+      "rank": 5,
+      "team_id": 300170307,
+      "team_name": "Stardust Crusaders",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Anita Bruschi"
+    },
+    {
+      "guid": "77c68d94-1583-11f1-af1a-8b3951234cf3-0-169376748",
+      "is_admin": false,
+      "points": 3051.0,
+      "rank": 6,
+      "team_id": 1367680109,
+      "team_name": "Checcoglione Racing",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Pasquale Miani"
+    },
+    {
+      "guid": "fb8b0a90-1175-11f1-a3fa-87fe5ee26551-0-178269622",
+      "is_admin": false,
+      "points": 3021.0,
+      "rank": 7,
+      "team_id": 228920303,
+      "team_name": "Pagurini di CiccioDeLucia",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Francesco De Lucia"
+    },
+    {
+      "guid": "3fecba9c-1178-11f1-bec4-d5465edddecf-0-34910116",
+      "is_admin": false,
+      "points": 2880.0,
+      "rank": 8,
+      "team_id": 255640107,
+      "team_name": "Ales(mo)!",
+      "team_no": 3,
+      "trend": 2,
+      "user_name": "Giuseppe Campana"
+    },
+    {
+      "guid": "94862ad6-199b-11f1-a02c-19558e7ce9a4-0-232604136",
+      "is_admin": false,
+      "points": 2821.0,
+      "rank": 9,
+      "team_id": 2994670107,
+      "team_name": "FantaPrimo",
+      "team_no": 1,
+      "trend": 2,
+      "user_name": "Davide Tota"
+    },
+    {
+      "guid": "a5f1a9b4-1935-11f1-8584-91067885f997-0-232492641",
+      "is_admin": false,
+      "points": 2808.0,
+      "rank": 10,
+      "team_id": 2660470202,
+      "team_name": "Eliii ;)",
+      "team_no": 1,
+      "trend": 3,
+      "user_name": "Elisa Lops"
+    },
+    {
+      "guid": "b956b656-1175-11f1-a35e-39ea15b0f4ef-0-156161037",
+      "is_admin": false,
+      "points": 2218.0,
+      "rank": 11,
+      "team_id": 224970208,
+      "team_name": "Cr\u00eape colLotus",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Phaelo Bean"
+    },
+    {
+      "guid": "7a3dba86-1176-11f1-bfd8-89ad6103548b-0-156160983",
+      "is_admin": false,
+      "points": 1969.0,
+      "rank": 12,
+      "team_id": 235000404,
+      "team_name": "L scuppioit",
+      "team_no": 1,
+      "trend": 1,
+      "user_name": "Alfonso U criminoil"
+    }
+  ],
+  "phase": "final",
+  "players": {
+    "11": {
+      "captain_pct": 0.0,
+      "constructor": "Williams",
+      "display_name": "A. Albon",
+      "full_name": "Alexander Albon",
+      "is_constructor": false,
+      "player_id": "11",
+      "price": 6.4,
+      "race_points": -16.0,
+      "season_points": 13.0,
+      "selected_pct": 11.0,
+      "tla": "ALB"
+    },
+    "110": {
+      "captain_pct": 9.0,
+      "constructor": "Ferrari",
+      "display_name": "L. Hamilton",
+      "full_name": "Lewis Hamilton",
+      "is_constructor": false,
+      "player_id": "110",
+      "price": 24.9,
+      "race_points": 15.0,
+      "season_points": 395.0,
+      "selected_pct": 18.0,
+      "tla": "HAM"
+    },
+    "11031": {
+      "captain_pct": 2.0,
+      "constructor": "Haas F1 Team",
+      "display_name": "O. Bearman",
+      "full_name": "Oliver Bearman",
+      "is_constructor": false,
+      "player_id": "11031",
+      "price": 5.8,
+      "race_points": 6.0,
+      "season_points": 69.0,
+      "selected_pct": 50.0,
+      "tla": "BEA"
+    },
+    "11032": {
+      "captain_pct": 2.0,
+      "constructor": "Red Bull Racing",
+      "display_name": "I. Hadjar",
+      "full_name": "Isack Hadjar",
+      "is_constructor": false,
+      "player_id": "11032",
+      "price": 14.5,
+      "race_points": 26.0,
+      "season_points": 168.0,
+      "selected_pct": 27.0,
+      "tla": "HAD"
+    },
+    "11051": {
+      "captain_pct": 0.0,
+      "constructor": "Audi",
+      "display_name": "G. Bortoleto",
+      "full_name": "Gabriel Bortoleto",
+      "is_constructor": false,
+      "player_id": "11051",
+      "price": 8.4,
+      "race_points": 8.0,
+      "season_points": 92.0,
+      "selected_pct": 33.0,
+      "tla": "BOR"
+    },
+    "11059": {
+      "captain_pct": 1.0,
+      "constructor": "Alpine",
+      "display_name": "F. Colapinto",
+      "full_name": "Franco Colapinto",
+      "is_constructor": false,
+      "player_id": "11059",
+      "price": 10.6,
+      "race_points": -18.0,
+      "season_points": 138.0,
+      "selected_pct": 21.0,
+      "tla": "COL"
+    },
+    "111": {
+      "captain_pct": 0.0,
+      "constructor": "Audi",
+      "display_name": "N. Hulkenberg",
+      "full_name": "Nico Hulkenberg",
+      "is_constructor": false,
+      "player_id": "111",
+      "price": 4.8,
+      "race_points": 15.0,
+      "season_points": 4.0,
+      "selected_pct": 37.0,
+      "tla": "HUL"
+    },
+    "11149": {
+      "captain_pct": 1.0,
+      "constructor": "Racing Bulls",
+      "display_name": "A. Lindblad",
+      "full_name": "Arvid Lindblad",
+      "is_constructor": false,
+      "player_id": "11149",
+      "price": 8.2,
+      "race_points": 17.0,
+      "season_points": 107.0,
+      "selected_pct": 45.0,
+      "tla": "LIN"
+    },
+    "11161": {
+      "captain_pct": 27.0,
+      "constructor": "Mercedes",
+      "display_name": "K. Antonelli",
+      "full_name": "Kimi Antonelli",
+      "is_constructor": false,
+      "player_id": "11161",
+      "price": 26.6,
+      "race_points": 28.0,
+      "season_points": 622.0,
+      "selected_pct": 38.0,
+      "tla": "ANT"
+    },
+    "114": {
+      "captain_pct": 0.0,
+      "constructor": "Racing Bulls",
+      "display_name": "L. Lawson",
+      "full_name": "Liam Lawson",
+      "is_constructor": false,
+      "player_id": "114",
+      "price": 9.7,
+      "race_points": 3.0,
+      "season_points": 134.0,
+      "selected_pct": 25.0,
+      "tla": "LAW"
+    },
+    "115": {
+      "captain_pct": 14.0,
+      "constructor": "Ferrari",
+      "display_name": "C. Leclerc",
+      "full_name": "Charles Leclerc",
+      "is_constructor": false,
+      "player_id": "115",
+      "price": 24.0,
+      "race_points": 20.0,
+      "season_points": 351.0,
+      "selected_pct": 26.0,
+      "tla": "LEC"
+    },
+    "116": {
+      "captain_pct": 0.0,
+      "constructor": "Red Bull Racing",
+      "display_name": "L. Lawson",
+      "full_name": "Liam Lawson",
+      "is_constructor": false,
+      "player_id": "116",
+      "price": 15.1,
+      "race_points": 0.0,
+      "season_points": 53.0,
+      "selected_pct": 2.0,
+      "tla": "LAW"
+    },
+    "117": {
+      "captain_pct": 6.0,
+      "constructor": "McLaren",
+      "display_name": "L. Norris",
+      "full_name": "Lando Norris",
+      "is_constructor": false,
+      "player_id": "117",
+      "price": 27.0,
+      "race_points": -11.0,
+      "season_points": 328.0,
+      "selected_pct": 9.0,
+      "tla": "NOR"
+    },
+    "118": {
+      "captain_pct": 0.0,
+      "constructor": "Haas F1 Team",
+      "display_name": "E. Ocon",
+      "full_name": "Esteban Ocon",
+      "is_constructor": false,
+      "player_id": "118",
+      "price": 8.9,
+      "race_points": 12.0,
+      "season_points": 137.0,
+      "selected_pct": 13.0,
+      "tla": "OCO"
+    },
+    "12": {
+      "captain_pct": 0.0,
+      "constructor": "Aston Martin",
+      "display_name": "F. Alonso",
+      "full_name": "Fernando Alonso",
+      "is_constructor": false,
+      "player_id": "12",
+      "price": 6.8,
+      "race_points": -14.0,
+      "season_points": 9.0,
+      "selected_pct": 9.0,
+      "tla": "ALO"
+    },
+    "121": {
+      "captain_pct": 0.0,
+      "constructor": "Cadillac",
+      "display_name": "S. Perez",
+      "full_name": "Sergio Perez",
+      "is_constructor": false,
+      "player_id": "121",
+      "price": 3.0,
+      "race_points": 11.0,
+      "season_points": 19.0,
+      "selected_pct": 20.0,
+      "tla": "PER"
+    },
+    "124": {
+      "captain_pct": 16.0,
+      "constructor": "Mercedes",
+      "display_name": "G. Russell",
+      "full_name": "George Russell",
+      "is_constructor": false,
+      "player_id": "124",
+      "price": 27.8,
+      "race_points": 45.0,
+      "season_points": 413.0,
+      "selected_pct": 22.0,
+      "tla": "RUS"
+    },
+    "125": {
+      "captain_pct": 1.0,
+      "constructor": "Williams",
+      "display_name": "C. Sainz",
+      "full_name": "Carlos Sainz",
+      "is_constructor": false,
+      "player_id": "125",
+      "price": 9.0,
+      "race_points": 15.0,
+      "season_points": 100.0,
+      "selected_pct": 22.0,
+      "tla": "SAI"
+    },
+    "129": {
+      "captain_pct": 0.0,
+      "constructor": "Aston Martin",
+      "display_name": "L. Stroll",
+      "full_name": "Lance Stroll",
+      "is_constructor": false,
+      "player_id": "129",
+      "price": 3.0,
+      "race_points": -20.0,
+      "season_points": -142.0,
+      "selected_pct": 4.0,
+      "tla": "STR"
+    },
+    "13": {
+      "captain_pct": 0.0,
+      "constructor": "Cadillac",
+      "display_name": "V. Bottas",
+      "full_name": "Valtteri Bottas",
+      "is_constructor": false,
+      "player_id": "13",
+      "price": 3.0,
+      "race_points": 6.0,
+      "season_points": -67.0,
+      "selected_pct": 20.0,
+      "tla": "BOT"
+    },
+    "130": {
+      "captain_pct": 0.0,
+      "constructor": "Racing Bulls",
+      "display_name": "Y. Tsunoda",
+      "full_name": "Yuki Tsunoda",
+      "is_constructor": false,
+      "player_id": "130",
+      "price": 9.7,
+      "race_points": 0.0,
+      "season_points": 23.0,
+      "selected_pct": 1.0,
+      "tla": "TSU"
+    },
+    "131": {
+      "captain_pct": 13.0,
+      "constructor": "Red Bull Racing",
+      "display_name": "M. Verstappen",
+      "full_name": "Max Verstappen",
+      "is_constructor": false,
+      "player_id": "131",
+      "price": 27.3,
+      "race_points": 43.0,
+      "season_points": 376.0,
+      "selected_pct": 18.0,
+      "tla": "VER"
+    },
+    "18": {
+      "captain_pct": 1.0,
+      "constructor": "Alpine",
+      "display_name": "P. Gasly",
+      "full_name": "Pierre Gasly",
+      "is_constructor": false,
+      "player_id": "18",
+      "price": 12.0,
+      "race_points": -15.0,
+      "season_points": 133.0,
+      "selected_pct": 21.0,
+      "tla": "GAS"
+    },
+    "1982": {
+      "captain_pct": 5.0,
+      "constructor": "McLaren",
+      "display_name": "O. Piastri",
+      "full_name": "Oscar Piastri",
+      "is_constructor": false,
+      "player_id": "1982",
+      "price": 24.1,
+      "race_points": 0.0,
+      "season_points": 228.0,
+      "selected_pct": 9.0,
+      "tla": "PIA"
+    },
+    "210": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Williams",
+      "full_name": "Williams",
+      "is_constructor": true,
+      "player_id": "210",
+      "price": 14.0,
+      "race_points": 6.0,
+      "season_points": 176.0,
+      "selected_pct": 9.0,
+      "tla": "WIL"
+    },
+    "23": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Alpine",
+      "full_name": "Alpine",
+      "is_constructor": true,
+      "player_id": "23",
+      "price": 19.5,
+      "race_points": -18.0,
+      "season_points": 376.0,
+      "selected_pct": 8.0,
+      "tla": "ALP"
+    },
+    "24": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Aston Martin",
+      "full_name": "Aston Martin",
+      "is_constructor": true,
+      "player_id": "24",
+      "price": 6.3,
+      "race_points": -35.0,
+      "season_points": -113.0,
+      "selected_pct": 3.0,
+      "tla": "AST"
+    },
+    "25": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Ferrari",
+      "full_name": "Ferrari",
+      "is_constructor": true,
+      "player_id": "25",
+      "price": 27.5,
+      "race_points": 45.0,
+      "season_points": 927.0,
+      "selected_pct": 41.0,
+      "tla": "FER"
+    },
+    "26": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Haas F1 Team",
+      "full_name": "Haas F1 Team",
+      "is_constructor": true,
+      "player_id": "26",
+      "price": 10.2,
+      "race_points": 21.0,
+      "season_points": 245.0,
+      "selected_pct": 24.0,
+      "tla": "HAA"
+    },
+    "2636": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Racing Bulls",
+      "full_name": "Racing Bulls",
+      "is_constructor": true,
+      "player_id": "2636",
+      "price": 14.7,
+      "race_points": 23.0,
+      "season_points": 441.0,
+      "selected_pct": 33.0,
+      "tla": "RBS"
+    },
+    "2640": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Audi",
+      "full_name": "Audi",
+      "is_constructor": true,
+      "player_id": "2640",
+      "price": 8.6,
+      "race_points": 27.0,
+      "season_points": 209.0,
+      "selected_pct": 21.0,
+      "tla": "AUD"
+    },
+    "2641": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Cadillac",
+      "full_name": "Cadillac",
+      "is_constructor": true,
+      "player_id": "2641",
+      "price": 3.0,
+      "race_points": 16.0,
+      "season_points": -51.0,
+      "selected_pct": 8.0,
+      "tla": "CAD"
+    },
+    "27": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "McLaren",
+      "full_name": "McLaren",
+      "is_constructor": true,
+      "player_id": "27",
+      "price": 31.9,
+      "race_points": 1.0,
+      "season_points": 743.0,
+      "selected_pct": 10.0,
+      "tla": "MCL"
+    },
+    "28": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Mercedes",
+      "full_name": "Mercedes",
+      "is_constructor": true,
+      "player_id": "28",
+      "price": 33.5,
+      "race_points": 88.0,
+      "season_points": 1269.0,
+      "selected_pct": 36.0,
+      "tla": "MER"
+    },
+    "29": {
+      "captain_pct": 0.0,
+      "constructor": "",
+      "display_name": "Red Bull Racing",
+      "full_name": "Red Bull Racing",
+      "is_constructor": true,
+      "player_id": "29",
+      "price": 31.8,
+      "race_points": 71.0,
+      "season_points": 716.0,
+      "selected_pct": 7.0,
+      "tla": "RBR"
+    }
+  },
+  "race_id": 15,
+  "season": 2026,
+  "teams": {
+    "38073a84-1176-11f1-ab76-5d5c886f6f39-0-136797047:1": {
+      "bank": 0.8,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 12,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": null,
+          "used": false
+        }
+      ],
+      "guid": "38073a84-1176-11f1-ab76-5d5c886f6f39-0-136797047",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11031",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 4
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "121",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "18",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3271.0,
+      "race_id": 15,
+      "team_name": "Problemi problemii",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 2,
+      "value": 116.6
+    },
+    "3fecba9c-1178-11f1-bec4-d5465edddecf-0-34910116:3": {
+      "bank": 0.3,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": null,
+          "used": false
+        }
+      ],
+      "guid": "3fecba9c-1178-11f1-bec4-d5465edddecf-0-34910116",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "118",
+          "slot": 5
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "124",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "2636",
+          "slot": 7
+        }
+      ],
+      "points": 2881.0,
+      "race_id": 15,
+      "team_name": "SempreUltimoConAferrari",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 119.5
+    },
+    "4a80de80-11a4-11f1-bd50-f12b35c615d5-0-231782919:1": {
+      "bank": 1.5,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 5,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 2,
+          "used": true
+        }
+      ],
+      "guid": "4a80de80-11a4-11f1-bd50-f12b35c615d5-0-231782919",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 2
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "118",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 6
+        }
+      ],
+      "points": 3327.0,
+      "race_id": 15,
+      "team_name": "Must be theeee...water",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 117.9
+    },
+    "56a7c1ea-1174-11f1-82b5-b37f1d54e5d0-0-203609872:1": {
+      "bank": 0.2,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 5,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 2,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 4,
+          "used": true
+        }
+      ],
+      "guid": "56a7c1ea-1174-11f1-82b5-b37f1d54e5d0-0-203609872",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11031",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 5
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "121",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3261.0,
+      "race_id": 15,
+      "team_name": "Scuseria Ferracci",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 113.0
+    },
+    "61340bae-117a-11f1-813b-35115d49f57d-0-156161074:1": {
+      "bank": 0.9,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": 2,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 13,
+          "used": true
+        }
+      ],
+      "guid": "61340bae-117a-11f1-813b-35115d49f57d-0-156161074",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11031",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3302.0,
+      "race_id": 15,
+      "team_name": "Piloti Parastatali",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 116.4
+    },
+    "6643c4a4-117f-11f1-be13-5557416cc632-0-211786406:1": {
+      "bank": 0.1,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": true
+        },
+        {
+          "chip": "limitless",
+          "race_id": 9,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 13,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": 11,
+          "used": true
+        },
+        {
+          "chip": "no_negative",
+          "race_id": null,
+          "used": false
+        }
+      ],
+      "guid": "6643c4a4-117f-11f1-be13-5557416cc632-0-211786406",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11059",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 1
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "125",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 6
+        }
+      ],
+      "points": 3162.0,
+      "race_id": 15,
+      "team_name": "Stardust Crusaders",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 123.8
+    },
+    "77c68d94-1583-11f1-af1a-8b3951234cf3-0-169376748:1": {
+      "bank": 1.4,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 14,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 5,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 4,
+          "used": true
+        }
+      ],
+      "guid": "77c68d94-1583-11f1-af1a-8b3951234cf3-0-169376748",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "110",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11059",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 5
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "18",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "26",
+          "slot": 7
+        }
+      ],
+      "points": 3051.0,
+      "race_id": 15,
+      "team_name": "Checcoglione Racing",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 120.0
+    },
+    "7a3dba86-1176-11f1-bfd8-89ad6103548b-0-156160983:1": {
+      "bank": 1.8,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": null,
+          "used": false
+        }
+      ],
+      "guid": "7a3dba86-1176-11f1-bfd8-89ad6103548b-0-156160983",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11059",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "117",
+          "slot": 2
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "131",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "210",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "23",
+          "slot": 7
+        }
+      ],
+      "points": 1969.0,
+      "race_id": 15,
+      "team_name": "L scuppioit",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 115.0
+    },
+    "94862ad6-199b-11f1-a02c-19558e7ce9a4-0-232604136:1": {
+      "bank": 3.2,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": 2,
+          "used": true
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": null,
+          "used": false
+        }
+      ],
+      "guid": "94862ad6-199b-11f1-a02c-19558e7ce9a4-0-232604136",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "111",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 3
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "18",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "2636",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 6
+        }
+      ],
+      "points": 2821.0,
+      "race_id": 15,
+      "team_name": "FantaPrimo",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 108.2
+    },
+    "a5f1a9b4-1935-11f1-8584-91067885f997-0-232492641:1": {
+      "bank": 1.8,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": null,
+          "used": false
+        }
+      ],
+      "guid": "a5f1a9b4-1935-11f1-8584-91067885f997-0-232492641",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11031",
+          "slot": 2
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 4
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "11161",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "26",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "114",
+          "slot": 5
+        }
+      ],
+      "points": 2808.0,
+      "race_id": 15,
+      "team_name": "Eliii ;)",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 112.2
+    },
+    "b956b656-1175-11f1-a35e-39ea15b0f4ef-0-156161037:1": {
+      "bank": 5.8,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "autopilot",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": null,
+          "used": false
+        }
+      ],
+      "guid": "b956b656-1175-11f1-a35e-39ea15b0f4ef-0-156161037",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11031",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 5
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "125",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "26",
+          "slot": 7
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11032",
+          "slot": 2
+        }
+      ],
+      "points": 2218.0,
+      "race_id": 15,
+      "team_name": "Cr\u00eape colLotus",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 99.4
+    },
+    "fb8b0a90-1175-11f1-a3fa-87fe5ee26551-0-178269622:1": {
+      "bank": 1.2,
+      "chips": [
+        {
+          "chip": "wildcard",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "limitless",
+          "race_id": 6,
+          "used": true
+        },
+        {
+          "chip": "autopilot",
+          "race_id": 13,
+          "used": true
+        },
+        {
+          "chip": "extra_drs",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "final_fix",
+          "race_id": null,
+          "used": false
+        },
+        {
+          "chip": "no_negative",
+          "race_id": 7,
+          "used": true
+        }
+      ],
+      "guid": "fb8b0a90-1175-11f1-a3fa-87fe5ee26551-0-178269622",
+      "picks": [
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11",
+          "slot": 5
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11031",
+          "slot": 4
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11051",
+          "slot": 3
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "11149",
+          "slot": 2
+        },
+        {
+          "is_captain": true,
+          "is_mega_captain": false,
+          "player_id": "115",
+          "slot": 1
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "25",
+          "slot": 6
+        },
+        {
+          "is_captain": false,
+          "is_mega_captain": false,
+          "player_id": "28",
+          "slot": 7
+        }
+      ],
+      "points": 3021.0,
+      "race_id": 15,
+      "team_name": "Pagurini di CiccioDeLucia",
+      "team_no": 1,
+      "transfers_left": 0,
+      "transfers_made": 0,
+      "value": 113.8
+    }
+  }
+}

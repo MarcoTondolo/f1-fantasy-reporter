@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Bahrain Grand Prix in Malaysia
+
+Optimal @ $100M scored 339 pts (captain: VER)
+Closest to their own optimal: Giuseppe Campana (301 pts, -73 off $121.1M)
+Furthest from their own optimal: Davide Tota (201 pts, -165 off $113.0M)
+League average gap to (own-budget) optimal: 144.1 pts

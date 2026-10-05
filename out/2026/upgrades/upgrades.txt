@@ -1,9 +1,14 @@
 🔧 *2026 upgrade tracker*
-8 mentions checked · 0 measured effects
+9 mentions checked · 3 measured effects
+
+📈 Measured effects:
+  Mercedes R15: +0.393pp (n=3/1) -- behind the field's own gain
+  McLaren R15: +0.337pp (n=3/1) -- behind the field's own gain
+  Williams R15: -0.194pp (n=3/1) -- improved vs field
 
 📰 Recent mentions:
-  [autosport.com] Azerbaijan GP was a step forward for upgraded Williams - but real test is still to come (Williams)
-  [motorsport.com] What's next for Williams after Baku B-spec yields mixed fortunes (Williams)
-  [autosport.com] Why McLaren was so much slower than Mercedes on Baku's straights (McLaren, Mercedes)
-  [motorsport.com] Why McLaren was so much slower than Mercedes on Baku's straights (McLaren, Mercedes)
-  [motorsport.com] Charles Leclerc: “McLaren and Red Bull did a step forward that we didn’t do” (McLaren, Ferrari, Red Bull)
+  [racefans.net] Mercedes ‘don’t know if upgrade made us faster or slower’ – Antonelli | Formula 1 (Mercedes)
+  [motorsport.com] Five quick takeaways from Bahrain GP in Malaysia (Red Bull)
+  [autosport.com] Why Mercedes' upgrade is still a "big question mark" (Mercedes)
+  [autosport.com] F1 Bahrain GP in Malaysia: Antonelli recovers from tough Friday to top FP3 (Mercedes)
+  [autosport.com] Mercedes introduces new floor, sidepods for F1 Bahrain GP (McLaren, Ferrari, Red Bull, Mercedes)

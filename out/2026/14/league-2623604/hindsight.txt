@@ -1,6 +1,0 @@
-🔮 *Hindsight* -- Spanish Grand Prix
-
-Optimal @ $100M scored 186 pts (captain: COL)
-Closest to their own optimal: Luc Grieve (186 pts, -12 off $104.6M)
-Furthest from their own optimal: Sharifa Habib (51 pts, -191 off $116.3M)
-League average gap to (own-budget) optimal: 70.2 pts

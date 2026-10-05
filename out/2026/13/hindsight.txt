@@ -1,6 +1,0 @@
-🔮 *Hindsight* -- Italian Grand Prix
-
-Optimal @ $100M scored 428 pts (captain: ANT)
-Closest to their own optimal: sydkav2 (519 pts, --91 off assumed $100M)
-Furthest from their own optimal: Caitlyn Landry (111 pts, -317 off assumed $100M)
-League average gap to (own-budget) optimal: 191.5 pts

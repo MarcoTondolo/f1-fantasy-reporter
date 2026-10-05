@@ -1,6 +1,0 @@
-🔮 *Hindsight* -- Italian Grand Prix
-
-Optimal @ $100M scored 428 pts (captain: ANT)
-Closest to their own optimal: Brad Besyk (402 pts, -58 off $119.6M)
-Furthest from their own optimal: Sean Macintyre (103 pts, -325 off assumed $100M)
-League average gap to (own-budget) optimal: 170.2 pts

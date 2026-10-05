@@ -1,6 +1,0 @@
-🔮 *Hindsight* -- Azerbaijan Grand Prix
-
-Optimal @ $100M scored 218 pts (captain: HAD)
-Closest to their own optimal: Hafeez Habib (276 pts, --58 off assumed $100M)
-Furthest from their own optimal: Andrea Sceviour (80 pts, -182 off $115.8M)
-League average gap to (own-budget) optimal: 100.0 pts

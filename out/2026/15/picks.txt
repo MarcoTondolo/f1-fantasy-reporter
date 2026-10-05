@@ -2,19 +2,26 @@
 Baku City Circuit, Baku
 
 📊 Top expected points:
-  ANT: 28.9 (p10 -2.0 / p90 49.0)
-  RUS: 25.7 (p10 -3.0 / p90 45.0)
-  HAM: 21.3 (p10 -8.0 / p90 42.0)
-  LEC: 21.0 (p10 -8.0 / p90 40.0)
-  NOR: 18.9 (p10 -10.0 / p90 41.0)
+  ANT: 29.3 (p10 1.0 / p90 49.0)
+  RUS: 26.4 (p10 -2.0 / p90 47.0)
+  HAM: 21.1 (p10 -7.0 / p90 40.0)
+  LEC: 21.1 (p10 -7.0 / p90 41.0)
+  NOR: 18.3 (p10 -11.0 / p90 40.0)
 
-🏗️ Captain suggestion: ANT (EV 57.9)
+🏗️ Captain suggestion: ANT (EV 58.6)
 
 📈 Likely price risers:
   ANT: 100% (Δ+0.30M)
   NOR: 100% (Δ+0.23M)
   HUL: 89% (Δ+0.48M)
-  RUS: 86% (Δ+0.10M)
-  ALB: 71% (Δ+0.18M)
+  RUS: 86% (Δ+0.11M)
+  ALB: 72% (Δ+0.20M)
 
-🧩 Optimal team: STR, HUL, PER, BOT, ANT + Mercedes, Ferrari (186.8 pts, $99.9M)
+📉 Likely budget losers -- think twice before backing these:
+  HAD: 99% (Δ-0.55M)
+  HAM: 99% (Δ-0.21M)
+  SAI: 99% (Δ-0.57M)
+  OCO: 97% (Δ-0.55M)
+  BEA: 97% (Δ-0.55M)
+
+🧩 Optimal team: STR, HUL, PER, BOT, ANT + Mercedes, Ferrari (187.0 pts, $99.9M)

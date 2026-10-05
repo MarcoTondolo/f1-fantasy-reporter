@@ -1,6 +1,6 @@
 🔮 *Hindsight* -- Azerbaijan Grand Prix
 
-Optimal @ $100M scored 218 pts (captain: HAD)
-Closest to their own optimal: sydkav2 (178 pts, -40 off assumed $100M)
-Furthest from their own optimal: Paul Gosse (5 pts, -202 off $98.0M)
-League average gap to (own-budget) optimal: 113.9 pts
+Optimal @ $100M scored 260 pts (captain: HAD)
+Closest to their own optimal: Phaelo Bean (0 pts, -269 off $105.2M)
+Furthest from their own optimal: Anita Bruschi (0 pts, -318 off $123.9M)
+League average gap to (own-budget) optimal: 296.8 pts

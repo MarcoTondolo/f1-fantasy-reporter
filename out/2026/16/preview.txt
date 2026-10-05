@@ -1,11 +1,11 @@
 📅 *Preview* -- Bahrain Grand Prix in Malaysia
 Sepang International Circuit, Kuala Lumpur
 
-⏰ Lockout: Saturday 09:00 BST
-  FP1: Fri 05:30
-  FP2: Fri 09:00
-  FP3: Sat 05:30
-  Qualifying: Sat 09:00 (lockout)
+⏰ Lockout: Saturday 10:00 CEST
+  FP1: Fri 06:30
+  FP2: Fri 10:00
+  FP3: Sat 06:30
+  Qualifying: Sat 10:00 (lockout)
 
 🚨 Grid penalties from Azerbaijan Grand Prix:
   Carlos Sainz: P9 -> P14 (-5)
