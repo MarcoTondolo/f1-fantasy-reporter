@@ -79,18 +79,38 @@
       "attributed_round": 16
     },
     {
-      "source": "https://www.autosport.com/rss/f1/news/",
-      "title": "Why Honda secretly introduced its second F1 ADUO upgrade in Madrid",
-      "summary": "Honda Racing Corporation president Koji Watanabe has revealed that Honda actually introduced its second ADUO (Additional Development and Upgrade Opportunities) upgrade as early as Formula 1\u2019s Spanish Grand Prix, with the upgrade focused on the power unit's turbocharger.<br />Aston Martin and Honda struggled from the start of the season, but their performance slightly improved after a major chassis ...<a class=\"more\" href=\"https://www.autosport.com/f1/news/why-honda-secretly-introduced-its-second-f1-aduo-upgrade-in-madrid/10860367/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=uk\">Keep reading</a>",
-      "link": "https://www.autosport.com/f1/news/why-honda-secretly-introduced-its-second-f1-aduo-upgrade-in-madrid/10860367/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=uk",
-      "published_at": "2026-10-01T03:56:47Z",
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Will Buxton raises alarm over Mercedes F1 upgrades ahead of Singapore GP",
+      "summary": "Formula 1 broadcaster Will Buxton has raised concerns over Mercedes' latest upgrade package, claiming team boss Toto Wolff suspects their major floor and sidepod changes may have cost them as much as half a second in lap time.<br />The Brackley outfit introduced major upgrades at the Bahrain Grand Prix in Malaysia. The upgrades, which resulted in modifications to almost every body surface, were ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/will-buxton-raises-alarm-over-mercedes-f1-upgrades-ahead-of-singapore-gp/10863178/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/will-buxton-raises-alarm-over-mercedes-f1-upgrades-ahead-of-singapore-gp/10863178/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-10-08T23:25:08Z",
       "matched_keywords": [
-        "upgrade"
+        "upgrade",
+        "upgrade package",
+        "sidepod",
+        "major upgrade"
       ],
       "constructors": [
-        "Aston Martin"
+        "Mercedes"
       ],
-      "attributed_round": 16
+      "attributed_round": 17
+    },
+    {
+      "source": "https://www.motorsport.com/rss/f1/news/",
+      "title": "Oscar Piastri: Red Bull has become \u201cthe class of the field\u201d in F1 2026",
+      "summary": "Oscar Piastri now views Red Bull as \u201cthe class of the field\u201d alongside Mercedes, as McLaren loses ground in Formula 1\u2019s 2026 pecking order.<br />Red Bull brought a significant upgrade to its RB22 at the Azerbaijan Grand Prix, with revamped sidepods, floor, mirrors, halo and diffuser.<br />This led to the team\u2019s best two results of the season so far, with Max Verstappen hounding George Russell ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/oscar-piastri-red-bull-has-become-the-class-of-the-field-in-f1-2026/10863147/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
+      "link": "https://www.motorsport.com/f1/news/oscar-piastri-red-bull-has-become-the-class-of-the-field-in-f1-2026/10863147/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published_at": "2026-10-08T20:05:02Z",
+      "matched_keywords": [
+        "upgrade",
+        "sidepod"
+      ],
+      "constructors": [
+        "McLaren",
+        "Red Bull",
+        "Mercedes"
+      ],
+      "attributed_round": 17
     },
     {
       "source": "https://www.motorsport.com/rss/f1/news/",
@@ -132,20 +152,6 @@
       ],
       "constructors": [
         "Mercedes"
-      ],
-      "attributed_round": 16
-    },
-    {
-      "source": "https://www.motorsport.com/rss/f1/news/",
-      "title": "Red Bull is overcoming ADUO restrictions but still calls on tweaks for F1 2027",
-      "summary": "Red Bull is working with the FIA on how to tweak Formula 1\u2019s Additional Development and Upgrades Opportunities system after its contentious findings, says team boss Laurent Mekies.<br />ADUO is new for 2026 and measures the V6 engine performance of all power units at the end of each quarter, handing at least one upgrade token to manufacturers lagging behind.<br />But it was initially assumed that ...<a class=\"more\" href=\"https://www.motorsport.com/f1/news/red-bull-is-overcoming-aduo-restrictions-but-still-calls-on-tweaks-for-f1-2027/10862326/?utm_source=RSS&amp;utm_medium=referral&amp;utm_campaign=RSS-F1&amp;utm_term=News&amp;utm_content=www\">Keep reading</a>",
-      "link": "https://www.motorsport.com/f1/news/red-bull-is-overcoming-aduo-restrictions-but-still-calls-on-tweaks-for-f1-2027/10862326/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published_at": "2026-10-06T15:51:13Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Red Bull"
       ],
       "attributed_round": 16
     },
