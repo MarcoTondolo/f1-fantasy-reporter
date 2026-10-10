@@ -2,13 +2,13 @@
 Marina Bay Street Circuit, Marina Bay
 
 📊 Top expected points:
-  RUS: 20.1 (p10 3.0 / p90 35.0)
-  ANT: 19.0 (p10 4.0 / p90 33.0)
-  LEC: 16.9 (p10 3.0 / p90 30.0)
-  HAM: 16.7 (p10 2.0 / p90 31.0)
-  VER: 15.2 (p10 1.0 / p90 29.0)
+  RUS: 19.9 (p10 5.0 / p90 34.0)
+  ANT: 18.8 (p10 4.0 / p90 32.0)
+  LEC: 16.7 (p10 3.0 / p90 30.0)
+  HAM: 16.6 (p10 3.0 / p90 30.0)
+  VER: 14.9 (p10 0.9 / p90 29.0)
 
-🏗️ Captain suggestion: RUS (EV 40.2)
+🏗️ Captain suggestion: RUS (EV 39.8)
 
 📈 Likely price risers:
   LIN: 100% (Δ+0.60M)
@@ -19,9 +19,9 @@ Marina Bay Street Circuit, Marina Bay
 
 📉 Likely budget losers -- think twice before backing these:
   NOR: 100% (Δ-0.29M)
-  HAM: 100% (Δ-0.26M)
   GAS: 100% (Δ-0.60M)
-  ALB: 100% (Δ-0.60M)
+  HAM: 100% (Δ-0.26M)
   PIA: 100% (Δ-0.24M)
+  ALB: 100% (Δ-0.60M)
 
-🧩 Optimal team: HUL, BOT, BEA, LIN, HAD + Mercedes, Ferrari (142.6 pts, $99.9M)
+🧩 Optimal team: HUL, BOT, BEA, LIN, HAD + Mercedes, Ferrari (141.1 pts, $99.9M)
