@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Singapore Grand Prix
+
+Optimal @ $100M scored 292 pts (captain: VER)
+Closest to their own optimal: Miriana Tota (388 pts, --65 off $122.7M)
+Furthest from their own optimal: Alfonso U criminoil (54 pts, -269 off $114.8M)
+League average gap to (own-budget) optimal: 52.8 pts
