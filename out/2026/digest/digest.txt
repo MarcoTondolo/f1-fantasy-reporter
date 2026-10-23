@@ -1,5 +1,5 @@
 F1 Fantasy daily digest -- 2026 round 18
-Generated 2026-10-23 10:10 UTC
+Generated 2026-10-23 12:38 UTC
 
 Confirmed lineup changes: no qualifying or practice session data yet for round 18 (FP1 R18 2026: The data you are trying to access has not been loaded yet. See `Session.load`)
 
