@@ -1,6 +1,6 @@
 🔮 *Hindsight* -- United States Grand Prix
 
-Optimal @ $100M scored 214 pts (captain: LEC)
-Closest to their own optimal: Miriana Tota (201 pts, -46 off $124.3M)
-Furthest from their own optimal: Alfonso U criminoil (35 pts, -196 off $113.3M)
-League average gap to (own-budget) optimal: 88.8 pts
+Optimal @ $100M scored 276 pts (captain: LEC)
+Closest to their own optimal: Miriana Tota (252 pts, -52 off $124.3M)
+Furthest from their own optimal: Alfonso U criminoil (81 pts, -211 off $113.3M)
+League average gap to (own-budget) optimal: 96.9 pts

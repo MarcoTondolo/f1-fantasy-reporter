@@ -1,12 +1,12 @@
 {
-  "captured_at": "2026-10-26T00:06:11.609033Z",
+  "captured_at": "2026-10-26T11:13:25.321603Z",
   "league_id": 383704,
   "league_name": "Formula Locale",
   "members": [
     {
       "guid": "4a80de80-11a4-11f1-bd50-f12b35c615d5-0-231782919",
       "is_admin": false,
-      "points": 4156.0,
+      "points": 4207.0,
       "rank": 1,
       "team_id": 442630410,
       "team_name": "Must be theeee...water",
@@ -17,7 +17,7 @@
     {
       "guid": "56a7c1ea-1174-11f1-82b5-b37f1d54e5d0-0-203609872",
       "is_admin": true,
-      "points": 4008.0,
+      "points": 4054.0,
       "rank": 2,
       "team_id": 207820103,
       "team_name": "Scuseria Ferracci",
@@ -28,7 +28,7 @@
     {
       "guid": "38073a84-1176-11f1-ab76-5d5c886f6f39-0-136797047",
       "is_admin": false,
-      "points": 3997.0,
+      "points": 4045.0,
       "rank": 3,
       "team_id": 231630408,
       "team_name": "Problemi problemii",
@@ -39,7 +39,7 @@
     {
       "guid": "6643c4a4-117f-11f1-be13-5557416cc632-0-211786406",
       "is_admin": false,
-      "points": 3831.0,
+      "points": 3868.0,
       "rank": 4,
       "team_id": 300170307,
       "team_name": "Stardust Crusaders",
@@ -50,7 +50,7 @@
     {
       "guid": "61340bae-117a-11f1-813b-35115d49f57d-0-156161074",
       "is_admin": false,
-      "points": 3807.0,
+      "points": 3843.0,
       "rank": 5,
       "team_id": 273010305,
       "team_name": "Piloti Parastatali",
@@ -61,7 +61,7 @@
     {
       "guid": "77c68d94-1583-11f1-af1a-8b3951234cf3-0-169376748",
       "is_admin": false,
-      "points": 3772.0,
+      "points": 3819.0,
       "rank": 6,
       "team_id": 1367680109,
       "team_name": "Checcoglione Racing",
@@ -72,7 +72,7 @@
     {
       "guid": "fb8b0a90-1175-11f1-a3fa-87fe5ee26551-0-178269622",
       "is_admin": false,
-      "points": 3696.0,
+      "points": 3747.0,
       "rank": 7,
       "team_id": 228920303,
       "team_name": "Pagurini di CiccioDeLucia",
@@ -81,9 +81,20 @@
       "user_name": "Francesco De Lucia"
     },
     {
+      "guid": "3fecba9c-1178-11f1-bec4-d5465edddecf-0-34910116",
+      "is_admin": false,
+      "points": 3630.0,
+      "rank": 8,
+      "team_id": 255640107,
+      "team_name": "Ales(mo)!",
+      "team_no": 3,
+      "trend": 1,
+      "user_name": "Giuseppe Campana"
+    },
+    {
       "guid": "a5f1a9b4-1935-11f1-8584-91067885f997-0-232492641",
       "is_admin": false,
-      "points": 3573.0,
+      "points": 3630.0,
       "rank": 8,
       "team_id": 2660470202,
       "team_name": "Eliii ;)",
@@ -92,20 +103,9 @@
       "user_name": "Elisa Lops"
     },
     {
-      "guid": "3fecba9c-1178-11f1-bec4-d5465edddecf-0-34910116",
-      "is_admin": false,
-      "points": 3572.0,
-      "rank": 9,
-      "team_id": 255640107,
-      "team_name": "Ales(mo)!",
-      "team_no": 3,
-      "trend": 3,
-      "user_name": "Giuseppe Campana"
-    },
-    {
       "guid": "94862ad6-199b-11f1-a02c-19558e7ce9a4-0-232604136",
       "is_admin": false,
-      "points": 3331.0,
+      "points": 3377.0,
       "rank": 10,
       "team_id": 2994670107,
       "team_name": "FantaPrimo",
@@ -116,7 +116,7 @@
     {
       "guid": "b956b656-1175-11f1-a35e-39ea15b0f4ef-0-156161037",
       "is_admin": false,
-      "points": 2787.0,
+      "points": 2850.0,
       "rank": 11,
       "team_id": 224970208,
       "team_name": "Cr\u00eape colLotus",
@@ -127,7 +127,7 @@
     {
       "guid": "7a3dba86-1176-11f1-bfd8-89ad6103548b-0-156160983",
       "is_admin": false,
-      "points": 2266.0,
+      "points": 2312.0,
       "rank": 12,
       "team_id": 235000404,
       "team_name": "L scuppioit",
@@ -146,8 +146,8 @@
       "is_constructor": false,
       "player_id": "11",
       "price": 4.6,
-      "race_points": 0.0,
-      "season_points": -7.0,
+      "race_points": 7.0,
+      "season_points": 0.0,
       "selected_pct": 10.0,
       "tla": "ALB"
     },
@@ -159,8 +159,8 @@
       "is_constructor": false,
       "player_id": "110",
       "price": 24.4,
-      "race_points": 19.0,
-      "season_points": 479.0,
+      "race_points": 23.0,
+      "season_points": 483.0,
       "selected_pct": 18.0,
       "tla": "HAM"
     },
@@ -172,8 +172,8 @@
       "is_constructor": false,
       "player_id": "11031",
       "price": 6.4,
-      "race_points": -20.0,
-      "season_points": 74.0,
+      "race_points": -13.0,
+      "season_points": 81.0,
       "selected_pct": 52.0,
       "tla": "BEA"
     },
@@ -198,8 +198,8 @@
       "is_constructor": false,
       "player_id": "11051",
       "price": 7.0,
-      "race_points": 8.0,
-      "season_points": 75.0,
+      "race_points": 17.0,
+      "season_points": 84.0,
       "selected_pct": 31.0,
       "tla": "BOR"
     },
@@ -211,8 +211,8 @@
       "is_constructor": false,
       "player_id": "11059",
       "price": 8.8,
-      "race_points": -20.0,
-      "season_points": 103.0,
+      "race_points": -18.0,
+      "season_points": 105.0,
       "selected_pct": 19.0,
       "tla": "COL"
     },
@@ -224,8 +224,8 @@
       "is_constructor": false,
       "player_id": "111",
       "price": 6.6,
-      "race_points": 0.0,
-      "season_points": 40.0,
+      "race_points": 7.0,
+      "season_points": 47.0,
       "selected_pct": 36.0,
       "tla": "HUL"
     },
@@ -237,8 +237,8 @@
       "is_constructor": false,
       "player_id": "11149",
       "price": 10.0,
-      "race_points": 4.0,
-      "season_points": 140.0,
+      "race_points": 11.0,
+      "season_points": 147.0,
       "selected_pct": 44.0,
       "tla": "LIN"
     },
@@ -250,8 +250,8 @@
       "is_constructor": false,
       "player_id": "11161",
       "price": 27.1,
-      "race_points": 35.0,
-      "season_points": 719.0,
+      "race_points": 36.0,
+      "season_points": 720.0,
       "selected_pct": 36.0,
       "tla": "ANT"
     },
@@ -263,8 +263,8 @@
       "is_constructor": false,
       "player_id": "114",
       "price": 9.9,
-      "race_points": 3.0,
-      "season_points": 172.0,
+      "race_points": 5.0,
+      "season_points": 174.0,
       "selected_pct": 28.0,
       "tla": "LAW"
     },
@@ -276,8 +276,8 @@
       "is_constructor": false,
       "player_id": "115",
       "price": 24.1,
-      "race_points": 47.0,
-      "season_points": 474.0,
+      "race_points": 53.0,
+      "season_points": 480.0,
       "selected_pct": 26.0,
       "tla": "LEC"
     },
@@ -302,8 +302,8 @@
       "is_constructor": false,
       "player_id": "117",
       "price": 26.1,
-      "race_points": 16.0,
-      "season_points": 378.0,
+      "race_points": 18.0,
+      "season_points": 380.0,
       "selected_pct": 8.0,
       "tla": "NOR"
     },
@@ -315,8 +315,8 @@
       "is_constructor": false,
       "player_id": "118",
       "price": 9.9,
-      "race_points": 1.0,
-      "season_points": 162.0,
+      "race_points": 7.0,
+      "season_points": 168.0,
       "selected_pct": 13.0,
       "tla": "OCO"
     },
@@ -328,8 +328,8 @@
       "is_constructor": false,
       "player_id": "12",
       "price": 5.4,
-      "race_points": -4.0,
-      "season_points": 33.0,
+      "race_points": 2.0,
+      "season_points": 39.0,
       "selected_pct": 10.0,
       "tla": "ALO"
     },
@@ -341,8 +341,8 @@
       "is_constructor": false,
       "player_id": "121",
       "price": 3.6,
-      "race_points": -1.0,
-      "season_points": 18.0,
+      "race_points": 0.0,
+      "season_points": 19.0,
       "selected_pct": 21.0,
       "tla": "PER"
     },
@@ -354,8 +354,8 @@
       "is_constructor": false,
       "player_id": "124",
       "price": 27.9,
-      "race_points": 7.0,
-      "season_points": 432.0,
+      "race_points": 9.0,
+      "season_points": 434.0,
       "selected_pct": 21.0,
       "tla": "RUS"
     },
@@ -367,8 +367,8 @@
       "is_constructor": false,
       "player_id": "125",
       "price": 8.4,
-      "race_points": -2.0,
-      "season_points": 115.0,
+      "race_points": 3.0,
+      "season_points": 120.0,
       "selected_pct": 22.0,
       "tla": "SAI"
     },
@@ -380,8 +380,8 @@
       "is_constructor": false,
       "player_id": "129",
       "price": 3.0,
-      "race_points": 7.0,
-      "season_points": -152.0,
+      "race_points": 12.0,
+      "season_points": -147.0,
       "selected_pct": 4.0,
       "tla": "STR"
     },
@@ -393,8 +393,8 @@
       "is_constructor": false,
       "player_id": "13",
       "price": 3.0,
-      "race_points": -20.0,
-      "season_points": -118.0,
+      "race_points": -19.0,
+      "season_points": -117.0,
       "selected_pct": 20.0,
       "tla": "BOT"
     },
@@ -419,8 +419,8 @@
       "is_constructor": false,
       "player_id": "131",
       "price": 28.2,
-      "race_points": 23.0,
-      "season_points": 509.0,
+      "race_points": 27.0,
+      "season_points": 513.0,
       "selected_pct": 22.0,
       "tla": "VER"
     },
@@ -432,8 +432,8 @@
       "is_constructor": false,
       "player_id": "18",
       "price": 10.2,
-      "race_points": 1.0,
-      "season_points": 137.0,
+      "race_points": 3.0,
+      "season_points": 139.0,
       "selected_pct": 20.0,
       "tla": "GAS"
     },
@@ -445,8 +445,8 @@
       "is_constructor": false,
       "player_id": "1982",
       "price": 23.4,
-      "race_points": 10.0,
-      "season_points": 273.0,
+      "race_points": 15.0,
+      "season_points": 278.0,
       "selected_pct": 9.0,
       "tla": "PIA"
     },
@@ -458,8 +458,8 @@
       "is_constructor": true,
       "player_id": "210",
       "price": 12.6,
-      "race_points": -3.0,
-      "season_points": 184.0,
+      "race_points": 11.0,
+      "season_points": 198.0,
       "selected_pct": 9.0,
       "tla": "WIL"
     },
@@ -471,8 +471,8 @@
       "is_constructor": true,
       "player_id": "23",
       "price": 18.8,
-      "race_points": -16.0,
-      "season_points": 368.0,
+      "race_points": -12.0,
+      "season_points": 372.0,
       "selected_pct": 7.0,
       "tla": "ALP"
     },
@@ -484,8 +484,8 @@
       "is_constructor": true,
       "player_id": "24",
       "price": 4.5,
-      "race_points": 4.0,
-      "season_points": -86.0,
+      "race_points": 17.0,
+      "season_points": -73.0,
       "selected_pct": 3.0,
       "tla": "AST"
     },
@@ -497,8 +497,8 @@
       "is_constructor": true,
       "player_id": "25",
       "price": 28.2,
-      "race_points": 66.0,
-      "season_points": 1164.0,
+      "race_points": 81.0,
+      "season_points": 1179.0,
       "selected_pct": 41.0,
       "tla": "FER"
     },
@@ -510,8 +510,8 @@
       "is_constructor": true,
       "player_id": "26",
       "price": 12.0,
-      "race_points": -18.0,
-      "season_points": 282.0,
+      "race_points": -3.0,
+      "season_points": 297.0,
       "selected_pct": 24.0,
       "tla": "HAA"
     },
@@ -523,8 +523,8 @@
       "is_constructor": true,
       "player_id": "2636",
       "price": 16.5,
-      "race_points": 17.0,
-      "season_points": 545.0,
+      "race_points": 31.0,
+      "season_points": 559.0,
       "selected_pct": 33.0,
       "tla": "RBS"
     },
@@ -536,8 +536,8 @@
       "is_constructor": true,
       "player_id": "2640",
       "price": 10.4,
-      "race_points": 11.0,
-      "season_points": 249.0,
+      "race_points": 29.0,
+      "season_points": 267.0,
       "selected_pct": 21.0,
       "tla": "AUD"
     },
@@ -549,8 +549,8 @@
       "is_constructor": true,
       "player_id": "2641",
       "price": 3.0,
-      "race_points": -22.0,
-      "season_points": -106.0,
+      "race_points": -18.0,
+      "season_points": -102.0,
       "selected_pct": 9.0,
       "tla": "CAD"
     },
@@ -562,8 +562,8 @@
       "is_constructor": true,
       "player_id": "27",
       "price": 32.4,
-      "race_points": 36.0,
-      "season_points": 872.0,
+      "race_points": 58.0,
+      "season_points": 894.0,
       "selected_pct": 10.0,
       "tla": "MCL"
     },
@@ -575,8 +575,8 @@
       "is_constructor": true,
       "player_id": "28",
       "price": 34.0,
-      "race_points": 52.0,
-      "season_points": 1425.0,
+      "race_points": 57.0,
+      "season_points": 1430.0,
       "selected_pct": 35.0,
       "tla": "MER"
     },
@@ -588,8 +588,8 @@
       "is_constructor": true,
       "player_id": "29",
       "price": 32.7,
-      "race_points": 46.0,
-      "season_points": 925.0,
+      "race_points": 55.0,
+      "season_points": 934.0,
       "selected_pct": 9.0,
       "tla": "RBR"
     }
@@ -676,7 +676,7 @@
           "slot": 7
         }
       ],
-      "points": 3997.0,
+      "points": 4045.0,
       "race_id": 18,
       "team_name": "Problemi problemii",
       "team_no": 1,
@@ -763,7 +763,7 @@
           "slot": 7
         }
       ],
-      "points": 3424.0,
+      "points": 3485.0,
       "race_id": 18,
       "team_name": "SempreUltimoConAferrari",
       "team_no": 1,
@@ -850,7 +850,7 @@
           "slot": 6
         }
       ],
-      "points": 4156.0,
+      "points": 4207.0,
       "race_id": 18,
       "team_name": "Must be theeee...water",
       "team_no": 1,
@@ -937,7 +937,7 @@
           "slot": 7
         }
       ],
-      "points": 4008.0,
+      "points": 4054.0,
       "race_id": 18,
       "team_name": "Scuseria Ferracci",
       "team_no": 1,
@@ -1024,7 +1024,7 @@
           "slot": 7
         }
       ],
-      "points": 3807.0,
+      "points": 3843.0,
       "race_id": 18,
       "team_name": "Piloti Parastatali",
       "team_no": 1,
@@ -1111,7 +1111,7 @@
           "slot": 6
         }
       ],
-      "points": 3831.0,
+      "points": 3868.0,
       "race_id": 18,
       "team_name": "Stardust Crusaders",
       "team_no": 1,
@@ -1198,7 +1198,7 @@
           "slot": 7
         }
       ],
-      "points": 3772.0,
+      "points": 3819.0,
       "race_id": 18,
       "team_name": "Checcoglione Racing",
       "team_no": 1,
@@ -1285,7 +1285,7 @@
           "slot": 7
         }
       ],
-      "points": 2266.0,
+      "points": 2312.0,
       "race_id": 18,
       "team_name": "L scuppioit",
       "team_no": 1,
@@ -1372,7 +1372,7 @@
           "slot": 6
         }
       ],
-      "points": 3331.0,
+      "points": 3377.0,
       "race_id": 18,
       "team_name": "FantaPrimo",
       "team_no": 1,
@@ -1459,7 +1459,7 @@
           "slot": 7
         }
       ],
-      "points": 3573.0,
+      "points": 3630.0,
       "race_id": 18,
       "team_name": "Eliii ;)",
       "team_no": 1,
@@ -1546,7 +1546,7 @@
           "slot": 7
         }
       ],
-      "points": 2787.0,
+      "points": 2850.0,
       "race_id": 18,
       "team_name": "Cr\u00eape colLotus",
       "team_no": 1,
@@ -1633,7 +1633,7 @@
           "slot": 7
         }
       ],
-      "points": 3696.0,
+      "points": 3747.0,
       "race_id": 18,
       "team_name": "Pagurini di CiccioDeLucia",
       "team_no": 1,
