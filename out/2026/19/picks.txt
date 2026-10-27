@@ -1,0 +1,27 @@
+🏁 *Race picks* -- Mexico City Grand Prix
+Autódromo Hermanos Rodríguez, Mexico City
+
+📊 Top expected points:
+  RUS: 25.9 (p10 0.0 / p90 46.0)
+  ANT: 25.5 (p10 -2.0 / p90 45.0)
+  LEC: 22.6 (p10 -5.0 / p90 42.0)
+  HAM: 22.3 (p10 -3.0 / p90 41.1)
+  VER: 19.5 (p10 -9.0 / p90 40.1)
+
+🏗️ Captain suggestion: RUS (EV 51.8)
+
+📈 Likely price risers:
+  LEC: 100% (Δ+0.30M)
+  HUL: 100% (Δ+0.60M)
+  VER: 100% (Δ+0.27M)
+  LIN: 94% (Δ+0.50M)
+  ANT: 90% (Δ+0.16M)
+
+📉 Likely budget losers -- think twice before backing these:
+  RUS: 100% (Δ-0.28M)
+  COL: 100% (Δ-0.60M)
+  ALB: 98% (Δ-0.56M)
+  TSU: 98% (Δ-0.56M)
+  BOR: 96% (Δ-0.55M)
+
+🧩 Optimal team: HUL, PER, BEA, HAD, ALB + Mercedes, Ferrari (161.2 pts, $99.7M)
