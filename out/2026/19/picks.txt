@@ -2,26 +2,26 @@
 Autódromo Hermanos Rodríguez, Mexico City
 
 📊 Top expected points:
-  RUS: 25.5 (p10 -1.0 / p90 46.0)
-  ANT: 25.0 (p10 -4.0 / p90 45.0)
-  LEC: 23.1 (p10 0.0 / p90 43.0)
-  HAM: 22.6 (p10 -5.0 / p90 42.0)
-  VER: 20.2 (p10 -8.0 / p90 40.0)
+  ANT: 25.4 (p10 -1.0 / p90 45.0)
+  RUS: 25.2 (p10 -4.1 / p90 45.0)
+  LEC: 22.7 (p10 -3.1 / p90 43.0)
+  HAM: 22.4 (p10 -5.0 / p90 42.0)
+  VER: 19.5 (p10 -9.0 / p90 40.0)
 
-🏗️ Captain suggestion: RUS (EV 51.1)
+🏗️ Captain suggestion: ANT (EV 50.8)
 
 📈 Likely price risers:
   LEC: 100% (Δ+0.30M)
   HUL: 100% (Δ+0.60M)
   VER: 100% (Δ+0.27M)
   LIN: 95% (Δ+0.51M)
-  ANT: 89% (Δ+0.15M)
+  ANT: 90% (Δ+0.16M)
 
 📉 Likely budget losers -- think twice before backing these:
-  RUS: 100% (Δ-0.28M)
   COL: 100% (Δ-0.60M)
-  TSU: 99% (Δ-0.57M)
+  RUS: 100% (Δ-0.28M)
+  TSU: 98% (Δ-0.56M)
   ALB: 98% (Δ-0.56M)
-  BOR: 97% (Δ-0.55M)
+  BOR: 96% (Δ-0.54M)
 
-🧩 Optimal team: GAS, HUL, BEA, LIN, ALB + Mercedes, Ferrari (161.2 pts, $100.0M)
+🧩 Optimal team: BOR, HUL, BOT, HAD, ALB + Mercedes, Ferrari (162.1 pts, $99.7M)
