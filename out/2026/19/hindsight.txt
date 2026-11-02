@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Mexico City Grand Prix
+
+Optimal @ $100M scored 244 pts (captain: HAD)
+Closest to their own optimal: Francesco Novia (252 pts, -60 off $121.6M)
+Furthest from their own optimal: Davide Tota (121 pts, -183 off $115.5M)
+League average gap to (own-budget) optimal: 122.8 pts
