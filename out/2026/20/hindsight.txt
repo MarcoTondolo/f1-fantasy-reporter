@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Brazilian Grand Prix
+
+Optimal @ $100M scored 199 pts (captain: VER)
+Closest to their own optimal: Anita Bruschi (221 pts, -31 off $127.6M)
+Furthest from their own optimal: Elisa Lops (101 pts, -137 off $121.3M)
+League average gap to (own-budget) optimal: 82.9 pts
