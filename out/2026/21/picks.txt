@@ -2,26 +2,26 @@
 Las Vegas Strip Street Circuit, Las Vegas
 
 📊 Top expected points:
-  RUS: 28.7 (p10 -0.1 / p90 49.0)
-  ANT: 25.6 (p10 0.0 / p90 45.0)
-  LEC: 23.1 (p10 -1.1 / p90 41.0)
-  HAM: 21.5 (p10 1.9 / p90 40.0)
-  NOR: 20.6 (p10 -8.0 / p90 41.0)
+  RUS: 28.5 (p10 0.9 / p90 49.0)
+  ANT: 25.7 (p10 -2.0 / p90 46.0)
+  LEC: 23.8 (p10 1.0 / p90 44.0)
+  HAM: 21.0 (p10 -2.0 / p90 39.0)
+  NOR: 19.7 (p10 -9.1 / p90 40.0)
 
-🏗️ Captain suggestion: RUS (EV 57.3)
+🏗️ Captain suggestion: RUS (EV 57.1)
 
 📈 Likely price risers:
-  VER: 100% (Δ+0.28M)
-  LEC: 97% (Δ+0.24M)
-  HAM: 90% (Δ+0.13M)
-  BOR: 87% (Δ+0.43M)
-  HAD: 84% (Δ+0.30M)
+  VER: 100% (Δ+0.27M)
+  LEC: 98% (Δ+0.24M)
+  HAM: 89% (Δ+0.13M)
+  BOR: 88% (Δ+0.44M)
+  HAD: 85% (Δ+0.32M)
 
 📉 Likely budget losers -- think twice before backing these:
-  ALO: 100% (Δ-0.60M)
-  BEA: 100% (Δ-0.60M)
-  TSU: 98% (Δ-0.56M)
-  COL: 98% (Δ-0.56M)
-  PIA: 98% (Δ-0.20M)
+  ALO: 99% (Δ-0.59M)
+  BEA: 99% (Δ-0.59M)
+  TSU: 98% (Δ-0.57M)
+  COL: 97% (Δ-0.56M)
+  OCO: 97% (Δ-0.53M)
 
-🧩 Optimal team: BOR, BOT, CAM, BEA, HAD + Mercedes, Ferrari (169.4 pts, $99.5M)
+🧩 Optimal team: BOR, PER, CAM, BEA, HAD + Mercedes, Ferrari (171.3 pts, $99.5M)
