@@ -26,20 +26,6 @@
       ],
       "constructors": [],
       "attributed_round": 20
-    },
-    {
-      "source": "https://www.racefans.net/feed/",
-      "title": "Russell explains why he chose not to use Mercedes\u2019 turbo upgrade in Las Vegas | Formula 1",
-      "summary": "George Russell isn't using Mercedes' new turbo this weekend because he would have to take another grid penalty.",
-      "link": "https://www.racefans.net/2026/11/19/russell-explains-why-he-chose-not-to-use-mercedes-turbo-upgrade-in-las-vegas/",
-      "published_at": "2026-11-19T06:21:26Z",
-      "matched_keywords": [
-        "upgrade"
-      ],
-      "constructors": [
-        "Mercedes"
-      ],
-      "attributed_round": 21
     }
   ],
   "effects": []
