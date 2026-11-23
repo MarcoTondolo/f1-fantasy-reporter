@@ -1,0 +1,6 @@
+🔮 *Hindsight* -- Las Vegas Grand Prix
+
+Optimal @ $100M scored 389 pts (captain: VER)
+Closest to their own optimal: Alfonso U criminoil (343 pts, -62 off $110.5M)
+Furthest from their own optimal: Phaelo Bean (227 pts, -174 off $107.8M)
+League average gap to (own-budget) optimal: 117.8 pts
